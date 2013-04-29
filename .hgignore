@@ -1,0 +1,6 @@
+﻿syntax: glob
+
+bin/
+builds/
+MP4Box/
+settings.conf
