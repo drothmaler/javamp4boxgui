@@ -16,11 +16,14 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -54,11 +57,16 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JPanel outputPanel = new JPanel(new GridBagLayout());
 	JPanel automationPanel = new JPanel(new GridBagLayout());
 	
+	JTextField outputTextField = new JTextField();
+	JLabel labelOutputFolder = new JLabel();
+	JRadioButton radioOutputFolderSettings = new JRadioButton();
+	JRadioButton radioOutputFolderVideoSource = new JRadioButton();
+	
 	JCheckBox autoclearCheckBox = new JCheckBox();
 	JCheckBox autoJoinCheckBox = new JCheckBox();
+	
 	JButton joinButton = new JButton();
 	JButton aboutButton = new JButton();
-	JTextField outputTextField = new JTextField();
 	
 	HashMap<String, String> settings = null;
 	
@@ -91,9 +99,14 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		autoJoinCheckBox.setSelected(Boolean.valueOf(settings.get(ParameterStrings.CHECKBOX_AUTOJOIN_SELECTED)));
 		autoJoinCheckBox.setToolTipText("Note! The UI doesn't update the table when auto joining on drop unless autoclear is disabled! Also doesn't overwrite files, will try new names!");
 		
+		outputTextField.setText(fileSettings.getCurrentOutputPath() + settings.get(ParameterStrings.OUTPUT_FILE));
+		labelOutputFolder.setText("Folder:");
+		radioOutputFolderSettings.setText("Default");
+		radioOutputFolderVideoSource.setText("Video source");
+
 		autoclearCheckBox.setText(settings.get(ParameterStrings.CHECKBOX_AUTOCLEAR));
 		autoJoinCheckBox.setText(settings.get(ParameterStrings.CHECKBOX_AUTOJOIN));
-		outputTextField.setText(fileSettings.getCurrentOutputPath() + settings.get(ParameterStrings.OUTPUT_FILE));
+		
 		joinButton.setText(settings.get(ParameterStrings.BUTTON_TEXT));
 		aboutButton.setText("About");
 		
@@ -115,19 +128,24 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	private void addComponents(){
 		this.getContentPane().setLayout(new GridBagLayout());
-		
 		getContentPane().add(videoPane, getComponentConstraints(GridBagConstraints.BOTH, 2, 3, 0, 0, 2));
 		
 		//Output settings
-		outputPanel.add(outputTextField, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
-		outputPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 1, 1)); //Filler panel
-		outputPanel.setBackground(Color.blue);
+		ButtonGroup groupOutputFolder = new ButtonGroup();
+		groupOutputFolder.add(radioOutputFolderSettings);
+		groupOutputFolder.add(radioOutputFolderVideoSource);
+		radioOutputFolderSettings.setSelected(true);
+		
+		outputPanel.add(outputTextField, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 3));
+		outputPanel.add(labelOutputFolder,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
+		outputPanel.add(radioOutputFolderSettings,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
+		outputPanel.add(radioOutputFolderVideoSource,getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 1, 1));
+		outputPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 3)); //Filler panel
 		
 		//Automation settings
 		automationPanel.add(autoclearCheckBox, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
 		automationPanel.add(autoJoinCheckBox, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
 		automationPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1)); //Filler panel
-		automationPanel.setBackground(Color.blue);
 		
 		//Add Tabbed pane and the tabs
 		getContentPane().add(optionsPane, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 2));
@@ -141,6 +159,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	private void addActionListener(){
 		joinButton.addActionListener(actionListener);
 		aboutButton.addActionListener(actionListener);
+		
+		radioOutputFolderSettings.addActionListener(actionListener);
+		radioOutputFolderVideoSource.addActionListener(actionListener);
 	}
 	
 	private void init(){
@@ -183,6 +204,11 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 				//System.out.println("Possible flavor: " + flavors[i].getMimeType());
 				// Check for file lists specifically
 				if (flavors[i].isFlavorJavaFileListType()) {
+					boolean wasDataEmpty = false;
+					if(model.getData()==null || model.getData().length==0){
+						wasDataEmpty = true;
+					}
+					
 					// Great!  Accept copy drops...
 					dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 					// And add the list of file names to our text area
@@ -201,9 +227,18 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 					model.fireTableStructureChanged();
 					videoTable.setModel(model);
 					
+					/**
+					 * Checks if the data was empty and the radio button for video source is selected.
+					 */
+					if(wasDataEmpty && radioOutputFolderVideoSource.isSelected()){
+						actionListener.actionRadioButtonOutputFolderVideoSource();
+					}
+					
+					//Autojoins if that option is selected
 					if(autoJoinCheckBox.isSelected()){
 						new MP4BoxController(this);
 						
+						//Auto clears the table is that option is selected
 						if(autoclearCheckBox.isSelected()){
 							model.removeAllRows();
 						}
@@ -259,6 +294,22 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	public JButton getJoinButton() {
 		return joinButton;
+	}
+	
+	public JTextField getOutputTextField() {
+		return outputTextField;
+	}
+	
+	public JRadioButton getRadioOutputFolderSettings() {
+		return radioOutputFolderSettings;
+	}
+	
+	public JRadioButton getRadioOutputFolderVideoSource() {
+		return radioOutputFolderVideoSource;
+	}
+	
+	public FileSettings getFileSettings() {
+		return fileSettings;
 	}
 	
 	/**
