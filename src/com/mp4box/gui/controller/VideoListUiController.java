@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
+import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.ui.VideoListUi;
 
 public class VideoListUiController implements ActionListener {
@@ -21,7 +22,7 @@ public class VideoListUiController implements ActionListener {
 	@SuppressWarnings("null")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() instanceof JButton && ((JButton) e.getSource()).getText().equals(ui.getSettings().get(ParameterStrings.BUTTON_TEXT))){
+		if(e.getSource() instanceof JButton && ((JButton) e.getSource()).getText().equals(ui.getSettings().get(ConfLanguageKeys.BUTTON_TEXT))){
 			new MP4BoxController(ui);
 			
 			if(ui.getAutoclearCheckBox().isSelected()){
@@ -53,9 +54,6 @@ public class VideoListUiController implements ActionListener {
 		
 		//Quick null check
 		if(data==null || data.length==0){
-//			ui.getRadioOutputFolderSettings().setSelected(true);
-//			ui.getRadioOutputFolderSettings().setSelected(false);
-			
 			return;
 		}else{
 			firstVideo = (String) data[0][0];

@@ -4,3 +4,4 @@ bin/
 builds/
 MP4Box/
 settings.conf
+language.conf

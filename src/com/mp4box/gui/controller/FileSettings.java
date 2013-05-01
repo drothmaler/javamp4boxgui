@@ -6,25 +6,58 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import com.mp4box.gui.model.ConfLanguageKeys;
+import com.mp4box.gui.model.ConfLanguageValues;
+import com.mp4box.gui.model.ConfSettingsKeys;
+import com.mp4box.gui.model.ConfSettingsValues;
 
 public class FileSettings {
 	
 	public static String newline = System.getProperty("line.separator");
 	public static String CONFIG_ASSIGN_SYMBOLE = "=";
+	public static String FILE_NAME_SETTINGS = "settings.conf";
+	public static String FILE_NAME_LANGUAGE = "language.conf";
 	
-	private HashMap<String, String> settings = null;
-	private File settingsFile = null;;
+	private HashMap<String, String> settings = new HashMap<String, String>();
+	
+	private HashMap<String, String> settingsHashMap = new HashMap<String, String>();
+	private HashMap<String, String> languageHashMap = new HashMap<String, String>();
+	
+	private File settingsFile = new File(".");;
+	private File languageFile = new File(".");;
 	
 	public FileSettings() {
-		settingsFile = new File(".");
+		//Let's load both config files
+		settingsFile = loadFile(FILE_NAME_SETTINGS, settingsFile, settingsHashMap, new ConfSettingsKeys(), new ConfSettingsValues());
+		languageFile = loadFile(FILE_NAME_LANGUAGE, languageFile, languageHashMap, new ConfLanguageKeys(), new ConfLanguageValues());
+		
+		//And lets combine them into one HashMap
+		settings.putAll(settingsHashMap);
+		settings.putAll(languageHashMap);
+	}
+	
+	/**
+	 * This method loads the config file specified by the parameters provided.
+	 * It will check if the file exists, and create it if it doesn't exist yet.
+	 * It will populate the variables with the data read from conf files, or provide defaults otherwise
+	 * @param fileName
+	 * @param confFile
+	 * @param confHashMap
+	 * @param keyObject
+	 * @param valueObject
+	 * @return
+	 */
+	private File loadFile(String fileName, File confFile, HashMap<String, String> confHashMap, Object keyObject, Object valueObject){
 		try {
-			settingsFile = new File(settingsFile.getCanonicalPath() + "/settings.conf");
-			if(!settingsFile.exists()){
-				//Tries to create the missing settings file
+			confFile = new File(confFile.getCanonicalPath() + File.separator + fileName);
+			if(!confFile.exists()){
+				//Tries to create the missing conf file
 				try {
-					setupNewSettings();
+					setupNewConfFile(confFile, confHashMap, keyObject, valueObject);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -32,56 +65,77 @@ public class FileSettings {
 		} catch (IOException e) {
 			e.printStackTrace();
 			
-			//Tries to create the missing settings file
+			//Tries to create the missing conf file
 			try {
-				setupNewSettings();
+				setupNewConfFile(confFile, confHashMap, keyObject, valueObject);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
 		
 		//Only reads in the properties file if it exists
-		if(settingsFile.exists()){
-			readSettings(settingsFile);
+		if(confFile.exists()){
+			readConfiguration(confFile, confHashMap);
 		}
-	}
-	
-	public FileSettings(File settingsFile) {
-		readSettings(settingsFile);
-		this.settingsFile = settingsFile;
-	}
-	
-	private void setupNewSettings() throws IOException{
-		settingsFile.createNewFile();
 		
-		settings = new HashMap<String, String>();
-		settings.put(ParameterStrings.AUTO_CHAPTER_FILETYPE, ParameterDefaultValues.AUTO_CHAPTER_FILETYPE);
-		settings.put(ParameterStrings.AUTO_CHAPTER_NAME, ParameterDefaultValues.AUTO_CHAPTER_NAME);
-		settings.put(ParameterStrings.AUTO_VIDEO_FILETYPE, ParameterDefaultValues.AUTO_VIDEO_FILETYPE);
-		settings.put(ParameterStrings.AUTO_VIDEO_NAME, ParameterDefaultValues.AUTO_VIDEO_NAME);
-		settings.put(ParameterStrings.BUTTON_TEXT, ParameterDefaultValues.BUTTON_TEXT);
-		settings.put(ParameterStrings.CHAPTER_ENABLED, ParameterDefaultValues.CHAPTER_ENABLED);
-		settings.put(ParameterStrings.CHAPTER_NAME, ParameterDefaultValues.CHAPTER_NAME);
-		settings.put(ParameterStrings.CHAPTER_FILENAME, ParameterDefaultValues.CHAPTER_FILENAME);
-		settings.put(ParameterStrings.CHECKBOX_AUTOCLEAR, ParameterDefaultValues.CHECKBOX_AUTOCLEAR);
-		settings.put(ParameterStrings.CHECKBOX_AUTOCLEAR_SELECTED, ParameterDefaultValues.CHECKBOX_AUTOCLEAR_SELECTED);
-		settings.put(ParameterStrings.CHECKBOX_AUTOJOIN, ParameterDefaultValues.CHECKBOX_AUTOJOIN);
-		settings.put(ParameterStrings.CHECKBOX_AUTOJOIN_SELECTED, ParameterDefaultValues.CHECKBOX_AUTOJOIN_SELECTED);
-		settings.put(ParameterStrings.CMD, ParameterDefaultValues.CMD);
-		settings.put(ParameterStrings.LIST_BACKGROUND_COLOUR, ParameterDefaultValues.LIST_BACKGROUND_COLOUR);
-		settings.put(ParameterStrings.MP4BOX_EXECUTABLE, ParameterDefaultValues.MP4BOX_EXECUTABLE);
-		settings.put(ParameterStrings.MP4BOX_PATH, ParameterDefaultValues.MP4BOX_PATH);
-		settings.put(ParameterStrings.OUTPUT_FILE, ParameterDefaultValues.OUTPUT_FILE);
-		settings.put(ParameterStrings.OUTPUT_PATH, ParameterDefaultValues.OUTPUT_PATH);
-		
-		saveSettings(settings);
+		return confFile;
 	}
 	
-	private void readSettings(File file){
+	/**
+	 * Creates config file with default values.
+	 * The type of config file is determined by the paramaters provided.
+	 * @param confFile
+	 * @param confHashMap
+	 * @param keyObject
+	 * @param valueObject
+	 * @throws IOException
+	 */
+	private void setupNewConfFile(File confFile, HashMap<String, String> confHashMap, Object keyObject, Object valueObject) throws IOException{
+		confFile.createNewFile();
+		
+		HashMap<String, String> keyHashMap = getKeyAndValue(keyObject);
+		HashMap<String, String> valueHashMap = getKeyAndValue(valueObject);
+		
+		for (String key : keyHashMap.keySet()) {
+			confHashMap.put(keyHashMap.get(key), valueHashMap.get(key));
+		}
+		
+		saveConfiguration(confFile, confHashMap);
+	}
+	
+	/**
+	 * Extracts the variables name and value (key & value) from the class provided.
+	 * It's made mainly for the classes that holds the default values in static Strings.
+	 * @param klass
+	 * @return
+	 */
+	public HashMap<String, String> getKeyAndValue(Object klass){
+		Field[] fields = klass.getClass().getDeclaredFields();
+		HashMap<String, String> keyValueHashMap = new HashMap<String, String>();
+		
+		for(Field field : fields){
+			try {
+				Object valueObject = field.get(klass);
+				
+				if(valueObject instanceof String){
+					keyValueHashMap.put(field.getName(), (String) valueObject);
+				}
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return keyValueHashMap;
+	}
+	
+	private void readConfiguration(File confFile, HashMap<String, String> confHashMap){
 		try {
-			Scanner scanner = new Scanner(new FileInputStream(file));
+			Scanner scanner = new Scanner(new FileInputStream(confFile));
 			
-			HashMap<String, String> settingsRead = new HashMap<String, String>();
 			try{
 				while(scanner.hasNext()){
 					String line = scanner.nextLine();
@@ -107,7 +161,7 @@ public class FileSettings {
 						if(equalsAt>0){
 							String name = line.substring(0, equalsAt);
 							String value = line.substring(equalsAt+1);
-							settingsRead.put(name, value);
+							confHashMap.put(name, value);
 						}
 					}
 					
@@ -117,18 +171,26 @@ public class FileSettings {
 				scanner.close();
 			}
 			
-			this.settings = settingsRead;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public boolean saveSettings(HashMap<String, String> settings){
-		this.settings = settings;
-		
+	public boolean saveConfiguration(File confFile, HashMap<String, String> confHashMap){
 		try {
-			OutputStream os = new FileOutputStream(settingsFile);
-			os.write(getSettingsAsString().getBytes());
+			String confString = "";
+			
+			//Adds an explanation to the settings file
+			if(confFile.getName().equals(FILE_NAME_SETTINGS)){
+				confString += "## Note that some of the values are empty." + newline;
+				confString += "## That is because they use the path of the application, but this can be overriden by specifying a different path!" + newline;
+				confString += "## It applies to the following: MP4BoxPath, OutputPath" + newline;
+			}
+			
+			confString += getConfHashMapAsString(confHashMap);
+			
+			OutputStream os = new FileOutputStream(confFile);
+			os.write(confString.getBytes());
 			os.close();
 			
 			return true;
@@ -142,15 +204,11 @@ public class FileSettings {
 		
 	}
 	
-	private String getSettingsAsString(){
+	private String getConfHashMapAsString(HashMap<String, String> confHashMap){
 		String returnString = "";
 		
-		returnString += "## Note that some of the values are empty." + newline;
-		returnString += "## That is because they use the path of the application, but this can be overriden by specifying a different path!" + newline;
-		returnString += "## It applies to the following: MP4BoxPath, OutputPath" + newline;
-		
-		for (String key : settings.keySet()) {
-			String value = settings.get(key);
+		for (String key : confHashMap.keySet()) {
+			String value = confHashMap.get(key);
 			returnString += key + CONFIG_ASSIGN_SYMBOLE + value + newline;
 		}
 		
@@ -160,7 +218,8 @@ public class FileSettings {
 	public String getCurrentOutputPath(){
 		String currentPath = getApplicationPath();
 		
-		String settingsPath = settings.get(ParameterStrings.OUTPUT_PATH);
+		//Checks that another path isn't defined in the conf file
+		String settingsPath = settingsHashMap.get(ConfSettingsKeys.OUTPUT_PATH);
 		if(!settingsPath.isEmpty()){
 			currentPath = settingsPath + File.separator;
 		}
@@ -169,15 +228,10 @@ public class FileSettings {
 	}
 	
 	public static String getApplicationPath(){
-		//return (new File(ClassLoader.getSystemResource("").getPath())).getAbsolutePath().replace("%20", " ") + File.separator;
 		return (new File("")).getAbsolutePath().replace("%20", " ") + File.separator;
 	}
 	
 	public HashMap<String, String> getSettings() {
 		return settings;
-	}
-	
-	public void setSettings(HashMap<String, String> settings) {
-		this.settings = settings;
 	}
 }

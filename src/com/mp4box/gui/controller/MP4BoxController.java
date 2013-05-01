@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
+import com.mp4box.gui.model.ConfSettingsKeys;
 import com.mp4box.gui.ui.VideoListUi;
 
 public class MP4BoxController {
@@ -52,7 +53,7 @@ public class MP4BoxController {
 				out.flush();
 				out.close();
 				
-				String execCommand = settings.get(ParameterStrings.CMD) + " \"\" \"" + mp4boxPath + "\" " + input + " -chap \"" + chapterFile + "\" -new \"" + outputFile + "\"";
+				String execCommand = settings.get(ConfSettingsKeys.CMD) + " \"\" \"" + mp4boxPath + "\" " + input + " -chap \"" + chapterFile + "\" -new \"" + outputFile + "\"";
 				System.out.println(execCommand);
 				
 				Runtime rt = Runtime.getRuntime();
@@ -176,11 +177,11 @@ public class MP4BoxController {
 	}
 	
 	private String getOutputFile(){
-		return findValidOutputFile(ui.getOutputPath() + ui.getOutputFilename(), settings.get(ParameterStrings.AUTO_VIDEO_NAME), settings.get(ParameterStrings.AUTO_VIDEO_FILETYPE)); 
+		return findValidOutputFile(ui.getOutputPath() + ui.getOutputFilename(), settings.get(ConfSettingsKeys.AUTO_VIDEO_NAME), settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE)); 
 	}
 	
 	private String getOutputChapterFile(){
-		return findValidOutputFile(ui.getOutputPath() + settings.get(ParameterStrings.CHAPTER_FILENAME), settings.get(ParameterStrings.AUTO_CHAPTER_NAME), settings.get(ParameterStrings.AUTO_CHAPTER_FILETYPE));
+		return findValidOutputFile(ui.getOutputPath() + settings.get(ConfSettingsKeys.CHAPTER_FILENAME), settings.get(ConfSettingsKeys.AUTO_CHAPTER_NAME), settings.get(ConfSettingsKeys.AUTO_CHAPTER_FILETYPE));
 	}
 	
 	private String findValidOutputFile(String outputFile, String name, String filetype){
@@ -205,11 +206,11 @@ public class MP4BoxController {
 	
 	private String getMP4BoxFilePath(){
 		String mp4boxPath = FileSettings.getApplicationPath();
-		if(!settings.get(ParameterStrings.MP4BOX_PATH).isEmpty()){
-			mp4boxPath = settings.get(ParameterStrings.MP4BOX_PATH);
+		if(!settings.get(ConfSettingsKeys.MP4BOX_PATH).isEmpty()){
+			mp4boxPath = settings.get(ConfSettingsKeys.MP4BOX_PATH);
 		}
 		
-		return mp4boxPath + settings.get(ParameterStrings.MP4BOX_EXECUTABLE);
+		return mp4boxPath + settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE);
 	}
 	
 }

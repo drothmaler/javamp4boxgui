@@ -32,8 +32,9 @@ import javax.swing.ListSelectionModel;
 
 import com.mp4box.gui.controller.FileSettings;
 import com.mp4box.gui.controller.MP4BoxController;
-import com.mp4box.gui.controller.ParameterStrings;
 import com.mp4box.gui.controller.VideoListUiController;
+import com.mp4box.gui.model.ConfLanguageKeys;
+import com.mp4box.gui.model.ConfSettingsKeys;
 
 /**
  * 
@@ -85,7 +86,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		videoTable.setFillsViewportHeight(true);
 		
 		try{
-			Field field = Class.forName("java.awt.Color").getField(settings.get(ParameterStrings.LIST_BACKGROUND_COLOUR));
+			Field field = Class.forName("java.awt.Color").getField(settings.get(ConfSettingsKeys.LIST_BACKGROUND_COLOUR));
 		    Color backgroundColor = (Color)field.get(null);
 			videoTable.setBackground(backgroundColor);
 		}catch(Exception e){
@@ -95,19 +96,19 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		videoPane.add(videoTable);
 		videoPane.setViewportView(videoTable);
 		
-		autoclearCheckBox.setSelected(Boolean.valueOf(settings.get(ParameterStrings.CHECKBOX_AUTOCLEAR_SELECTED)));
-		autoJoinCheckBox.setSelected(Boolean.valueOf(settings.get(ParameterStrings.CHECKBOX_AUTOJOIN_SELECTED)));
+		autoclearCheckBox.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.CHECKBOX_AUTOCLEAR_SELECTED)));
+		autoJoinCheckBox.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.CHECKBOX_AUTOJOIN_SELECTED)));
 		autoJoinCheckBox.setToolTipText("Note! The UI doesn't update the table when auto joining on drop unless autoclear is disabled! Also doesn't overwrite files, will try new names!");
 		
-		outputTextField.setText(fileSettings.getCurrentOutputPath() + settings.get(ParameterStrings.OUTPUT_FILE));
+		outputTextField.setText(fileSettings.getCurrentOutputPath() + settings.get(ConfSettingsKeys.OUTPUT_FILE));
 		labelOutputFolder.setText("Folder:");
 		radioOutputFolderSettings.setText("Default");
 		radioOutputFolderVideoSource.setText("Video source");
 
-		autoclearCheckBox.setText(settings.get(ParameterStrings.CHECKBOX_AUTOCLEAR));
-		autoJoinCheckBox.setText(settings.get(ParameterStrings.CHECKBOX_AUTOJOIN));
+		autoclearCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR));
+		autoJoinCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN));
 		
-		joinButton.setText(settings.get(ParameterStrings.BUTTON_TEXT));
+		joinButton.setText(settings.get(ConfLanguageKeys.BUTTON_TEXT));
 		aboutButton.setText("About");
 		
 		dt = new DropTarget(videoTable, this);
@@ -218,8 +219,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 						String filePath = list.get(j).toString();
 						int chapNumb = j + 1;
 						model.addRow(filePath, 
-								Boolean.valueOf(settings.get(ParameterStrings.CHAPTER_ENABLED)), 
-								settings.get(ParameterStrings.CHAPTER_NAME) + " " + chapNumb);
+								Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_ENABLED)), 
+								settings.get(ConfLanguageKeys.CHAPTER_NAME) + " " + chapNumb);
 					}
 
 					// If we made it this far, everything worked.

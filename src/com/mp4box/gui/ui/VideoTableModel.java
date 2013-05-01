@@ -38,14 +38,6 @@ public class VideoTableModel extends AbstractTableModel {
      * Ref: http://gifrific.com/wp-content/uploads/2012/08/Gary-Oldman-Yelling-Everyone-Leon-The-Professional.gif
      */
     public boolean isCellEditable(int row, int col) {
-        //Note that the data/cell address is constant,
-        //no matter where the cell appears onscreen.
-//        if (col < 2) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-    	
     	return true;
     }
 
