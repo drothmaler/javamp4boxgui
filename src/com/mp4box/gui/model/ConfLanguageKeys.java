@@ -13,4 +13,9 @@ public class ConfLanguageKeys {
 	public static String OUTPUT_FOLDER_LABEL = "OutputFolderLabel";
 	public static String OUTPUT_FOLDER_RADIO_DEFAULT = "OutputFolderDefault";
 	public static String OUTPUT_FOLDER_RADIO_VIDEOSOURCE = "OutputFolderVideSource";
+	
+	public static String OUTPUT_FILE_LABEL = "OutputFileLabel";
+	public static String OUTPUT_FILE_RADIO_DEFAULT = "OutputFileDefault";
+	public static String OUTPUT_FILE_RADIO_VIDEOSOURCE = "OutputFileVideSource";
+	
 }

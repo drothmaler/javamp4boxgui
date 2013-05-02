@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
 import com.mp4box.gui.model.ConfLanguageKeys;
+import com.mp4box.gui.model.ConfSettingsKeys;
 import com.mp4box.gui.ui.VideoListUi;
 
 public class VideoListUiController implements ActionListener {
@@ -30,7 +31,7 @@ public class VideoListUiController implements ActionListener {
 			}
 		}else if(e.getSource() instanceof JRadioButton){
 			JRadioButton radioButton = (JRadioButton) e.getSource();
-			if(radioButton.getText().equals("Default")){
+			if(radioButton.equals(ui.getRadioOutputFolderDefault())){
 				//We select the default folder (settings or self determined)
 				String folderDefault = ui.getFileSettings().getCurrentOutputPath();
 				
@@ -39,9 +40,19 @@ public class VideoListUiController implements ActionListener {
 				
 				//Now we combine the new folder with the existing filename
 				ui.getOutputTextField().setText(folderDefault + filename);
-			}else if(radioButton.getText().equals("Video source")){
+			}else if(radioButton.equals(ui.getRadioOutputFolderVideoSource())){
 				actionRadioButtonOutputFolderVideoSource();
+			}else if(radioButton.equals(ui.getRadioOutputFileDefault())){
+				//We select the default folder (settings or self determined)
+				String fileDefault = ui.getSettings().get(ConfSettingsKeys.OUTPUT_FILE);
 				
+				//We select the filename already defined in the output textbox
+				String foldername = splitOutputFilePath(ui.getOutputTextField().getText())[0];
+				
+				//Now we combine the new folder with the existing filename
+				ui.getOutputTextField().setText(foldername + fileDefault);
+			}else if(radioButton.equals(ui.getRadioOutputFileVideoSource())){
+				actionRadioButtonOutputFileVideoSource();
 			}
 		}else if(e.getSource() instanceof JButton){
 			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland, and tested on the following version of MP4Box: 'GPAC.Framework.Setup-0.5.1-DEV-rev4452'!");
@@ -67,6 +78,27 @@ public class VideoListUiController implements ActionListener {
 		
 		//Now we combine the new folder with the existing filename
 		ui.getOutputTextField().setText(folderSourceVideo + filename);
+	}
+	
+	public void actionRadioButtonOutputFileVideoSource(){
+		Object[][] data = ui.getModel().getData();
+		String firstVideo = "";
+		
+		//Quick null check
+		if(data==null || data.length==0){
+			return;
+		}else{
+			firstVideo = (String) data[0][0];
+		}
+		
+		//We select the folder where the source video resides
+		String fileSourceVideo = splitOutputFilePath(firstVideo)[1];
+		
+		//We select the filename already defined in the output textbox
+		String foldername = splitOutputFilePath(ui.getOutputTextField().getText())[0];
+		
+		//Now we combine the new folder with the existing filename
+		ui.getOutputTextField().setText(foldername + fileSourceVideo);
 	}
 	
 	private String[] splitOutputFilePath(String path){

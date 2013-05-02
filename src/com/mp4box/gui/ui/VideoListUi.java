@@ -62,6 +62,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JLabel labelOutputFolder = new JLabel();
 	JRadioButton radioOutputFolderDefault = new JRadioButton();
 	JRadioButton radioOutputFolderVideoSource = new JRadioButton();
+	JLabel labelOutputFile = new JLabel();
+	JRadioButton radioOutputFileDefault = new JRadioButton();
+	JRadioButton radioOutputFileVideoSource = new JRadioButton();
 	
 	JCheckBox autoclearCheckBox = new JCheckBox();
 	JCheckBox autoJoinCheckBox = new JCheckBox();
@@ -104,7 +107,10 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		labelOutputFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_LABEL));
 		radioOutputFolderDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_DEFAULT));
 		radioOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_VIDEOSOURCE));
-
+		labelOutputFile.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_LABEL));
+		radioOutputFileDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_DEFAULT));
+		radioOutputFileVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_VIDEOSOURCE));
+		
 		autoclearCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR));
 		autoJoinCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN));
 		
@@ -137,11 +143,19 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		groupOutputFolder.add(radioOutputFolderVideoSource);
 		radioOutputFolderDefault.setSelected(true);
 		
+		ButtonGroup groupOutputFile = new ButtonGroup();
+		groupOutputFile.add(radioOutputFileDefault);
+		groupOutputFile.add(radioOutputFileVideoSource);
+		radioOutputFileDefault.setSelected(true);
+		
 		outputPanel.add(outputTextField, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 3));
 		outputPanel.add(labelOutputFolder,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
 		outputPanel.add(radioOutputFolderDefault,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
 		outputPanel.add(radioOutputFolderVideoSource,getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 1, 1));
-		outputPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 3)); //Filler panel
+		outputPanel.add(labelOutputFile,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
+		outputPanel.add(radioOutputFileDefault,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 2, 1));
+		outputPanel.add(radioOutputFileVideoSource,getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 2, 1));
+		outputPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 3)); //Filler panel
 		
 		//Automation settings
 		automationPanel.add(autoclearCheckBox, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
@@ -163,10 +177,12 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		
 		radioOutputFolderDefault.addActionListener(actionListener);
 		radioOutputFolderVideoSource.addActionListener(actionListener);
+		radioOutputFileDefault.addActionListener(actionListener);
+		radioOutputFileVideoSource.addActionListener(actionListener);
 	}
 	
 	private void init(){
-		this.setTitle("Java MP4Box Gui v1.1 Snapshot");
+		this.setTitle("Java MP4Box Gui v1.2 SNAPSHOT");
 		this.setSize(640,480);
 		this.setLocationRelativeTo(null); //Centers the window on the screen
 		this.pack();
@@ -235,6 +251,13 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 						actionListener.actionRadioButtonOutputFolderVideoSource();
 					}
 					
+					/**
+					 * Checks if the data was empty and the dario button for video source is selected.
+					 */
+					if(wasDataEmpty && radioOutputFileVideoSource.isSelected()){
+						actionListener.actionRadioButtonOutputFileVideoSource();
+					}
+					
 					//Autojoins if that option is selected
 					if(autoJoinCheckBox.isSelected()){
 						new MP4BoxController(this);
@@ -301,12 +324,20 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		return outputTextField;
 	}
 	
-	public JRadioButton getRadioOutputFolderSettings() {
+	public JRadioButton getRadioOutputFolderDefault() {
 		return radioOutputFolderDefault;
 	}
 	
 	public JRadioButton getRadioOutputFolderVideoSource() {
 		return radioOutputFolderVideoSource;
+	}
+	
+	public JRadioButton getRadioOutputFileDefault() {
+		return radioOutputFileDefault;
+	}
+	
+	public JRadioButton getRadioOutputFileVideoSource() {
+		return radioOutputFileVideoSource;
 	}
 	
 	public FileSettings getFileSettings() {
