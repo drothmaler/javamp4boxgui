@@ -60,7 +60,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	JTextField outputTextField = new JTextField();
 	JLabel labelOutputFolder = new JLabel();
-	JRadioButton radioOutputFolderSettings = new JRadioButton();
+	JRadioButton radioOutputFolderDefault = new JRadioButton();
 	JRadioButton radioOutputFolderVideoSource = new JRadioButton();
 	
 	JCheckBox autoclearCheckBox = new JCheckBox();
@@ -101,9 +101,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		autoJoinCheckBox.setToolTipText("Note! The UI doesn't update the table when auto joining on drop unless autoclear is disabled! Also doesn't overwrite files, will try new names!");
 		
 		outputTextField.setText(fileSettings.getCurrentOutputPath() + settings.get(ConfSettingsKeys.OUTPUT_FILE));
-		labelOutputFolder.setText("Folder:");
-		radioOutputFolderSettings.setText("Default");
-		radioOutputFolderVideoSource.setText("Video source");
+		labelOutputFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_LABEL));
+		radioOutputFolderDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_DEFAULT));
+		radioOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_VIDEOSOURCE));
 
 		autoclearCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR));
 		autoJoinCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN));
@@ -133,13 +133,13 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		
 		//Output settings
 		ButtonGroup groupOutputFolder = new ButtonGroup();
-		groupOutputFolder.add(radioOutputFolderSettings);
+		groupOutputFolder.add(radioOutputFolderDefault);
 		groupOutputFolder.add(radioOutputFolderVideoSource);
-		radioOutputFolderSettings.setSelected(true);
+		radioOutputFolderDefault.setSelected(true);
 		
 		outputPanel.add(outputTextField, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 3));
 		outputPanel.add(labelOutputFolder,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
-		outputPanel.add(radioOutputFolderSettings,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
+		outputPanel.add(radioOutputFolderDefault,getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
 		outputPanel.add(radioOutputFolderVideoSource,getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 1, 1));
 		outputPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 3)); //Filler panel
 		
@@ -150,8 +150,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		
 		//Add Tabbed pane and the tabs
 		getContentPane().add(optionsPane, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 2));
-		optionsPane.add("Output", outputPanel);
-		optionsPane.add("Automation", automationPanel);
+		optionsPane.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), outputPanel);
+		optionsPane.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), automationPanel);
 		
 		getContentPane().add(joinButton, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 2, 1));
 		getContentPane().add(aboutButton, getComponentConstraints(GridBagConstraints.CENTER, 0, 0, 1, 2, 1));
@@ -161,7 +161,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		joinButton.addActionListener(actionListener);
 		aboutButton.addActionListener(actionListener);
 		
-		radioOutputFolderSettings.addActionListener(actionListener);
+		radioOutputFolderDefault.addActionListener(actionListener);
 		radioOutputFolderVideoSource.addActionListener(actionListener);
 	}
 	
@@ -302,7 +302,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	public JRadioButton getRadioOutputFolderSettings() {
-		return radioOutputFolderSettings;
+		return radioOutputFolderDefault;
 	}
 	
 	public JRadioButton getRadioOutputFolderVideoSource() {
