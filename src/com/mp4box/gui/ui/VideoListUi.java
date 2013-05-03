@@ -12,6 +12,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -228,15 +229,12 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 					
 					// Great!  Accept copy drops...
 					dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-					// And add the list of file names to our text area
+					// And add the list of file names to our list
 					@SuppressWarnings("rawtypes")
 					List list = (List)tr.getTransferData(flavors[i]);
 					for (int j = 0; j < list.size(); j++) {
 						String filePath = list.get(j).toString();
-						int chapNumb = j + 1;
-						model.addRow(filePath, 
-								Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_ENABLED)), 
-								settings.get(ConfLanguageKeys.CHAPTER_NAME) + " " + chapNumb);
+						addFilePathToModel(filePath, j);
 					}
 
 					// If we made it this far, everything worked.
@@ -295,6 +293,27 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		}
 	}
 
+	public int addFilePathToModel(String filePath, int chapterNumber){
+		File file = new File(filePath);
+		if(file.isDirectory()){
+			for(File childFile : file.listFiles()){
+				try {
+					chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "/n Stack trace: " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		}else{
+			chapterNumber = chapterNumber + 1;
+			model.addRow(filePath, 
+				Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_ENABLED)), 
+				settings.get(ConfLanguageKeys.CHAPTER_NAME) + " " + chapterNumber);
+		}
+		
+		return chapterNumber;
+	}
+	
 	@Override
 	public void dropActionChanged(DropTargetDragEvent arg0) {
 		// TODO Auto-generated method stub
