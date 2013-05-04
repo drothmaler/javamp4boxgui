@@ -53,6 +53,8 @@ public class VideoListUiController implements ActionListener {
 				ui.getOutputTextField().setText(foldername + fileDefault);
 			}else if(radioButton.equals(ui.getRadioOutputFileVideoSource())){
 				actionRadioButtonOutputFileVideoSource();
+			}else if(radioButton.equals(ui.getRadioOutputFileVideoSourceFolder())){
+				actionRadioButtonOutputFileVideoSourceFolder();
 			}
 		}else if(e.getSource() instanceof JButton){
 			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland, and tested on the following version of MP4Box: 'GPAC.Framework.Setup-0.5.1-DEV-rev4452'!");
@@ -94,11 +96,33 @@ public class VideoListUiController implements ActionListener {
 		//We select the folder where the source video resides
 		String fileSourceVideo = splitOutputFilePath(firstVideo)[1];
 		
-		//We select the filename already defined in the output textbox
+		//We select the foldername already defined in the output textbox
 		String foldername = splitOutputFilePath(ui.getOutputTextField().getText())[0];
 		
 		//Now we combine the new folder with the existing filename
 		ui.getOutputTextField().setText(foldername + fileSourceVideo);
+	}
+	
+	public void actionRadioButtonOutputFileVideoSourceFolder(){
+		Object[][] data = ui.getModel().getData();
+		String firstVideo = "";
+		
+		//Quick null check
+		if(data==null || data.length==0){
+			return;
+		}else{
+			firstVideo = (String) data[0][0];
+		}
+		
+		//We select the parent folder of the first video
+		File firstVideoFile = new File(firstVideo);
+		String fileSourceVideoParentFolder = firstVideoFile.getParentFile().getName().toString() + ui.getSettings().get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE);
+		
+		//We select the foldername already defined in the output textbox
+		String foldername = splitOutputFilePath(ui.getOutputTextField().getText())[0];
+		
+		//Now we combine the new folder with the existing filename
+		ui.getOutputTextField().setText(foldername + fileSourceVideoParentFolder);
 	}
 	
 	private String[] splitOutputFilePath(String path){

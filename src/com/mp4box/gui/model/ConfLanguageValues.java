@@ -17,5 +17,6 @@ public class ConfLanguageValues {
 	public static String OUTPUT_FILE_LABEL = "File:";
 	public static String OUTPUT_FILE_RADIO_DEFAULT = "Default";
 	public static String OUTPUT_FILE_RADIO_VIDEOSOURCE = "Video source";
+	public static String OUTPUT_FILE_RADIO_VIDEOSOURCEFOLDER = "Video Source Folder";
 	
 }
