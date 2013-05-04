@@ -136,6 +136,29 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		return c;
 	}
 	
+	private void setDefaultRadioOutputFolder(){
+		String selection = settings.get(ConfSettingsKeys.OUTPUT_FOLDER_DEFAULT);
+		int defaultSelection = Integer.valueOf(selection);
+		
+		if(defaultSelection==1){
+			radioOutputFolderDefault.setSelected(true);
+		}else if(defaultSelection==2){
+			radioOutputFolderVideoSource.setSelected(true);
+		}
+	}
+	
+	private void setDefaultRadioOutputFile(){
+		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.OUTPUT_FILE_DEFAULT));
+		
+		if(defaultSelection==1){
+			radioOutputFileDefault.setSelected(true);
+		}else if(defaultSelection==2){
+			radioOutputFileVideoSource.setSelected(true);
+		}else if(defaultSelection==3){
+			radioOutputFileVideoSourceFolder.setSelected(true);
+		}
+	}
+	
 	private void addComponents(){
 		this.getContentPane().setLayout(new GridBagLayout());
 		getContentPane().add(videoPane, getComponentConstraints(GridBagConstraints.BOTH, 2, 3, 0, 0, 2));
@@ -144,13 +167,13 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		ButtonGroup groupOutputFolder = new ButtonGroup();
 		groupOutputFolder.add(radioOutputFolderDefault);
 		groupOutputFolder.add(radioOutputFolderVideoSource);
-		radioOutputFolderDefault.setSelected(true);
+		setDefaultRadioOutputFolder();
 		
 		ButtonGroup groupOutputFile = new ButtonGroup();
 		groupOutputFile.add(radioOutputFileDefault);
 		groupOutputFile.add(radioOutputFileVideoSource);
 		groupOutputFile.add(radioOutputFileVideoSourceFolder);
-		radioOutputFileDefault.setSelected(true);
+		setDefaultRadioOutputFile();
 		
 		outputPanel.add(outputTextField, 					getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 4));
 		outputPanel.add(labelOutputFolder,					getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));

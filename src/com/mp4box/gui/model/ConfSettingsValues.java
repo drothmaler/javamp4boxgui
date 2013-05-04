@@ -17,4 +17,6 @@ public class ConfSettingsValues {
 	public static String AUTO_VIDEO_FILETYPE = ".mp4";
 	public static String AUTO_CHAPTER_NAME = "chapters";
 	public static String AUTO_CHAPTER_FILETYPE = ".txt";
+	public static String OUTPUT_FOLDER_DEFAULT = "1";
+	public static String OUTPUT_FILE_DEFAULT = "1";
 }

@@ -15,4 +15,6 @@ public class ConfSettingsKeys {
 	public static String AUTO_VIDEO_FILETYPE = "AutoVideoFiletype";
 	public static String AUTO_CHAPTER_NAME = "AutoChapterName";
 	public static String AUTO_CHAPTER_FILETYPE = "AutoChapterFiletype";
+	public static String OUTPUT_FOLDER_DEFAULT = "OutputFolderDefaultSelection";
+	public static String OUTPUT_FILE_DEFAULT = "OutputFileDefaultSelection";
 }
