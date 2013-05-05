@@ -84,7 +84,7 @@ public class MP4BoxController {
 				e.printStackTrace();
 			}
 		}else{
-			JOptionPane.showMessageDialog(ui, "MP4Box can't be found...and it's sort of important! I was looking for it here: " + mp4boxPath +"\n"
+			JOptionPane.showMessageDialog(ui, "MP4Box can't be found...and it's sort of important! \nI was looking for it here: " + mp4boxPath +"\n"
 					                        + "You can download MP4Box/GPAC from here: http://gpac.wp.mines-telecom.fr/ \n"
 					                        + "I advice you to use a fresh build atm (April 2013) so the videos are joined correctly (Nightly DEV build of v0.5.1) \n"
 					                        + "Also, look at the webpage 'http://sourceforge.net/p/javamp4boxgui/' for more info and copy/paste possibilities ;-)");
