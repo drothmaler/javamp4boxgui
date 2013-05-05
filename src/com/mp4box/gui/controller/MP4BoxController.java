@@ -76,9 +76,11 @@ public class MP4BoxController {
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(ui, "An exception (IO) happened, is the total length of the folder and filename very long? \nYou might wanna try a shorter folder path and/or filename! \n" + e.getMessage());
 				e.printStackTrace();
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(ui, "An exception happened, the application was unable to parse the command! \nHave you messed up the command in the properties file or maybe have strange letters in the folder/filename its unable to handle? \n" + e.getMessage());
 				e.printStackTrace();
 			}
 		}else{

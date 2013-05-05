@@ -330,7 +330,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 				try {
 					chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "/n Stack trace: " + e.getMessage());
+					JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "\nStack trace: " + e.getMessage());
 					e.printStackTrace();
 				}
 			}
