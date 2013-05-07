@@ -204,7 +204,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	private void init(){
-		this.setTitle("Java MP4Box Gui v1.3-SNAPSHOT");
+		this.setTitle("Java MP4Box Gui v1.4");
 		this.setSize(640,480);
 		this.setLocationRelativeTo(null); //Centers the window on the screen
 		this.pack();
