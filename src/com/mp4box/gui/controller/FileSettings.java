@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -212,7 +213,11 @@ public class FileSettings {
 	private String getConfHashMapAsString(HashMap<String, String> confHashMap){
 		String returnString = "";
 		
-		for (String key : confHashMap.keySet()) {
+		//Let's get the keys as an array and sort it so that the properties file will become more systematic
+		String[] keyArray = Arrays.copyOf(confHashMap.keySet().toArray(),confHashMap.keySet().size(), String[].class);
+		Arrays.sort(keyArray);
+		
+		for (String key : keyArray) {
 			String value = confHashMap.get(key);
 			returnString += key + CONFIG_ASSIGN_SYMBOLE + value + newline;
 		}
