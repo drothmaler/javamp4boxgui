@@ -224,7 +224,7 @@ public class FileSettings {
 		String currentPath = getApplicationPath();
 		
 		//Checks that another path isn't defined in the conf file
-		String settingsPath = settingsHashMap.get(ConfSettingsKeys.OUTPUT_PATH);
+		String settingsPath = settingsHashMap.get(ConfSettingsKeys.OUTPUT_FOLDER);
 		if(!settingsPath.isEmpty()){
 			currentPath = settingsPath + File.separator;
 		}

@@ -5,22 +5,22 @@ public class ConfLanguageKeys {
 	public static String TAB_NAME_AUTOMATION = "TabNameAutomation";
 	public static String TAB_NAME_FOLDER_RECURSION = "TabNameFolderRecursion";
 	
-	public static String CHECKBOX_AUTOCLEAR = "AutoClear";
-	public static String CHECKBOX_AUTOJOIN = "AutoJoin";
+	public static String CHECKBOX_AUTOCLEAR_TEXT = "CheckBoxAutoClearText";
+	public static String CHECKBOX_AUTOJOIN_TEXT = "CheckBoxAutoJoinText";
 	
 	public static String LABEL_SEPARATE_VIDEOS = "LabelSeparateVideos";
 	public static String CHECKBOX_SEPARATE_VIDEOS_TEXT = "CheckBoxSeperateVideosText";
 	
-	public static String CHAPTER_NAME = "ChapterName";
-	public static String BUTTON_TEXT = "ButtonText";
+	public static String CHAPTER_NAME_DEFAULT = "ChapterName";
+	public static String BUTTON_JOIN_VIDEOS_TEXT = "ButtonJoinVideosText";
 	
-	public static String OUTPUT_FOLDER_LABEL = "OutputFolderLabel";
-	public static String OUTPUT_FOLDER_RADIO_DEFAULT = "OutputFolderDefault";
-	public static String OUTPUT_FOLDER_RADIO_VIDEOSOURCE = "OutputFolderVideSource";
+	public static String LABEL_OUTPUT_FOLDER = "LabelOutputFolder";
+	public static String RADIO_BUTTON_OUTPUT_FOLDER_TEXT_DEFAULT = "RadioButtonOutputFolderTextDefault";
+	public static String RADIO_BUTTON_OUTPUT_FOLDER_TEXT_VIDEOSOURCE = "RadioButtonOutputFolderTextVideSource";
 	
-	public static String OUTPUT_FILE_LABEL = "OutputFileLabel";
-	public static String OUTPUT_FILE_RADIO_DEFAULT = "OutputFileDefault";
-	public static String OUTPUT_FILE_RADIO_VIDEOSOURCE = "OutputFileVideSource";
-	public static String OUTPUT_FILE_RADIO_VIDEOSOURCEFOLDER = "OutputFileVideSourceFolder";
+	public static String LABEL_OUTPUT_FILE = "LabelOutputFile";
+	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_DEFAULT = "RadioButtonOutputFileTextDefault";
+	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE = "RadioButtonOutputFileTextVideSource";
+	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER = "RadioButtonOutputFileTextVideSourceFolder";
 	
 }

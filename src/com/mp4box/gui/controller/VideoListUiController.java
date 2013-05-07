@@ -42,7 +42,7 @@ public class VideoListUiController implements ActionListener {
 				actionRadioButtonOutputFolderVideoSource();
 			}else if(radioButton.equals(ui.getRadioButtonOutputFileDefault())){
 				//We select the default folder (settings or self determined)
-				String fileDefault = ui.getSettings().get(ConfSettingsKeys.OUTPUT_FILE) + ui.getSettings().get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE);
+				String fileDefault = ui.getSettings().get(ConfSettingsKeys.VIDEO_FILE_NAME) + ui.getSettings().get(ConfSettingsKeys.VIDEO_FILE_TYPE);
 				
 				//We select the filename already defined in the output textbox
 				String foldername = splitOutputFilePath(ui.getTextFieldOutput().getText())[0];
@@ -136,7 +136,7 @@ public class VideoListUiController implements ActionListener {
 		
 		//We select the parent folder of the first video
 		File firstVideoFile = new File(firstVideo);
-		String fileSourceVideoParentFolder = firstVideoFile.getParentFile().getName().toString() + ui.getSettings().get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE);
+		String fileSourceVideoParentFolder = firstVideoFile.getParentFile().getName().toString() + ui.getSettings().get(ConfSettingsKeys.VIDEO_FILE_TYPE);
 		
 		//We select the foldername already defined in the output textbox
 		String foldername = splitOutputFilePath(ui.getTextFieldOutput().getText())[0];

@@ -110,22 +110,22 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		checkBoxAutoJoin.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.CHECKBOX_AUTOJOIN_SELECTED)));
 		checkBoxAutoJoin.setToolTipText("Note! The UI doesn't update the table when auto joining on drop unless autoclear is disabled! Also doesn't overwrite files, will try new names!");
 		
-		textFieldOutput.setText(fileSettings.getCurrentOutputPath() + settings.get(ConfSettingsKeys.OUTPUT_FILE) + settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE));
-		labeloutputFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_LABEL));
-		radioButtonOutputFolderDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_DEFAULT));
-		radioButtonOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_VIDEOSOURCE));
-		labelOutputFile.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_LABEL));
-		radioButtonOutputFileDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_DEFAULT));
-		radioButtonOutputFileVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_VIDEOSOURCE));
-		radioButtonOutputFileVideoSourceFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_VIDEOSOURCEFOLDER));
+		textFieldOutput.setText(fileSettings.getCurrentOutputPath() + settings.get(ConfSettingsKeys.VIDEO_FILE_NAME) + settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE));
+		labeloutputFolder.setText(settings.get(ConfLanguageKeys.LABEL_OUTPUT_FOLDER));
+		radioButtonOutputFolderDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FOLDER_TEXT_DEFAULT));
+		radioButtonOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FOLDER_TEXT_VIDEOSOURCE));
+		labelOutputFile.setText(settings.get(ConfLanguageKeys.LABEL_OUTPUT_FILE));
+		radioButtonOutputFileDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_DEFAULT));
+		radioButtonOutputFileVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE));
+		radioButtonOutputFileVideoSourceFolder.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER));
 		
-		checkBoxAutoclear.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR));
-		checkBoxAutoJoin.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN));
+		checkBoxAutoclear.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR_TEXT));
+		checkBoxAutoJoin.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN_TEXT));
 		
 		labelSeparateVideos.setText(FileSettings.HTML_TAG + settings.get(ConfLanguageKeys.LABEL_SEPARATE_VIDEOS));
 		checkBoxSeparateVideos.setText(settings.get(ConfLanguageKeys.CHECKBOX_SEPARATE_VIDEOS_TEXT));
 		
-		buttonJoin.setText(settings.get(ConfLanguageKeys.BUTTON_TEXT));
+		buttonJoin.setText(settings.get(ConfLanguageKeys.BUTTON_JOIN_VIDEOS_TEXT));
 		buttonAbout.setText("About");
 		
 		dropTarget = new DropTarget(tableVideo, this);
@@ -213,7 +213,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	private void setRadioButtonDefaultOutputFolder(){
-		String selection = settings.get(ConfSettingsKeys.OUTPUT_FOLDER_DEFAULT);
+		String selection = settings.get(ConfSettingsKeys.RADIO_BUTTON_OUTPUT_FOLDER_DEFAULT_SELECTION);
 		int defaultSelection = Integer.valueOf(selection);
 		
 		if(defaultSelection==1){
@@ -224,7 +224,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	private void setRadioButtonDefaultOutputFile(){
-		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.OUTPUT_FILE_DEFAULT));
+		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.RADIO_BUTTON_OUTPUT_FILE_DEFAULT_SELECTION));
 		
 		if(defaultSelection==1){
 			radioButtonOutputFileDefault.setSelected(true);
@@ -371,7 +371,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			chapterNumber = chapterNumber + 1;
 			videoTableModel.addRow(filePath, 
 				Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_ENABLED)), 
-				settings.get(ConfLanguageKeys.CHAPTER_NAME) + chapterNumber);
+				settings.get(ConfLanguageKeys.CHAPTER_NAME_DEFAULT) + chapterNumber);
 		}
 		
 		return chapterNumber;

@@ -180,7 +180,7 @@ public class MP4BoxController {
 	
 	private String getOutputFile(){
 		String folderpath = ui.getFolderPathOutput();
-		String fileType = settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE);
+		String fileType = settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE);
 		String filename = ui.getFilenameOutput().replace(fileType, "");
 		
 		return findValidOutputFile(folderpath, filename, fileType);
@@ -189,7 +189,7 @@ public class MP4BoxController {
 	private String getOutputChapterFile(){
 		String folderpath = ui.getFolderPathOutput();
 		String filename = settings.get(ConfSettingsKeys.CHAPTER_FILENAME);
-		String filetype = settings.get(ConfSettingsKeys.AUTO_CHAPTER_FILETYPE);
+		String filetype = settings.get(ConfSettingsKeys.CHAPTER_FILE_TYPE);
 		
 		return findValidOutputFile(folderpath, filename, filetype);
 	}
