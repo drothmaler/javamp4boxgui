@@ -19,6 +19,9 @@ public class FileSettings {
 	
 	public static String newline = System.getProperty("line.separator");
 	public static String CONFIG_ASSIGN_SYMBOLE = "=";
+	public static String NEW_LINE_CONF = "newLine";
+	public static String NEW_LINE_CODE = "<br>";
+	public static String HTML_TAG = "<html>";
 	public static String FILE_NAME_SETTINGS = "settings.conf";
 	public static String FILE_NAME_LANGUAGE = "language.conf";
 	
@@ -160,7 +163,7 @@ public class FileSettings {
 						
 						if(equalsAt>0){
 							String name = line.substring(0, equalsAt);
-							String value = line.substring(equalsAt+1);
+							String value = (line.substring(equalsAt+1)).replaceAll(NEW_LINE_CONF, NEW_LINE_CODE);
 							confHashMap.put(name, value);
 						}
 					}
@@ -185,6 +188,8 @@ public class FileSettings {
 				confString += "## Note that some of the values are empty." + newline;
 				confString += "## That is because they use the path of the application, but this can be overriden by specifying a different path!" + newline;
 				confString += "## It applies to the following: MP4BoxPath, OutputPath" + newline;
+			}else if(confFile.getName().equals(FILE_NAME_LANGUAGE)){
+				confString += "## To add new line in text, use the text " + NEW_LINE_CONF + newline;
 			}
 			
 			confString += getConfHashMapAsString(confHashMap);

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
@@ -23,12 +24,9 @@ public class VideoListUiController implements ActionListener {
 	@SuppressWarnings("null")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() instanceof JButton && ((JButton) e.getSource()).getText().equals(ui.getSettings().get(ConfLanguageKeys.BUTTON_TEXT))){
-			new MP4BoxController(ui);
-			
-			if(ui.getAutoclearCheckBox().isSelected()){
-				ui.getModel().removeAllRows();
-			}
+		if((e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonJoin()))){
+			MP4BoxController controller = new MP4BoxController(ui);
+			controller.joinVideos();
 		}else if(e.getSource() instanceof JRadioButton){
 			JRadioButton radioButton = (JRadioButton) e.getSource();
 			if(radioButton.equals(ui.getRadioOutputFolderDefault())){
@@ -44,7 +42,7 @@ public class VideoListUiController implements ActionListener {
 				actionRadioButtonOutputFolderVideoSource();
 			}else if(radioButton.equals(ui.getRadioOutputFileDefault())){
 				//We select the default folder (settings or self determined)
-				String fileDefault = ui.getSettings().get(ConfSettingsKeys.OUTPUT_FILE);
+				String fileDefault = ui.getSettings().get(ConfSettingsKeys.OUTPUT_FILE) + ui.getSettings().get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE);
 				
 				//We select the filename already defined in the output textbox
 				String foldername = splitOutputFilePath(ui.getOutputTextField().getText())[0];
@@ -56,8 +54,30 @@ public class VideoListUiController implements ActionListener {
 			}else if(radioButton.equals(ui.getRadioOutputFileVideoSourceFolder())){
 				actionRadioButtonOutputFileVideoSourceFolder();
 			}
-		}else if(e.getSource() instanceof JButton){
+		}else if(e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonAbout())){
 			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland, and tested on the following version of MP4Box: 'GPAC.Framework.Setup-0.5.1-DEV-rev4452'!");
+		}else if((e.getSource() instanceof JCheckBox && ((JCheckBox) e.getSource()).equals(ui.getCheckBoxSeparateVideos()))){
+			if(ui.getCheckBoxSeparateVideos().isSelected()){
+				/**
+				 * When the separate videos based on folders option is enabled, other options are set as a result.
+				 */
+				
+				//Enable these two options that are required
+				ui.getCheckBoxAutoJoin().setSelected(true);
+				ui.getCheckBoxAutoClear().setSelected(true);
+				
+				//Disable them to make sure they are kept as required
+				ui.getCheckBoxAutoJoin().setEnabled(false);
+				ui.getCheckBoxAutoClear().setEnabled(false);
+			}else if(!ui.getCheckBoxSeparateVideos().isSelected()){
+				//Reset options to default
+				ui.getCheckBoxAutoJoin().setSelected(Boolean.valueOf(ui.getSettings().get(ConfSettingsKeys.CHECKBOX_AUTOJOIN_SELECTED)));
+				ui.getCheckBoxAutoClear().setSelected(Boolean.valueOf(ui.getSettings().get(ConfSettingsKeys.CHECKBOX_AUTOCLEAR_SELECTED)));
+				
+				//Enable them so the user can do whatever
+				ui.getCheckBoxAutoJoin().setEnabled(true);
+				ui.getCheckBoxAutoClear().setEnabled(true);
+			}
 		}
 	}
 

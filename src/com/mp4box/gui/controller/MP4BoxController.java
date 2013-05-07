@@ -24,7 +24,13 @@ public class MP4BoxController {
 		ui = uiInput;
 		data = ui.getModel().getData();
 		settings = ui.getSettings();
-		
+	}
+	
+	/**
+	 * Executes the MP4box join command
+	 * @param uiInput
+	 */
+	public void joinVideos(){
 		String mp4boxPath = getMP4BoxFilePath();
 		if((new File(mp4boxPath).exists())){
 			String input = "";
@@ -33,11 +39,11 @@ public class MP4BoxController {
 			}
 			
 			try {
-				
 				String outputFile = getOutputFile();
 				String chapterFile = getOutputChapterFile();
 				BufferedWriter out = new BufferedWriter(new FileWriter(chapterFile));
 				
+				//Create chapters
 				String duration = "00:00:00.000";
 				for (int i = 0; i < data.length; i++) {
 					if((Boolean) data[i][1]){
@@ -54,6 +60,8 @@ public class MP4BoxController {
 				out.close();
 				
 				String execCommand = settings.get(ConfSettingsKeys.CMD) + " \"\" \"" + mp4boxPath + "\" " + input + " -chap \"" + chapterFile + "\" -new \"" + outputFile + "\"";
+				
+				System.out.println("Here is the output of the command:\n");
 				System.out.println(execCommand);
 				
 				Runtime rt = Runtime.getRuntime();
@@ -66,7 +74,6 @@ public class MP4BoxController {
 				BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 	
 				// read the output from the command
-				System.out.println("Here is the output of the command:\n");
 				while ((s = stdInput.readLine()) != null) {
 					System.out.println(s);
 				}
@@ -84,10 +91,12 @@ public class MP4BoxController {
 				e.printStackTrace();
 			}
 		}else{
-			JOptionPane.showMessageDialog(ui, "MP4Box can't be found...and it's sort of important! \nI was looking for it here: " + mp4boxPath +"\n"
-					                        + "You can download MP4Box/GPAC from here: http://gpac.wp.mines-telecom.fr/ \n"
-					                        + "I advice you to use a fresh build atm (April 2013) so the videos are joined correctly (Nightly DEV build of v0.5.1) \n"
-					                        + "Also, look at the webpage 'http://sourceforge.net/p/javamp4boxgui/' for more info and copy/paste possibilities ;-)");
+			JOptionPane.showMessageDialog(ui, getMP4BoxMissingMessage(mp4boxPath));
+		}
+		
+		//Auto clears the table is that option is selected
+		if(ui.getCheckBoxAutoClear().isSelected()){
+			ui.getModelVideoTable().removeAllRows();
 		}
 	}
 	
@@ -140,34 +149,25 @@ public class MP4BoxController {
 		 * Calculating how many milliseconds we have and how many seconds in the total milliseconds totally
 		 */
 		milliseconds = time1_milliseconds + time2_milliseconds; //Total
-		if(milliseconds>999){
-			int milliseconds_left = milliseconds % 1000; //milliseconds left when the rest are seconds 
-			seconds = (milliseconds - milliseconds_left) / 1000; //seconds we can get out of the milliseconds
-			
-			milliseconds = milliseconds_left; // Setting the milliseconds left to the main variable for it
-		}
+		int milliseconds_left = milliseconds % 1000; //milliseconds left when the rest are seconds 
+		seconds = (milliseconds - milliseconds_left) / 1000; //seconds we can get out of the milliseconds
+		milliseconds = milliseconds_left; // Setting the milliseconds left to the main variable for it
 		
 		/**
 		 * ...and as above, but now for seconds and minutes
 		 */
 		seconds += time1_seconds + time2_seconds; //Total
-		if(seconds>59){
-			int seconds_left = seconds % 60;
-			minutes = (seconds - seconds_left) % 60;
-			
-			seconds = seconds_left;
-		}
+		int seconds_left = seconds % 60;
+		minutes = (seconds - seconds_left) / 60;
+		seconds = seconds_left;
 		
 		/**
 		 * ...and as above, but now for minutes and seconds
 		 */
 		minutes += time1_minutes + time2_minutes; //Total
-		if(minutes>59){
-			int minutes_left = seconds % 60;
-			hours = (minutes - minutes_left) % 60;
-			
-			minutes = minutes_left;
-		}
+		int minutes_left = minutes % 60;
+		hours = (minutes - minutes_left) / 60;
+		minutes = minutes_left;
 		
 		/**
 		 * Here we can just add the rest together. There are no days etc in this time measurement
@@ -179,40 +179,73 @@ public class MP4BoxController {
 	}
 	
 	private String getOutputFile(){
-		return findValidOutputFile(ui.getOutputPath() + ui.getOutputFilename(), settings.get(ConfSettingsKeys.AUTO_VIDEO_NAME), settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE)); 
+		String folderpath = ui.getOutputPath();
+		String fileType = settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE);
+		String filename = ui.getOutputFilename().replace(fileType, "");
+		
+		return findValidOutputFile(folderpath, filename, fileType);
 	}
 	
 	private String getOutputChapterFile(){
-		return findValidOutputFile(ui.getOutputPath() + settings.get(ConfSettingsKeys.CHAPTER_FILENAME), settings.get(ConfSettingsKeys.AUTO_CHAPTER_NAME), settings.get(ConfSettingsKeys.AUTO_CHAPTER_FILETYPE));
+		String folderpath = ui.getOutputPath();
+		String filename = settings.get(ConfSettingsKeys.CHAPTER_FILENAME);
+		String filetype = settings.get(ConfSettingsKeys.AUTO_CHAPTER_FILETYPE);
+		
+		return findValidOutputFile(folderpath, filename, filetype);
 	}
 	
-	private String findValidOutputFile(String outputFile, String name, String filetype){
+	/**
+	 * If the auto join is selected, then don't overwrite, but find a new filename!
+	 * @param folderpath
+	 * @param filename
+	 * @param filetype
+	 * @return
+	 */
+	private String findValidOutputFile(String folderpath, String filename, String filetype){
 		if(ui.getAutoJoinCheckBox().isSelected()){
-			File file = new File(outputFile);
+			File file = new File(folderpath + filename + filetype);
 			if(file.exists()){
 				long i = 1;
 				while(true){
-					File newFile = new File(ui.getOutputPath() + name + i + filetype);
+					File newFile = new File(folderpath + filename + "_" + i + filetype);
 					if(newFile.exists()){
 						i++;
 					}else{
-						outputFile = newFile.toString().replace("%20", " ");
+						try {
+							System.out.println("File exists, new file created: " + newFile.getCanonicalPath().toString());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						file = newFile;
 						break;
 					}
 				}
 			}
+			
+			//Return the new file to use
+			return file.toString().replace("%20", " ");
 		}
 		
-		return outputFile;
+		//Return the same file since we only want to overwrite in auto mode!
+		return folderpath + filename + filetype;
 	}
 	
-	private String getMP4BoxFilePath(){
+	public String getMP4BoxFilePath(){
 		String mp4boxPath = FileSettings.getApplicationPath();
 		if(!settings.get(ConfSettingsKeys.MP4BOX_PATH).isEmpty()){
 			mp4boxPath = settings.get(ConfSettingsKeys.MP4BOX_PATH);
 		}
 		
 		return mp4boxPath + settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE);
+	}
+	
+	public String getMP4BoxMissingMessage(String mp4boxPath){
+		return "MP4Box can't be found...and it's sort of important! \nI was looking for it here: " + mp4boxPath +"\n"
+            + "You can download MP4Box/GPAC from here: http://gpac.wp.mines-telecom.fr/ \n"
+            + "I advice you to use a fresh build atm (April 2013) so the videos are joined correctly (Nightly DEV build of v0.5.1) \n"
+            + "Also, look at the webpage 'http://sourceforge.net/p/javamp4boxgui/' for more info and copy/paste possibilities ;-)";
 	}
 	
 }
