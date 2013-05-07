@@ -22,7 +22,7 @@ public class MP4BoxController {
 	
 	public MP4BoxController(VideoListUi uiInput){
 		ui = uiInput;
-		data = ui.getModel().getData();
+		data = ui.getVideoTableModel().getData();
 		settings = ui.getSettings();
 	}
 	
@@ -96,7 +96,7 @@ public class MP4BoxController {
 		
 		//Auto clears the table is that option is selected
 		if(ui.getCheckBoxAutoClear().isSelected()){
-			ui.getModelVideoTable().removeAllRows();
+			ui.getVideoTableModel().removeAllRows();
 		}
 	}
 	
@@ -179,15 +179,15 @@ public class MP4BoxController {
 	}
 	
 	private String getOutputFile(){
-		String folderpath = ui.getOutputPath();
+		String folderpath = ui.getFolderPathOutput();
 		String fileType = settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE);
-		String filename = ui.getOutputFilename().replace(fileType, "");
+		String filename = ui.getFilenameOutput().replace(fileType, "");
 		
 		return findValidOutputFile(folderpath, filename, fileType);
 	}
 	
 	private String getOutputChapterFile(){
-		String folderpath = ui.getOutputPath();
+		String folderpath = ui.getFolderPathOutput();
 		String filename = settings.get(ConfSettingsKeys.CHAPTER_FILENAME);
 		String filetype = settings.get(ConfSettingsKeys.AUTO_CHAPTER_FILETYPE);
 		
@@ -202,7 +202,7 @@ public class MP4BoxController {
 	 * @return
 	 */
 	private String findValidOutputFile(String folderpath, String filename, String filetype){
-		if(ui.getAutoJoinCheckBox().isSelected()){
+		if(ui.getCheckBoxAutoJoin().isSelected()){
 			File file = new File(folderpath + filename + filetype);
 			if(file.exists()){
 				long i = 1;

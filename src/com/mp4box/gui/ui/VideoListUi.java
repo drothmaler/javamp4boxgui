@@ -47,37 +47,37 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 
 	private static final long serialVersionUID = -8428320171364156148L;
 	
-	DropTarget dt;
-	VideoTableModel model = new VideoTableModel();
+	DropTarget dropTarget;
+	VideoTableModel videoTableModel = new VideoTableModel();
 	GridBagLayout layoutManager = new GridBagLayout();
 	VideoListUiController actionListener = new VideoListUiController(this);
 	FileSettings fileSettings = new FileSettings();
 	
-	JTable videoTable = new JTable();
-	JScrollPane videoPane = new JScrollPane();
+	JTable tableVideo = new JTable();
+	JScrollPane scrollPaneVideo = new JScrollPane();
 	
-	JTabbedPane optionsPane = new JTabbedPane();
-	JPanel outputPanel = new JPanel(new GridBagLayout());
-	JPanel automationPanel = new JPanel(new GridBagLayout());
-	JPanel folderRecursionPanel = new JPanel(new GridBagLayout());
+	JTabbedPane tabbedPaneOptions = new JTabbedPane();
+	JPanel panelOutput = new JPanel(new GridBagLayout());
+	JPanel panelAutomation = new JPanel(new GridBagLayout());
+	JPanel panelFolderRecursion = new JPanel(new GridBagLayout());
 	
-	JTextField outputTextField = new JTextField();
-	JLabel labelOutputFolder = new JLabel();
-	JRadioButton radioOutputFolderDefault = new JRadioButton();
-	JRadioButton radioOutputFolderVideoSource = new JRadioButton();
+	JTextField textFieldOutput = new JTextField();
+	JLabel labeloutputFolder = new JLabel();
+	JRadioButton radioButtonOutputFolderDefault = new JRadioButton();
+	JRadioButton radioButtonOutputFolderVideoSource = new JRadioButton();
 	JLabel labelOutputFile = new JLabel();
-	JRadioButton radioOutputFileDefault = new JRadioButton();
-	JRadioButton radioOutputFileVideoSource = new JRadioButton();
-	JRadioButton radioOutputFileVideoSourceFolder = new JRadioButton();
+	JRadioButton radioButtonOutputFileDefault = new JRadioButton();
+	JRadioButton radioButtonOutputFileVideoSource = new JRadioButton();
+	JRadioButton radioButtonOutputFileVideoSourceFolder = new JRadioButton();
 	
-	JCheckBox autoclearCheckBox = new JCheckBox();
-	JCheckBox autoJoinCheckBox = new JCheckBox();
+	JCheckBox checkBoxAutoclear = new JCheckBox();
+	JCheckBox checkBoxAutoJoin = new JCheckBox();
 	
 	JLabel labelSeparateVideos = new JLabel();
 	JCheckBox checkBoxSeparateVideos = new JCheckBox();
 	
-	JButton joinButton = new JButton();
-	JButton aboutButton = new JButton();
+	JButton buttonJoin = new JButton();
+	JButton buttonAbout = new JButton();
 	
 	HashMap<String, String> settings = null;
 	
@@ -86,49 +86,49 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		
 		initComponents();
 		addComponents();
-		addActionListener();
+		addActionListeners();
 		init();
 	}
 	
 	private void initComponents(){
-		videoTable = new JTable(model);
-		videoTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		videoTable.setFillsViewportHeight(true);
+		tableVideo = new JTable(videoTableModel);
+		tableVideo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableVideo.setFillsViewportHeight(true);
 		
 		try{
 			Field field = Class.forName("java.awt.Color").getField(settings.get(ConfSettingsKeys.LIST_BACKGROUND_COLOUR));
 		    Color backgroundColor = (Color)field.get(null);
-			videoTable.setBackground(backgroundColor);
+			tableVideo.setBackground(backgroundColor);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 			
-		videoPane.add(videoTable);
-		videoPane.setViewportView(videoTable);
+		scrollPaneVideo.add(tableVideo);
+		scrollPaneVideo.setViewportView(tableVideo);
 		
-		autoclearCheckBox.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.CHECKBOX_AUTOCLEAR_SELECTED)));
-		autoJoinCheckBox.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.CHECKBOX_AUTOJOIN_SELECTED)));
-		autoJoinCheckBox.setToolTipText("Note! The UI doesn't update the table when auto joining on drop unless autoclear is disabled! Also doesn't overwrite files, will try new names!");
+		checkBoxAutoclear.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.CHECKBOX_AUTOCLEAR_SELECTED)));
+		checkBoxAutoJoin.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.CHECKBOX_AUTOJOIN_SELECTED)));
+		checkBoxAutoJoin.setToolTipText("Note! The UI doesn't update the table when auto joining on drop unless autoclear is disabled! Also doesn't overwrite files, will try new names!");
 		
-		outputTextField.setText(fileSettings.getCurrentOutputPath() + settings.get(ConfSettingsKeys.OUTPUT_FILE) + settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE));
-		labelOutputFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_LABEL));
-		radioOutputFolderDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_DEFAULT));
-		radioOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_VIDEOSOURCE));
+		textFieldOutput.setText(fileSettings.getCurrentOutputPath() + settings.get(ConfSettingsKeys.OUTPUT_FILE) + settings.get(ConfSettingsKeys.AUTO_VIDEO_FILETYPE));
+		labeloutputFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_LABEL));
+		radioButtonOutputFolderDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_DEFAULT));
+		radioButtonOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FOLDER_RADIO_VIDEOSOURCE));
 		labelOutputFile.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_LABEL));
-		radioOutputFileDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_DEFAULT));
-		radioOutputFileVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_VIDEOSOURCE));
-		radioOutputFileVideoSourceFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_VIDEOSOURCEFOLDER));
+		radioButtonOutputFileDefault.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_DEFAULT));
+		radioButtonOutputFileVideoSource.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_VIDEOSOURCE));
+		radioButtonOutputFileVideoSourceFolder.setText(settings.get(ConfLanguageKeys.OUTPUT_FILE_RADIO_VIDEOSOURCEFOLDER));
 		
-		autoclearCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR));
-		autoJoinCheckBox.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN));
+		checkBoxAutoclear.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR));
+		checkBoxAutoJoin.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN));
 		
 		labelSeparateVideos.setText(FileSettings.HTML_TAG + settings.get(ConfLanguageKeys.LABEL_SEPARATE_VIDEOS));
 		checkBoxSeparateVideos.setText(settings.get(ConfLanguageKeys.CHECKBOX_SEPARATE_VIDEOS_TEXT));
 		
-		joinButton.setText(settings.get(ConfLanguageKeys.BUTTON_TEXT));
-		aboutButton.setText("About");
+		buttonJoin.setText(settings.get(ConfLanguageKeys.BUTTON_TEXT));
+		buttonAbout.setText("About");
 		
-		dt = new DropTarget(videoTable, this);
+		dropTarget = new DropTarget(tableVideo, this);
 	}
 	
 	private GridBagConstraints getComponentConstraints(int fill, double weightx, double weighty, int gridx, int gridy, int gridwidth){
@@ -146,65 +146,65 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	private void addComponents(){
 		this.getContentPane().setLayout(new GridBagLayout());
-		getContentPane().add(videoPane, getComponentConstraints(GridBagConstraints.BOTH, 2, 3, 0, 0, 2));
+		getContentPane().add(scrollPaneVideo, getComponentConstraints(GridBagConstraints.BOTH, 2, 3, 0, 0, 2));
 		
 		//Output settings
 		ButtonGroup groupOutputFolder = new ButtonGroup();
-		groupOutputFolder.add(radioOutputFolderDefault);
-		groupOutputFolder.add(radioOutputFolderVideoSource);
-		setDefaultRadioOutputFolder();
+		groupOutputFolder.add(radioButtonOutputFolderDefault);
+		groupOutputFolder.add(radioButtonOutputFolderVideoSource);
+		setRadioButtonDefaultOutputFolder();
 		
 		ButtonGroup groupOutputFile = new ButtonGroup();
-		groupOutputFile.add(radioOutputFileDefault);
-		groupOutputFile.add(radioOutputFileVideoSource);
-		groupOutputFile.add(radioOutputFileVideoSourceFolder);
-		setDefaultRadioOutputFile();
+		groupOutputFile.add(radioButtonOutputFileDefault);
+		groupOutputFile.add(radioButtonOutputFileVideoSource);
+		groupOutputFile.add(radioButtonOutputFileVideoSourceFolder);
+		setRadioButtonDefaultOutputFile();
 		
-		outputPanel.add(outputTextField, 					getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 4));
-		outputPanel.add(labelOutputFolder,					getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
-		outputPanel.add(radioOutputFolderDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
-		outputPanel.add(radioOutputFolderVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 1, 1));
-		outputPanel.add(labelOutputFile,					getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
-		outputPanel.add(radioOutputFileDefault,				getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 2, 1));
-		outputPanel.add(radioOutputFileVideoSource,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 2, 2, 1));
-		outputPanel.add(radioOutputFileVideoSourceFolder,	getComponentConstraints(GridBagConstraints.BOTH, 9, 1, 3, 2, 1));
-		outputPanel.add(new JPanel(), 						getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 3)); //Filler panel
+		panelOutput.add(textFieldOutput, 					getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 4));
+		panelOutput.add(labeloutputFolder,					getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
+		panelOutput.add(radioButtonOutputFolderDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
+		panelOutput.add(radioButtonOutputFolderVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 1, 1));
+		panelOutput.add(labelOutputFile,					getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
+		panelOutput.add(radioButtonOutputFileDefault,				getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 2, 1));
+		panelOutput.add(radioButtonOutputFileVideoSource,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 2, 2, 1));
+		panelOutput.add(radioButtonOutputFileVideoSourceFolder,	getComponentConstraints(GridBagConstraints.BOTH, 9, 1, 3, 2, 1));
+		panelOutput.add(new JPanel(), 						getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 3)); //Filler panel
 		
 		//Automation settings
-		automationPanel.add(autoclearCheckBox, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
-		automationPanel.add(autoJoinCheckBox, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
-		automationPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1)); //Filler panel
+		panelAutomation.add(checkBoxAutoclear, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
+		panelAutomation.add(checkBoxAutoJoin, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
+		panelAutomation.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1)); //Filler panel
 		
 		//Folder recursion and video joining settings
-		folderRecursionPanel.add(labelSeparateVideos, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
-		folderRecursionPanel.add(checkBoxSeparateVideos, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
-		folderRecursionPanel.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1));
+		panelFolderRecursion.add(labelSeparateVideos, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
+		panelFolderRecursion.add(checkBoxSeparateVideos, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
+		panelFolderRecursion.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1));
 		
 		//Add Tabbed pane and the tabs
-		getContentPane().add(optionsPane, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 2));
-		optionsPane.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), outputPanel);
-		optionsPane.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), automationPanel);
-		optionsPane.add(settings.get(ConfLanguageKeys.TAB_NAME_FOLDER_RECURSION), folderRecursionPanel);
+		getContentPane().add(tabbedPaneOptions, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 2));
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), panelOutput);
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), panelAutomation);
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_FOLDER_RECURSION), panelFolderRecursion);
 		
-		getContentPane().add(joinButton, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 2, 1));
-		getContentPane().add(aboutButton, getComponentConstraints(GridBagConstraints.CENTER, 0, 0, 1, 2, 1));
+		getContentPane().add(buttonJoin, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 2, 1));
+		getContentPane().add(buttonAbout, getComponentConstraints(GridBagConstraints.CENTER, 0, 0, 1, 2, 1));
 	}
 	
-	private void addActionListener(){
-		joinButton.addActionListener(actionListener);
-		aboutButton.addActionListener(actionListener);
+	private void addActionListeners(){
+		buttonJoin.addActionListener(actionListener);
+		buttonAbout.addActionListener(actionListener);
 		
-		radioOutputFolderDefault.addActionListener(actionListener);
-		radioOutputFolderVideoSource.addActionListener(actionListener);
-		radioOutputFileDefault.addActionListener(actionListener);
-		radioOutputFileVideoSource.addActionListener(actionListener);
-		radioOutputFileVideoSourceFolder.addActionListener(actionListener);
+		radioButtonOutputFolderDefault.addActionListener(actionListener);
+		radioButtonOutputFolderVideoSource.addActionListener(actionListener);
+		radioButtonOutputFileDefault.addActionListener(actionListener);
+		radioButtonOutputFileVideoSource.addActionListener(actionListener);
+		radioButtonOutputFileVideoSourceFolder.addActionListener(actionListener);
 		
 		checkBoxSeparateVideos.addActionListener(actionListener);
 	}
 	
 	private void init(){
-		this.setTitle("Java MP4Box Gui v1.4");
+		this.setTitle("Java MP4Box Gui v1.5-SNAPSHOT");
 		this.setSize(640,480);
 		this.setLocationRelativeTo(null); //Centers the window on the screen
 		this.pack();
@@ -212,47 +212,29 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		this.setVisible(true);
 	}
 	
-	private void setDefaultRadioOutputFolder(){
+	private void setRadioButtonDefaultOutputFolder(){
 		String selection = settings.get(ConfSettingsKeys.OUTPUT_FOLDER_DEFAULT);
 		int defaultSelection = Integer.valueOf(selection);
 		
 		if(defaultSelection==1){
-			radioOutputFolderDefault.setSelected(true);
+			radioButtonOutputFolderDefault.setSelected(true);
 		}else if(defaultSelection==2){
-			radioOutputFolderVideoSource.setSelected(true);
+			radioButtonOutputFolderVideoSource.setSelected(true);
 		}
 	}
 	
-	private void setDefaultRadioOutputFile(){
+	private void setRadioButtonDefaultOutputFile(){
 		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.OUTPUT_FILE_DEFAULT));
 		
 		if(defaultSelection==1){
-			radioOutputFileDefault.setSelected(true);
+			radioButtonOutputFileDefault.setSelected(true);
 		}else if(defaultSelection==2){
-			radioOutputFileVideoSource.setSelected(true);
+			radioButtonOutputFileVideoSource.setSelected(true);
 		}else if(defaultSelection==3){
-			radioOutputFileVideoSourceFolder.setSelected(true);
+			radioButtonOutputFileVideoSourceFolder.setSelected(true);
 		}
 	}
-
-	@Override
-	public void dragEnter(DropTargetDragEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dragExit(DropTargetEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dragOver(DropTargetDragEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	/**
 	 * Source: Drag&Drop: http://www.java-tips.org/java-se-tips/javax.swing/how-to-implement-drag-drop-functionality-in-your-applic.html
@@ -275,7 +257,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 				// Check for file lists specifically
 				if (flavors[i].isFlavorJavaFileListType()) {
 					boolean wasDataEmpty = false;
-					if(model.getData()==null || model.getData().length==0){
+					if(videoTableModel.getData()==null || videoTableModel.getData().length==0){
 						wasDataEmpty = true;
 					}
 					
@@ -291,15 +273,15 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 
 					// If we made it this far, everything worked.
 					dtde.dropComplete(true);
-					model.fireTableStructureChanged();
-					videoTable.setModel(model);
+					videoTableModel.fireTableStructureChanged();
+					tableVideo.setModel(videoTableModel);
 					
 					if(wasDataEmpty){
 						checkAndUpdateFolderFileNames();
 					}
 					
 					//Auto joins if that option is selected, but not if the separate videos option is selected (list should be empty by now then.
-					if(autoJoinCheckBox.isSelected() && !checkBoxSeparateVideos.isSelected()){
+					if(checkBoxAutoJoin.isSelected() && !checkBoxSeparateVideos.isSelected()){
 						new MP4BoxController(this);
 					}
 					
@@ -337,16 +319,16 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		/**
 		 * Checks if the data was empty and the radio button for video source is selected.
 		 */
-		if(radioOutputFolderVideoSource.isSelected()){
+		if(radioButtonOutputFolderVideoSource.isSelected()){
 			actionListener.actionRadioButtonOutputFolderVideoSource();
 		}
 		
 		/**
 		 * Checks if the data was empty and the radio button for video source is selected.
 		 */
-		if(radioOutputFileVideoSource.isSelected()){
+		if(radioButtonOutputFileVideoSource.isSelected()){
 			actionListener.actionRadioButtonOutputFileVideoSource();
-		}else if(radioOutputFileVideoSourceFolder.isSelected()){
+		}else if(radioButtonOutputFileVideoSourceFolder.isSelected()){
 			actionListener.actionRadioButtonOutputFileVideoSourceFolder();
 		}
 	}
@@ -356,7 +338,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	 * Will call the MP4BoxController manually of the separate videos option is selected.
 	 * @param filePath
 	 * @param chapterNumber
-	 * @return
+	 * @return Chapter Number
 	 */
 	public int addFilePathToModel(String filePath, int chapterNumber){
 		File file = new File(filePath);
@@ -377,7 +359,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			}
 			
 			//Run join command if separate videos is selected and there is data
-			if(checkBoxSeparateVideos.isSelected() && model.getData().length>0){
+			if(checkBoxSeparateVideos.isSelected() && videoTableModel.getData().length>0){
 				//Update folder path and file name
 				checkAndUpdateFolderFileNames();
 				
@@ -387,7 +369,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			}
 		}else{
 			chapterNumber = chapterNumber + 1;
-			model.addRow(filePath, 
+			videoTableModel.addRow(filePath, 
 				Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_ENABLED)), 
 				settings.get(ConfLanguageKeys.CHAPTER_NAME) + chapterNumber);
 		}
@@ -395,61 +377,83 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		return chapterNumber;
 	}
 	
+	/**
+	 * This returns the output path in the JTextField which hopefully is correct and so on!
+	 * The filename is removed from the string!
+	 * @return
+	 */
+	public String getFolderPathOutput(){
+		return textFieldOutput.getText().substring(0, textFieldOutput.getText().lastIndexOf(File.separator) + 1);
+	}
+	
+	/**
+	 * Returns the filename in the JTextField!
+	 * @return
+	 */
+	public String getFilenameOutput(){
+		return textFieldOutput.getText().substring(textFieldOutput.getText().lastIndexOf(File.separator), textFieldOutput.getText().length());
+	}
+	
+	@Override
+	public void dragEnter(DropTargetDragEvent arg0) {
+		// Not needed atm
+		
+	}
+
+	@Override
+	public void dragExit(DropTargetEvent arg0) {
+		// Not needed atm
+		
+	}
+
+	@Override
+	public void dragOver(DropTargetDragEvent arg0) {
+		// Not needed atm
+	}
+	
 	@Override
 	public void dropActionChanged(DropTargetDragEvent arg0) {
-		// TODO Auto-generated method stub
+		// Not needed atm
 	}
 	
 	public HashMap<String, String> getSettings() {
 		return settings;
 	}
 	
-	public VideoTableModel getModel() {
-		return model;
+	public VideoTableModel getVideoTableModel() {
+		return videoTableModel;
+	}
+		
+	public JTextField getTextFieldOutput() {
+		return textFieldOutput;
 	}
 	
-	public JCheckBox getAutoclearCheckBox() {
-		return autoclearCheckBox;
+	public JRadioButton getRadioButtonOutputFolderDefault() {
+		return radioButtonOutputFolderDefault;
 	}
 	
-	public JCheckBox getAutoJoinCheckBox() {
-		return autoJoinCheckBox;
+	public JRadioButton getRadioButtonOutputFolderVideoSource() {
+		return radioButtonOutputFolderVideoSource;
 	}
 	
-	public JButton getJoinButton() {
-		return joinButton;
+	public JRadioButton getRadioButtonOutputFileDefault() {
+		return radioButtonOutputFileDefault;
 	}
 	
-	public JTextField getOutputTextField() {
-		return outputTextField;
+	public JRadioButton getRadioButtonOutputFileVideoSource() {
+		return radioButtonOutputFileVideoSource;
 	}
 	
-	public JRadioButton getRadioOutputFolderDefault() {
-		return radioOutputFolderDefault;
-	}
-	
-	public JRadioButton getRadioOutputFolderVideoSource() {
-		return radioOutputFolderVideoSource;
-	}
-	
-	public JRadioButton getRadioOutputFileDefault() {
-		return radioOutputFileDefault;
-	}
-	
-	public JRadioButton getRadioOutputFileVideoSource() {
-		return radioOutputFileVideoSource;
-	}
-	
-	public JRadioButton getRadioOutputFileVideoSourceFolder() {
-		return radioOutputFileVideoSourceFolder;
+	public JRadioButton getRadioButtonOutputFileVideoSourceFolder() {
+		return radioButtonOutputFileVideoSourceFolder;
 	}
 	
 	public JButton getButtonJoin(){
-		return joinButton;
+		return buttonJoin;
 	}
 	
 	public JButton getButtonAbout(){
-		return aboutButton;
+		return buttonAbout;
 	}
 	
 	public JCheckBox getCheckBoxSeparateVideos(){
@@ -457,15 +461,11 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 
 	public JCheckBox getCheckBoxAutoJoin(){
-		return autoJoinCheckBox;
+		return checkBoxAutoJoin;
 	}
 	
 	public JCheckBox getCheckBoxAutoClear(){
-		return autoclearCheckBox;
-	}
-	
-	public VideoTableModel getModelVideoTable(){
-		return model;
+		return checkBoxAutoclear;
 	}
 	
 	public FileSettings getFileSettings() {
@@ -474,23 +474,6 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	public ActionListener getActionListener(){
 		return actionListener;
-	}
-	
-	/**
-	 * This returns the output path in the JTextField which hopefully is correct and so on!
-	 * The filename is removed from the string!
-	 * @return
-	 */
-	public String getOutputPath(){
-		return outputTextField.getText().substring(0, outputTextField.getText().lastIndexOf(File.separator) + 1);
-	}
-	
-	/**
-	 * Returns the filename in the JTextField!
-	 * @return
-	 */
-	public String getOutputFilename(){
-		return outputTextField.getText().substring(outputTextField.getText().lastIndexOf(File.separator), outputTextField.getText().length());
 	}
 	
 }
