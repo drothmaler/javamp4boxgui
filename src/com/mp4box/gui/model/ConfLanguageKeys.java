@@ -4,6 +4,7 @@ public class ConfLanguageKeys {
 	public static String TAB_NAME_OUTPUT = "TabNameOutput";
 	public static String TAB_NAME_AUTOMATION = "TabNameAutomation";
 	public static String TAB_NAME_FOLDER_RECURSION = "TabNameFolderRecursion";
+	public static String TAB_NAME_INFORMATION = "TabNameInformation";
 	
 	public static String CHECKBOX_AUTOCLEAR_TEXT = "CheckBoxAutoClearText";
 	public static String CHECKBOX_AUTOJOIN_TEXT = "CheckBoxAutoJoinText";
@@ -23,4 +24,5 @@ public class ConfLanguageKeys {
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE = "RadioButtonOutputFileTextVideSource";
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER = "RadioButtonOutputFileTextVideSourceFolder";
 	
+	public static String EDITOR_PANE_INFORMATION = "EditorPaneInformation";
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -60,6 +61,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JPanel panelOutput = new JPanel(new GridBagLayout());
 	JPanel panelAutomation = new JPanel(new GridBagLayout());
 	JPanel panelFolderRecursion = new JPanel(new GridBagLayout());
+	JPanel panelInformation = new JPanel(new GridBagLayout());
 	
 	JTextField textFieldOutput = new JTextField();
 	JLabel labeloutputFolder = new JLabel();
@@ -75,6 +77,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	JLabel labelSeparateVideos = new JLabel();
 	JCheckBox checkBoxSeparateVideos = new JCheckBox();
+	
+	JEditorPane editorPaneInformation = new JEditorPane();
 	
 	JButton buttonJoin = new JButton();
 	JButton buttonAbout = new JButton();
@@ -125,6 +129,12 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		labelSeparateVideos.setText(FileSettings.HTML_TAG + settings.get(ConfLanguageKeys.LABEL_SEPARATE_VIDEOS));
 		checkBoxSeparateVideos.setText(settings.get(ConfLanguageKeys.CHECKBOX_SEPARATE_VIDEOS_TEXT));
 		
+		editorPaneInformation.setContentType("text/html");
+		editorPaneInformation.setEditable(false);
+		editorPaneInformation.setBackground(null);
+		editorPaneInformation.setBorder(null);
+		editorPaneInformation.setText(settings.get(ConfLanguageKeys.EDITOR_PANE_INFORMATION));
+		
 		buttonJoin.setText(settings.get(ConfLanguageKeys.BUTTON_JOIN_VIDEOS_TEXT));
 		buttonAbout.setText("About");
 		
@@ -160,31 +170,35 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		groupOutputFile.add(radioButtonOutputFileVideoSourceFolder);
 		setRadioButtonDefaultOutputFile();
 		
-		panelOutput.add(textFieldOutput, 					getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 4));
-		panelOutput.add(labeloutputFolder,					getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
+		panelOutput.add(textFieldOutput, 						getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 4));
+		panelOutput.add(labeloutputFolder,						getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
 		panelOutput.add(radioButtonOutputFolderDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
 		panelOutput.add(radioButtonOutputFolderVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 1, 1));
-		panelOutput.add(labelOutputFile,					getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
-		panelOutput.add(radioButtonOutputFileDefault,				getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 2, 1));
-		panelOutput.add(radioButtonOutputFileVideoSource,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 2, 2, 1));
+		panelOutput.add(labelOutputFile,						getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
+		panelOutput.add(radioButtonOutputFileDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 2, 1));
+		panelOutput.add(radioButtonOutputFileVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 2, 2, 1));
 		panelOutput.add(radioButtonOutputFileVideoSourceFolder,	getComponentConstraints(GridBagConstraints.BOTH, 9, 1, 3, 2, 1));
-		panelOutput.add(new JPanel(), 						getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 3)); //Filler panel
+		panelOutput.add(new JPanel(), 							getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 3)); //Filler panel
 		
 		//Automation settings
-		panelAutomation.add(checkBoxAutoclear, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
-		panelAutomation.add(checkBoxAutoJoin, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
-		panelAutomation.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1)); //Filler panel
+		panelAutomation.add(checkBoxAutoclear, 	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
+		panelAutomation.add(checkBoxAutoJoin, 	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
+		panelAutomation.add(new JPanel(), 		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1)); //Filler panel
 		
 		//Folder recursion and video joining settings
-		panelFolderRecursion.add(labelSeparateVideos, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
-		panelFolderRecursion.add(checkBoxSeparateVideos, getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
-		panelFolderRecursion.add(new JPanel(), getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1));
+		panelFolderRecursion.add(labelSeparateVideos, 		getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
+		panelFolderRecursion.add(checkBoxSeparateVideos, 	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
+		panelFolderRecursion.add(new JPanel(), 				getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1));
+		
+		panelInformation.add(editorPaneInformation,  getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
+		panelInformation.add(new JPanel(),			 getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 1, 1));
 		
 		//Add Tabbed pane and the tabs
 		getContentPane().add(tabbedPaneOptions, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 2));
-		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), panelOutput);
-		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), panelAutomation);
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), 			panelOutput);
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), 		panelAutomation);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_FOLDER_RECURSION), panelFolderRecursion);
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION),		panelInformation);
 		
 		getContentPane().add(buttonJoin, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 2, 1));
 		getContentPane().add(buttonAbout, getComponentConstraints(GridBagConstraints.CENTER, 0, 0, 1, 2, 1));
