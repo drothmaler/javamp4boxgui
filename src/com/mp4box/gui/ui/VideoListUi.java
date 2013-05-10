@@ -64,9 +64,13 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JPanel panelInformation = new JPanel(new GridBagLayout());
 	
 	JTextField textFieldOutput = new JTextField();
+	
+	JPanel panelOutputFolder = new JPanel(new GridBagLayout());
 	JLabel labeloutputFolder = new JLabel();
 	JRadioButton radioButtonOutputFolderDefault = new JRadioButton();
 	JRadioButton radioButtonOutputFolderVideoSource = new JRadioButton();
+	
+	JPanel panelOutputFile = new JPanel(new GridBagLayout());
 	JLabel labelOutputFile = new JLabel();
 	JRadioButton radioButtonOutputFileDefault = new JRadioButton();
 	JRadioButton radioButtonOutputFileVideoSource = new JRadioButton();
@@ -171,15 +175,20 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		groupOutputFile.add(radioButtonOutputFileVideoSourceFolder);
 		setRadioButtonDefaultOutputFile();
 		
-		panelOutput.add(textFieldOutput, 						getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 4));
-		panelOutput.add(labeloutputFolder,						getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
-		panelOutput.add(radioButtonOutputFolderDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
-		panelOutput.add(radioButtonOutputFolderVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 1, 1));
-		panelOutput.add(labelOutputFile,						getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
-		panelOutput.add(radioButtonOutputFileDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 2, 1));
-		panelOutput.add(radioButtonOutputFileVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 2, 2, 1));
-		panelOutput.add(radioButtonOutputFileVideoSourceFolder,	getComponentConstraints(GridBagConstraints.BOTH, 9, 1, 3, 2, 1));
-		panelOutput.add(new JPanel(), 							getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 3)); //Filler panel
+		//Output panel
+		panelOutput.add(textFieldOutput,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 2));
+		panelOutput.add(labeloutputFolder,	getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
+		panelOutput.add(panelOutputFolder,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 1, 1));
+		panelOutput.add(labelOutputFile,	getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
+		panelOutput.add(panelOutputFile,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 2, 1));
+		panelOutput.add(new JPanel(),		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 2)); //Filler panel to push components to the top
+		
+		panelOutputFolder.add(radioButtonOutputFolderDefault,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 0, 1));
+		panelOutputFolder.add(radioButtonOutputFolderVideoSource,	getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 1, 0, 1));
+		
+		panelOutputFile.add(radioButtonOutputFileDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 0, 1));
+		panelOutputFile.add(radioButtonOutputFileVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 0, 1));
+		panelOutputFile.add(radioButtonOutputFileVideoSourceFolder,	getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 0, 1));
 		
 		//Automation settings
 		panelAutomation.add(checkBoxAutoclear, 	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
