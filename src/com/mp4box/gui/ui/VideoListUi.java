@@ -80,6 +80,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	JEditorPane editorPaneInformation = new JEditorPane();
 	
+	JPanel panelButton = new JPanel(new GridBagLayout());
 	JButton buttonJoin = new JButton();
 	JButton buttonAbout = new JButton();
 	
@@ -156,7 +157,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	private void addComponents(){
 		this.getContentPane().setLayout(new GridBagLayout());
-		getContentPane().add(scrollPaneVideo, getComponentConstraints(GridBagConstraints.BOTH, 2, 3, 0, 0, 2));
+		getContentPane().add(scrollPaneVideo, getComponentConstraints(GridBagConstraints.BOTH, 2, 3, 0, 0, 1));
 		
 		//Output settings
 		ButtonGroup groupOutputFolder = new ButtonGroup();
@@ -194,14 +195,15 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		panelInformation.add(new JPanel(),			 getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 1, 1));
 		
 		//Add Tabbed pane and the tabs
-		getContentPane().add(tabbedPaneOptions, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 2));
+		getContentPane().add(tabbedPaneOptions, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), 			panelOutput);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), 		panelAutomation);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_FOLDER_RECURSION), panelFolderRecursion);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION),		panelInformation);
 		
-		getContentPane().add(buttonJoin, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 2, 1));
-		getContentPane().add(buttonAbout, getComponentConstraints(GridBagConstraints.CENTER, 0, 0, 1, 2, 1));
+		panelButton.add(buttonJoin, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 0, 1));
+		panelButton.add(buttonAbout, getComponentConstraints(GridBagConstraints.CENTER, 0, 0, 1, 0, 1));
+		getContentPane().add(panelButton, getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1));
 	}
 	
 	private void addActionListeners(){
