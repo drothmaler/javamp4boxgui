@@ -9,7 +9,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
-import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.model.ConfSettingsKeys;
 import com.mp4box.gui.ui.VideoListUi;
 

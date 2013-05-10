@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -16,6 +18,8 @@ import com.mp4box.gui.model.ConfSettingsKeys;
 import com.mp4box.gui.ui.VideoListUi;
 
 public class MP4BoxController {
+	
+	private static Logger log = Logger.getLogger("Log");
 	
 	private Object[][] data;
 	private HashMap<String, String> settings;
@@ -55,15 +59,15 @@ public class MP4BoxController {
 					    out.newLine();
 					}
 				    
-				    duration = addTime(duration, getVideoDuration(String.valueOf(data[i][0])));
+					duration = addTime(duration, getVideoDuration(String.valueOf(data[i][0])));
 				}
 				out.flush();
 				out.close();
 				
 				String execCommand = settings.get(ConfSettingsKeys.CMD) + " \"\" \"" + mp4boxPath + "\" " + input + " -chap \"" + chapterFile + "\" -new \"" + outputFile + "\"";
 				
-				System.out.println("Here is the output of the command:\n");
-				System.out.println(execCommand);
+				log.log(Level.INFO, "Here is the command and output of the command");
+				log.log(Level.INFO, execCommand);
 				
 				Runtime rt = Runtime.getRuntime();
 				Process proc = rt.exec(execCommand);
@@ -76,20 +80,22 @@ public class MP4BoxController {
 	
 				// read the output from the command
 				while ((s = stdInput.readLine()) != null) {
-					System.out.println(s);
+					log.log(Level.INFO, s);
 				}
 				
 				while ((s = stdError.readLine()) != null) {
-					System.out.println(s);
+					log.log(Level.WARNING, s);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(ui, "An exception (IO) happened, is the total length of the folder and filename very long? \nYou might wanna try a shorter folder path and/or filename! \n" + e.getMessage());
-				e.printStackTrace();
+				String message = "An exception (IO) happened, is the total length of the folder and filename very long? \nYou might wanna try a shorter folder path and/or filename!";
+				JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
+				log.log(Level.SEVERE, message, e);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(ui, "An exception happened, the application was unable to parse the command! \nHave you messed up the command in the properties file or maybe have strange letters in the folder/filename its unable to handle? \n" + e.getMessage());
-				e.printStackTrace();
+				String message = "An exception happened, the application was unable to parse the command! \nHave you messed up the command in the properties file or maybe have strange letters in the folder/filename its unable to handle?";
+				JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
+				log.log(Level.SEVERE, message, e);
+			}catch(Exception e){
+				log.log(Level.SEVERE, "If the error is a NullPointer, then it might be related to a filetype thats not supported!", e);
 			}
 		}else{
 			JOptionPane.showMessageDialog(ui, getMP4BoxMissingMessage(mp4boxPath));
@@ -213,10 +219,9 @@ public class MP4BoxController {
 						i++;
 					}else{
 						try {
-							System.out.println("File exists, new file created: " + newFile.getCanonicalPath().toString());
+							log.log(Level.INFO, "File exists, new file created: " + newFile.getCanonicalPath().toString());
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.log(Level.WARNING, "Exception with the new output file!", e);
 						}
 						
 						file = newFile;

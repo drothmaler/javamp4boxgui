@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.model.ConfLanguageValues;
@@ -17,6 +19,8 @@ import com.mp4box.gui.model.ConfSettingsKeys;
 import com.mp4box.gui.model.ConfSettingsValues;
 
 public class FileSettings {
+	
+	private static Logger log = Logger.getLogger("Log");
 	
 	public static String newline = System.getProperty("line.separator");
 	public static String CONFIG_ASSIGN_SYMBOLE = "=";
@@ -56,30 +60,27 @@ public class FileSettings {
 	 * @return
 	 */
 	private File loadFile(String fileName, File confFile, HashMap<String, String> confHashMap, Object keyObject, Object valueObject){
+		String file = "";
 		try {
-			confFile = new File(confFile.getCanonicalPath() + File.separator + fileName);
+			file = confFile.getCanonicalPath() + File.separator + fileName;
+			confFile = new File(file);
 			if(!confFile.exists()){
 				//Tries to create the missing conf file
 				try {
 					setupNewConfFile(confFile, confHashMap, keyObject, valueObject);
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				} catch (IOException e) {
+					log.log(Level.SEVERE, "Tried to create missing conf file " + confFile.getCanonicalPath(), e);
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			
-			//Tries to create the missing conf file
-			try {
-				setupNewConfFile(confFile, confHashMap, keyObject, valueObject);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			log.log(Level.SEVERE, "Unable to create missing conf file!", e);
 		}
 		
 		//Only reads in the properties file if it exists
 		if(confFile.exists()){
 			readConfiguration(confFile, confHashMap);
+		}else{
+			log.log(Level.SEVERE, "The conf file " + file + "is unreadable, and should have been created by this point!");
 		}
 		
 		return confFile;
@@ -125,11 +126,9 @@ public class FileSettings {
 					keyValueHashMap.put(field.getName(), (String) valueObject);
 				}
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.log(Level.SEVERE, e.getMessage(), e);
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 		
@@ -176,7 +175,7 @@ public class FileSettings {
 			}
 			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 	
@@ -201,10 +200,10 @@ public class FileSettings {
 			
 			return true;
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.log(Level.SEVERE, e.getMessage(), e);
 			return false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.log(Level.SEVERE, e.getMessage(), e);
 			return false;
 		}
 		

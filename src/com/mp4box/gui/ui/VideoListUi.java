@@ -17,6 +17,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -47,6 +52,8 @@ import com.mp4box.gui.model.ConfSettingsKeys;
 public class VideoListUi extends JFrame implements DropTargetListener {
 
 	private static final long serialVersionUID = -8428320171364156148L;
+	
+	private static Logger log = Logger.getLogger("Log");
 	
 	DropTarget dropTarget;
 	VideoTableModel videoTableModel = new VideoTableModel();
@@ -97,6 +104,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		addComponents();
 		addActionListeners();
 		init();
+		saveLogFile();
 	}
 	
 	private void initComponents(){
@@ -109,7 +117,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		    Color backgroundColor = (Color)field.get(null);
 			tableVideo.setBackground(backgroundColor);
 		}catch(Exception e){
-			e.printStackTrace();
+			log.log(Level.INFO, e.getMessage(), e.getStackTrace());
 		}
 			
 		scrollPaneVideo.add(tableVideo);
@@ -229,12 +237,24 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	private void init(){
-		this.setTitle("Java MP4Box Gui v1.5");
+		this.setTitle("Java MP4Box Gui v1.6-SNAPSHOT");
 		this.setSize(640,480);
 		this.setLocationRelativeTo(null); //Centers the window on the screen
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+	}
+	
+	private void saveLogFile(){
+		try {
+			Handler handler = new FileHandler("application.log", 100000000, 10);
+			handler.setFormatter(new SimpleFormatter());
+			Logger.getLogger("Log").addHandler(handler);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void setRadioButtonDefaultOutputFolder(){
@@ -332,7 +352,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			JOptionPane.showMessageDialog(this, "Are you sure you dropped a file list?");
 			dtde.rejectDrop();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.log(Level.SEVERE, "File drop failed", e);
 			dtde.rejectDrop();
 		}
 	}
@@ -379,7 +399,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 					chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "\nStack trace: " + e.getMessage());
-					e.printStackTrace();
+					log.log(Level.SEVERE, "Unable to properly process a file in " + filePath, e);
 				}
 			}
 			
