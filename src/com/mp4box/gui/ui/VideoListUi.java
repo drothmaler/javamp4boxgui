@@ -203,7 +203,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		
 		panelButton.add(buttonJoin, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 0, 1));
 		panelButton.add(buttonAbout, getComponentConstraints(GridBagConstraints.CENTER, 0, 0, 1, 0, 1));
-		getContentPane().add(panelButton, getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1));
+		getContentPane().add(panelButton, getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
 	}
 	
 	private void addActionListeners(){
