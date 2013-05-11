@@ -25,4 +25,7 @@ public class ConfSettingsValues {
 	
 	public static String RADIO_BUTTON_OUTPUT_FOLDER_DEFAULT_SELECTION = "1";
 	public static String RADIO_BUTTON_OUTPUT_FILE_DEFAULT_SELECTION = "1";
+	
+	public static String SINGLE_FILE_KEEP_NAME = "true";
+	public static String SINGLE_FILE_SKIP_CHAPTER = "true";
 }

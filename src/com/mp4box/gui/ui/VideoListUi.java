@@ -13,6 +13,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -96,6 +97,20 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JButton buttonAbout = new JButton();
 	
 	HashMap<String, String> settings = null;
+	
+	FileFilter filterDirectory = new FileFilter() {
+		@Override
+		public boolean accept(File file) {
+			return file.isDirectory();
+		}
+	};
+	
+	FileFilter filterFile = new FileFilter() {
+		@Override
+		public boolean accept(File file) {
+			return file.isFile();
+		}
+	};
 	
 	public VideoListUi(){
 		settings = fileSettings.getSettings();
@@ -392,27 +407,55 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			if(checkBoxSeparateVideos.isSelected()){
 				//Resets the the chap number for each folder, so each video will start with 1.
 				chapterNumber = 0;
-			}
-			
-			for(File childFile : file.listFiles()){
-				try {
-					chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "\nStack trace: " + e.getMessage());
-					log.log(Level.SEVERE, "Unable to properly process a file in " + filePath, e);
+				
+				/**
+				 * First join all videos in the current folder
+				 */
+				for(File childFile : file.listFiles(filterFile)){
+					try {
+						chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
+					} catch (IOException e) {
+						messageProcessFileException(filePath, e);
+					}
+				}
+				
+				//Run join command if there is data
+				if(videoTableModel.getData().length>0){
+					//Update folder path and file name
+					checkAndUpdateFolderFileNames();
+					
+					//Calls the controller manually so that the process is done per folder, and not on all files.
+					MP4BoxController controller = new MP4BoxController(this);
+					controller.joinVideos();
+				}
+				
+				/**
+				 * Now iterate thru the folders
+				 */
+				for(File childFile : file.listFiles(filterDirectory)){
+					try {
+						chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
+					} catch (IOException e) {
+						messageProcessFileException(filePath, e);
+					}
+				}
+			}else{
+				/**
+				 * This is run if the "join per folder" option is unchecked.
+				 * All files in the folder(s) will be combined to a single file!
+				 */
+				for(File childFile : file.listFiles()){
+					try {
+						chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
+					} catch (IOException e) {
+						messageProcessFileException(filePath, e);
+					}
 				}
 			}
-			
-			//Run join command if separate videos is selected and there is data
-			if(checkBoxSeparateVideos.isSelected() && videoTableModel.getData().length>0){
-				//Update folder path and file name
-				checkAndUpdateFolderFileNames();
-				
-				//Calls the controller manually so that the process is done per folder, and not on all files.
-				MP4BoxController controller = new MP4BoxController(this);
-				controller.joinVideos();
-			}
 		}else{
+			/**
+			 * Adds the file to the model since it isn't a folder
+			 */
 			chapterNumber = chapterNumber + 1;
 			videoTableModel.addRow(filePath, 
 				Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_ENABLED)), 
@@ -420,6 +463,11 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		}
 		
 		return chapterNumber;
+	}
+	
+	private void messageProcessFileException(String filePath, IOException e){
+		JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "\nStack trace: " + e.getMessage());
+		log.log(Level.SEVERE, "Unable to properly process a file in " + filePath, e);
 	}
 	
 	/**
@@ -436,7 +484,11 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	 * @return
 	 */
 	public String getFilenameOutput(){
-		return textFieldOutput.getText().substring(textFieldOutput.getText().lastIndexOf(File.separator), textFieldOutput.getText().length());
+		return getFilenameOutput(textFieldOutput.getText());
+	}
+	
+	public String getFilenameOutput(String file){
+		return file.substring(file.lastIndexOf(File.separator), file.length());
 	}
 	
 	@Override

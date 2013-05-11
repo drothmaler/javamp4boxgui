@@ -25,4 +25,7 @@ public class ConfSettingsKeys {
 	
 	public static String RADIO_BUTTON_OUTPUT_FOLDER_DEFAULT_SELECTION = "OutputFolderDefaultSelection";
 	public static String RADIO_BUTTON_OUTPUT_FILE_DEFAULT_SELECTION = "OutputFileDefaultSelection";
+	
+	public static String SINGLE_FILE_KEEP_NAME = "SingleFileKeepName";
+	public static String SINGLE_FILE_SKIP_CHAPTER = "SingleFileSkipChapter";
 }

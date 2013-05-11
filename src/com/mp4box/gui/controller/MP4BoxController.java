@@ -36,6 +36,8 @@ public class MP4BoxController {
 	 * @param uiInput
 	 */
 	public void joinVideos(){
+		log.log(Level.INFO, "##### Join start #####");
+		
 		String mp4boxPath = getMP4BoxFilePath();
 		if((new File(mp4boxPath).exists())){
 			String input = "";
@@ -45,26 +47,38 @@ public class MP4BoxController {
 			
 			try {
 				String outputFile = getOutputFile();
-				String chapterFile = getOutputChapterFile();
-				BufferedWriter out = new BufferedWriter(new FileWriter(chapterFile));
 				
-				//Create chapters
-				String duration = "00:00:00.000";
-				for (int i = 0; i < data.length; i++) {
-					if((Boolean) data[i][1]){
-						out.write("CHAPTER" + i + "=" + duration + " \n");
-					    out.newLine();
+				boolean singleFileSkipChapter = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER));
+				String chapterFile = "";
+				String chapter = "";
+				
+				// Skips chapter if there is one file and singleFileSkipChapter is true 
+				if(data.length>1 || !singleFileSkipChapter){
+					chapterFile = getOutputChapterFile();
+					BufferedWriter out = new BufferedWriter(new FileWriter(chapterFile));
+					
+					//Create chapters
+					String duration = "00:00:00.000";
+					for (int i = 0; i < data.length; i++) {
+						if((Boolean) data[i][1]){
+							out.write("CHAPTER" + i + "=" + duration + " \n");
+						    out.newLine();
+						    
+						    out.write("CHAPTER" + i + "NAME=" + data[i][2] + " \n");
+						    out.newLine();
+						}
 					    
-					    out.write("CHAPTER" + i + "NAME=" + data[i][2] + " \n");
-					    out.newLine();
+						duration = addTime(duration, getVideoDuration(String.valueOf(data[i][0])));
 					}
-				    
-					duration = addTime(duration, getVideoDuration(String.valueOf(data[i][0])));
+					out.flush();
+					out.close();
+					
+					chapter = " -chap \"" + chapterFile + "\" ";
+				}else{
+					log.log(Level.INFO, "Skipping adding chapter to file. " + ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
 				}
-				out.flush();
-				out.close();
 				
-				String execCommand = settings.get(ConfSettingsKeys.CMD) + " \"\" \"" + mp4boxPath + "\" " + input + " -chap \"" + chapterFile + "\" -new \"" + outputFile + "\"";
+				String execCommand = settings.get(ConfSettingsKeys.CMD) + " \"\" \"" + mp4boxPath + "\" " + input + chapter + "-new \"" + outputFile + "\"";
 				
 				log.log(Level.INFO, "Here is the command and output of the command");
 				log.log(Level.INFO, execCommand);
@@ -105,6 +119,8 @@ public class MP4BoxController {
 		if(ui.getCheckBoxAutoClear().isSelected()){
 			ui.getVideoTableModel().removeAllRows();
 		}
+		
+		log.log(Level.INFO, "##### Join done #####");
 	}
 	
 	public String getVideoDuration(String path) throws IOException{
@@ -185,14 +201,32 @@ public class MP4BoxController {
 		return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 	}
 	
+	/**
+	 * Gets the output video file destination.
+	 * Makes sure it's a filename it can use (file doesn't exist already)
+	 * @return
+	 */
 	private String getOutputFile(){
 		String folderpath = ui.getFolderPathOutput();
 		String fileType = settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE);
 		String filename = ui.getFilenameOutput().replace(fileType, "");
 		
+		// If there is only one file in the list, then lets just use that files name
+		boolean keepName = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_KEEP_NAME));
+		if(data.length==1 && keepName){
+			filename = ui.getFilenameOutput((String) data[0][0]).replace(fileType, "");
+			
+			log.log(Level.INFO, "Using filename as output filename. " + ConfSettingsKeys.SINGLE_FILE_KEEP_NAME + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
+		}
+		
 		return findValidOutputFile(folderpath, filename, fileType);
 	}
 	
+	/**
+	 * Gets the output chapter file destination.
+	 * Makes sure it's a filename it can use (file doesn't exist already)
+	 * @return
+	 */
 	private String getOutputChapterFile(){
 		String folderpath = ui.getFolderPathOutput();
 		String filename = settings.get(ConfSettingsKeys.CHAPTER_FILENAME);
