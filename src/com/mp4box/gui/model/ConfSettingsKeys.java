@@ -34,6 +34,10 @@ public class ConfSettingsKeys {
 	public static String SINGLE_FILE_KEEP_NAME = "SingleFileKeepName";
 	public static String SINGLE_FILE_SKIP_CHAPTER = "SingleFileSkipChapter";
 	
+	public static String LOG_NAME = "LogName";
+	public static String LOG_SIZE = "LogSize";
+	public static String LOG_NUMBER_OF_FILES = "LogNumberOfFiles";
+	public static String LOG_WRITE_TO_FILE = "LogWriteToFile";
 	
 	/**
 	 * This code is for retrieving the correct settings based on operating system used!

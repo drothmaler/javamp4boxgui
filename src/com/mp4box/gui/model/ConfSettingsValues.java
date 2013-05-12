@@ -33,4 +33,10 @@ public class ConfSettingsValues {
 	
 	public static String SINGLE_FILE_KEEP_NAME = "true";
 	public static String SINGLE_FILE_SKIP_CHAPTER = "true";
+	
+	public static String LOG_NAME = "application.log";
+	public static String LOG_SIZE = "100000000";
+	public static String LOG_NUMBER_OF_FILES = "10";
+	public static String LOG_WRITE_TO_FILE = "true";
+	
 }

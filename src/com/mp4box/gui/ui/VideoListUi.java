@@ -261,14 +261,16 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	private void saveLogFile(){
-		try {
-			Handler handler = new FileHandler("application.log", 100000000, 10);
-			handler.setFormatter(new SimpleFormatter());
-			Logger.getLogger("Log").addHandler(handler);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(Boolean.valueOf(settings.get(ConfSettingsKeys.LOG_WRITE_TO_FILE))){
+			try {
+				Handler handler = new FileHandler(settings.get(ConfSettingsKeys.LOG_NAME), Integer.valueOf(settings.get(ConfSettingsKeys.LOG_SIZE)), Integer.valueOf(settings.get(ConfSettingsKeys.LOG_NUMBER_OF_FILES)));
+				handler.setFormatter(new SimpleFormatter());
+				Logger.getLogger("Log").addHandler(handler);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
