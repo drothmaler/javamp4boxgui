@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.model.ConfSettingsKeys;
+import com.mp4box.gui.model.ConfSettingsRegex;
 import com.mp4box.gui.ui.VideoListUi;
 
 public class MP4BoxController {
@@ -42,29 +43,39 @@ public class MP4BoxController {
 		if((new File(mp4boxPath).exists())){
 			String input = "";
 			for(int i=0;i<data.length; i++){
-				input += " -cat \"" + data[i][0] + "\" ";
+				String tempInput = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+				tempInput = tempInput.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
+				
+				input += tempInput;
 			}
 			
 			try {
 				String outputFile = getOutputFile();
 				
 				boolean singleFileSkipChapter = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER));
-				String chapterFile = "";
 				String chapter = "";
 				
 				// Skips chapter if there is one file and singleFileSkipChapter is true 
 				if(data.length>1 || !singleFileSkipChapter){
-					chapterFile = getOutputChapterFile();
+					String chapterFile = getOutputChapterFile();
 					BufferedWriter out = new BufferedWriter(new FileWriter(chapterFile));
 					
 					//Create chapters
-					String duration = "00:00:00.000";
+					String duration = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_INITIALTIME);
 					for (int i = 0; i < data.length; i++) {
 						if((Boolean) data[i][1]){
-							out.write("CHAPTER" + i + "=" + duration + " \n");
+							String timeData = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_TIME);
+							timeData = timeData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_NUMBER, String.valueOf(i));
+							timeData = timeData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_DURATION, duration);
+							
+							out.write(timeData);
 						    out.newLine();
 						    
-						    out.write("CHAPTER" + i + "NAME=" + data[i][2] + " \n");
+						    String nameData = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_NAME);
+						    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NUMBER, String.valueOf(i));
+						    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NAME, duration);
+						    
+						    out.write(nameData);
 						    out.newLine();
 						}
 					    
@@ -73,12 +84,21 @@ public class MP4BoxController {
 					out.flush();
 					out.close();
 					
-					chapter = " -chap \"" + chapterFile + "\" ";
+					String tempChap = settings.get(ConfSettingsKeys.MP4BOX_CHAPTER());
+					tempChap = tempChap.replace(ConfSettingsRegex.MP4BOX_CHAPTER_FILE, chapterFile);
+					chapter = tempChap;
 				}else{
 					log.log(Level.INFO, "Skipping adding chapter to file. " + ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
 				}
 				
-				String execCommand = settings.get(ConfSettingsKeys.CMD) + " \"\" \"" + mp4boxPath + "\" " + input + chapter + "-new \"" + outputFile + "\"";
+				String executable = settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE());
+				executable = executable.replace(ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH, settings.get(ConfSettingsKeys.MP4BOX_PATH()));
+				
+				String execCommand = settings.get(ConfSettingsKeys.MP4BOX_COMMAND());
+				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE, executable);
+				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_INPUT, input);
+				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER, chapter);
+				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE, outputFile);
 				
 				log.log(Level.INFO, "Here is the command and output of the command");
 				log.log(Level.INFO, execCommand);
@@ -216,7 +236,7 @@ public class MP4BoxController {
 		if(data.length==1 && keepName){
 			filename = ui.getFilenameOutput((String) data[0][0]).replace(fileType, "");
 			
-			log.log(Level.INFO, "Using filename as output filename. " + ConfSettingsKeys.SINGLE_FILE_KEEP_NAME + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
+			log.log(Level.INFO, "Using the single video's filename as the output filename (" + filename + "). " + ConfSettingsKeys.SINGLE_FILE_KEEP_NAME + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
 		}
 		
 		return findValidOutputFile(folderpath, filename, fileType);
@@ -230,7 +250,7 @@ public class MP4BoxController {
 	private String getOutputChapterFile(){
 		String folderpath = ui.getFolderPathOutput();
 		String filename = settings.get(ConfSettingsKeys.CHAPTER_FILENAME);
-		String filetype = settings.get(ConfSettingsKeys.CHAPTER_FILE_TYPE);
+		String filetype = settings.get(ConfSettingsKeys.CHAPTER_FILETYPE);
 		
 		return findValidOutputFile(folderpath, filename, filetype);
 	}
@@ -274,11 +294,14 @@ public class MP4BoxController {
 	
 	public String getMP4BoxFilePath(){
 		String mp4boxPath = FileSettings.getApplicationPath();
-		if(!settings.get(ConfSettingsKeys.MP4BOX_PATH).isEmpty()){
-			mp4boxPath = settings.get(ConfSettingsKeys.MP4BOX_PATH);
+		if(!settings.get(ConfSettingsKeys.MP4BOX_PATH()).isEmpty()){
+			mp4boxPath = settings.get(ConfSettingsKeys.MP4BOX_PATH());
 		}
 		
-		return mp4boxPath + settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE);
+		String returnString = settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE());
+		returnString = returnString.replace(ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH, mp4boxPath);
+		
+		return returnString;
 	}
 	
 	public String getMP4BoxMissingMessage(String mp4boxPath){

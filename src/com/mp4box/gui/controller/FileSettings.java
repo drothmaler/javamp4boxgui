@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -24,8 +25,11 @@ public class FileSettings {
 	
 	public static String newline = System.getProperty("line.separator");
 	public static String CONFIG_ASSIGN_SYMBOLE = "=";
-	public static String NEW_LINE_CONF = "newLine";
-	public static String NEW_LINE_CODE = "<br>";
+	public static String NEW_LINE_HTML_CONF = "newLineHtml";
+	public static String NEW_LINE_HTML_CODE = "<br>";
+	public static String NEW_LINE_TEXT_CONF = "newLineText";
+	public static String NEW_LINE_TEXT_CODE = "\n";
+	public static String NEW_LINE_TEXT_EXPL = "\\n";
 	public static String HTML_TAG = "<html>";
 	public static String FILE_NAME_SETTINGS = "settings.conf";
 	public static String FILE_NAME_LANGUAGE = "language.conf";
@@ -119,16 +123,18 @@ public class FileSettings {
 		HashMap<String, String> keyValueHashMap = new HashMap<String, String>();
 		
 		for(Field field : fields){
-			try {
-				Object valueObject = field.get(klass);
-				
-				if(valueObject instanceof String){
-					keyValueHashMap.put(field.getName(), (String) valueObject);
+			if(!Modifier.isPrivate(field.getModifiers())){
+				try {
+					Object valueObject = field.get(klass);
+					
+					if(valueObject instanceof String){
+						keyValueHashMap.put(field.getName(), (String) valueObject);
+					}
+				} catch (IllegalArgumentException e) {
+					log.log(Level.SEVERE, e.getMessage(), e);
+				} catch (IllegalAccessException e) {
+					log.log(Level.SEVERE, e.getMessage(), e);
 				}
-			} catch (IllegalArgumentException e) {
-				log.log(Level.SEVERE, e.getMessage(), e);
-			} catch (IllegalAccessException e) {
-				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 		
@@ -163,7 +169,8 @@ public class FileSettings {
 						
 						if(equalsAt>0){
 							String name = line.substring(0, equalsAt);
-							String value = (line.substring(equalsAt+1)).replaceAll(NEW_LINE_CONF, NEW_LINE_CODE);
+							String value = (line.substring(equalsAt+1)).replaceAll(NEW_LINE_HTML_CONF, NEW_LINE_HTML_CODE);
+							value = value.replaceAll(NEW_LINE_TEXT_CONF, NEW_LINE_TEXT_CODE);
 							confHashMap.put(name, value);
 						}
 					}
@@ -188,9 +195,8 @@ public class FileSettings {
 				confString += "## Note that some of the values are empty." + newline;
 				confString += "## That is because they use the path of the application, but this can be overriden by specifying a different path!" + newline;
 				confString += "## It applies to the following: MP4BoxPath, OutputPath" + newline;
-			}else if(confFile.getName().equals(FILE_NAME_LANGUAGE)){
-				confString += "## To add new line in text, use the text " + NEW_LINE_CONF + newline;
 			}
+			confString += "## To add new line in text, write \"" + NEW_LINE_HTML_CONF + "\" for \"" + NEW_LINE_HTML_CODE + "\", and \"" + NEW_LINE_TEXT_CONF + "\" for \""+ NEW_LINE_TEXT_EXPL + "\". " +  newline;
 			
 			confString += getConfHashMapAsString(confHashMap);
 			

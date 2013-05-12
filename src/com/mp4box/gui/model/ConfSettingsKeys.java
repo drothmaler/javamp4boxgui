@@ -12,14 +12,19 @@ public class ConfSettingsKeys {
 	
 	public static String CHAPTER_ENABLED = "ChapterEnabled";
 	public static String CHAPTER_FILENAME = "ChapterFilename";
-	public static String CHAPTER_FILE_TYPE = "ChapterFiletype";
+	public static String CHAPTER_FILETYPE = "ChapterFiletype";
+	public static String CHAPTER_FILE_DATA_TIME = "ChapterFileDataTime";
+	public static String CHAPTER_FILE_DATA_NAME = "ChapterFileDataName";
+	public static String CHAPTER_FILE_DATA_INITIALTIME = "ChapterFileDataInitialtime";
 	
 	public static String VIDEO_FILE_NAME = "VideoFileName";
 	public static String VIDEO_FILE_TYPE = "VideoFileType";
 	
-	public static String MP4BOX_PATH = "MP4BoxPath";
-	public static String MP4BOX_EXECUTABLE = "MP4BoxExecutable";
-	public static String CMD = "Cmd";
+	public static String MP4BOX_WIN_PATH = "MP4BoxWinPath";
+	public static String MP4BOX_WIN_EXECUTABLE = "MP4BoxWinExec";
+	public static String MP4BOX_WIN_CHAPTER = "MP4BoxWinChapter";
+	public static String MP4BOX_WIN_INPUT = "MP4BoxWinInput";
+	public static String MP4BOX_WIN_COMMAND = "MP4BoxWinCommand";
 	
 	public static String LIST_BACKGROUND_COLOUR = "ListBackground";
 	
@@ -28,4 +33,54 @@ public class ConfSettingsKeys {
 	
 	public static String SINGLE_FILE_KEEP_NAME = "SingleFileKeepName";
 	public static String SINGLE_FILE_SKIP_CHAPTER = "SingleFileSkipChapter";
+	
+	
+	/**
+	 * This code is for retrieving the correct settings based on operating system used!
+	 */
+	private static String OS = System.getProperty("os.name").toLowerCase();
+	
+	public static boolean isWindows(){
+		return (OS.indexOf("win")>=0);
+	}
+	
+	public static String MP4BOX_PATH(){
+		if(isWindows()){
+			return MP4BOX_WIN_PATH;
+		}
+		
+		return "";
+	}
+	
+	public static String MP4BOX_EXECUTABLE(){
+		if(isWindows()){
+			return MP4BOX_WIN_EXECUTABLE;
+		}
+		
+		return "";
+	}
+	
+	public static String MP4BOX_CHAPTER(){
+		if(isWindows()){
+			return MP4BOX_WIN_CHAPTER;
+		}
+		
+		return "";
+	}
+	
+	public static String MP4BOX_INPUT(){
+		if(isWindows()){
+			return MP4BOX_WIN_INPUT;
+		}
+		
+		return "";
+	}
+	
+	public static String MP4BOX_COMMAND(){
+		if(isWindows()){
+			return MP4BOX_WIN_COMMAND;
+		}
+		
+		return "";
+	}
 }
