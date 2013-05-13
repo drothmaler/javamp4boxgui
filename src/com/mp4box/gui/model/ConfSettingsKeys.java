@@ -11,7 +11,6 @@ public class ConfSettingsKeys {
 	public static String OUTPUT_FOLDER = "OutputFolder";
 	
 	public static String CHAPTER_ENABLED = "ChapterEnabled";
-	public static String CHAPTER_FILENAME = "ChapterFilename";
 	public static String CHAPTER_FILETYPE = "ChapterFiletype";
 	public static String CHAPTER_FILE_DATA_TIME = "ChapterFileDataTime";
 	public static String CHAPTER_FILE_DATA_NAME = "ChapterFileDataName";

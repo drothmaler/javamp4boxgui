@@ -11,7 +11,6 @@ public class ConfSettingsValues {
 	public static String OUTPUT_FOLDER = "";
 	
 	public static String CHAPTER_ENABLED = "true";
-	public static String CHAPTER_FILENAME = "chapters";
 	public static String CHAPTER_FILETYPE = ".txt";
 	public static String CHAPTER_FILE_DATA_TIME = "CHAPTER" + ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_NUMBER + "=" + ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_DURATION + " " + FileSettings.NEW_LINE_TEXT_CONF;
 	public static String CHAPTER_FILE_DATA_NAME = "CHAPTER" + ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NUMBER + "NAME=" + ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NAME + " " + FileSettings.NEW_LINE_TEXT_CONF;
@@ -21,7 +20,7 @@ public class ConfSettingsValues {
 	public static String VIDEO_FILE_TYPE = ".mp4";
 	
 	public static String MP4BOX_WIN_PATH = "";
-	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "/MP4Box/MP4Box.exe";
+	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box/MP4Box.exe";
 	public static String MP4BOX_WIN_CHAPTER = "-chap \"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
 	public static String MP4BOX_WIN_INPUT = " -cat \"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
 	public static String MP4BOX_WIN_COMMAND = "cmd /c start \"\" \"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + " " + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + " -new \"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";

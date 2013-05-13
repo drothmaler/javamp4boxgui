@@ -73,7 +73,7 @@ public class MP4BoxController {
 						    
 						    String nameData = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_NAME);
 						    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NUMBER, String.valueOf(i));
-						    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NAME, duration);
+						    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NAME, (String) data[i][2]);
 						    
 						    out.write(nameData);
 						    out.newLine();
@@ -228,16 +228,8 @@ public class MP4BoxController {
 	 */
 	private String getOutputFile(){
 		String folderpath = ui.getFolderPathOutput();
+		String filename = getOutputFilename();
 		String fileType = settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE);
-		String filename = ui.getFilenameOutput().replace(fileType, "");
-		
-		// If there is only one file in the list, then lets just use that files name
-		boolean keepName = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_KEEP_NAME));
-		if(data.length==1 && keepName){
-			filename = ui.getFilenameOutput((String) data[0][0]).replace(fileType, "");
-			
-			log.log(Level.INFO, "Using the single video's filename as the output filename (" + filename + "). " + ConfSettingsKeys.SINGLE_FILE_KEEP_NAME + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
-		}
 		
 		return findValidOutputFile(folderpath, filename, fileType);
 	}
@@ -249,10 +241,29 @@ public class MP4BoxController {
 	 */
 	private String getOutputChapterFile(){
 		String folderpath = ui.getFolderPathOutput();
-		String filename = settings.get(ConfSettingsKeys.CHAPTER_FILENAME);
+		String filename = getOutputFilename();
 		String filetype = settings.get(ConfSettingsKeys.CHAPTER_FILETYPE);
 		
 		return findValidOutputFile(folderpath, filename, filetype);
+	}
+	
+	/**
+	 * Returns the filename from the output text field.
+	 * Unless there is one video to join and the use filename option is enabled!
+	 * @return
+	 */
+	private String getOutputFilename(){
+		String filename = ui.getFilenameOutput().replace(settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE), "");
+		
+		// If there is only one file in the list, then lets just use that files name
+		boolean keepName = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_KEEP_NAME));
+		if(data.length==1 && keepName){
+			filename = ui.getFilenameOutput((String) data[0][0]).replace(settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE), "");
+			
+			log.log(Level.INFO, "Using the single video's filename as the output filename (" + filename + "). " + ConfSettingsKeys.SINGLE_FILE_KEEP_NAME + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
+		}
+		
+		return filename;
 	}
 	
 	/**
