@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,100 +40,32 @@ public class MP4BoxController {
 	public void joinVideos(){
 		log.log(Level.INFO, "##### Join start #####");
 		
-		String mp4boxPath = getMP4BoxFilePath();
-		if((new File(mp4boxPath).exists())){
-			String input = "";
-			for(int i=0;i<data.length; i++){
-				String tempInput = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
-				tempInput = tempInput.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
+		String mp4boxFilePath = getMP4BoxFilePath();
+		if((new File(mp4boxFilePath).exists())){
+			String addInputCommand = createInputCommand(0, data.length);
+			String outputFile = getOutputFile();
+			String addChapterCommand =  createChapterFile();
 				
-				input += tempInput;
-			}
-			
-			try {
-				String outputFile = getOutputFile();
-				
-				boolean singleFileSkipChapter = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER));
-				String chapter = "";
-				
-				// Skips chapter if there is one file and singleFileSkipChapter is true 
-				if(data.length>1 || !singleFileSkipChapter){
-					String chapterFile = getOutputChapterFile();
-					BufferedWriter out = new BufferedWriter(new FileWriter(chapterFile));
+			if(addChapterCommand!=null){
+				try {
+					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
 					
-					//Create chapters
-					String duration = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_INITIALTIME);
-					for (int i = 0; i < data.length; i++) {
-						if((Boolean) data[i][1]){
-							String timeData = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_TIME);
-							timeData = timeData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_NUMBER, String.valueOf(i));
-							timeData = timeData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_DURATION, duration);
-							
-							out.write(timeData);
-						    out.newLine();
-						    
-						    String nameData = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_NAME);
-						    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NUMBER, String.valueOf(i));
-						    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NAME, (String) data[i][2]);
-						    
-						    out.write(nameData);
-						    out.newLine();
-						}
-					    
-						duration = addTime(duration, getVideoDuration(String.valueOf(data[i][0])));
-					}
-					out.flush();
-					out.close();
+				} catch (IOException e) {
+					String message = "An exception (IO) happened, is the total length of the folder and filename very long? \nYou might wanna try a shorter folder path and/or filename!";
+					JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
+					log.log(Level.SEVERE, message, e);
 					
-					String tempChap = settings.get(ConfSettingsKeys.MP4BOX_CHAPTER());
-					tempChap = tempChap.replace(ConfSettingsRegex.MP4BOX_CHAPTER_FILE, chapterFile);
-					chapter = tempChap;
-				}else{
-					log.log(Level.INFO, "Skipping adding chapter to file. " + ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
+					/**
+					 * Since the join failed, and it's likely that it has to do with the command being to big, 
+					 * lets try and split the data list up and join them in portions.
+					 */
+					divideAndConquere(mp4boxFilePath, addChapterCommand, outputFile);
+				}catch(Exception e){
+					log.log(Level.SEVERE, "If the error is a NullPointer, then it might be related to a filetype thats not supported!", e);
 				}
-				
-				String executable = settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE());
-				executable = executable.replace(ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH, settings.get(ConfSettingsKeys.MP4BOX_PATH()));
-				
-				String execCommand = settings.get(ConfSettingsKeys.MP4BOX_COMMAND());
-				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE, executable);
-				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_INPUT, input);
-				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER, chapter);
-				execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE, outputFile);
-				
-				log.log(Level.INFO, "Here is the command and output of the command");
-				log.log(Level.INFO, execCommand);
-				
-				Runtime rt = Runtime.getRuntime();
-				Process proc = rt.exec(execCommand);
-				
-				//Output to terminal
-				String s;
-				
-				BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-	
-				// read the output from the command
-				while ((s = stdInput.readLine()) != null) {
-					log.log(Level.INFO, s);
-				}
-				
-				while ((s = stdError.readLine()) != null) {
-					log.log(Level.WARNING, s);
-				}
-			} catch (IOException e) {
-				String message = "An exception (IO) happened, is the total length of the folder and filename very long? \nYou might wanna try a shorter folder path and/or filename!";
-				JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
-				log.log(Level.SEVERE, message, e);
-			} catch (ParseException e) {
-				String message = "An exception happened, the application was unable to parse the command! \nHave you messed up the command in the properties file or maybe have strange letters in the folder/filename its unable to handle?";
-				JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
-				log.log(Level.SEVERE, message, e);
-			}catch(Exception e){
-				log.log(Level.SEVERE, "If the error is a NullPointer, then it might be related to a filetype thats not supported!", e);
 			}
 		}else{
-			JOptionPane.showMessageDialog(ui, getMP4BoxMissingMessage(mp4boxPath));
+			JOptionPane.showMessageDialog(ui, getMP4BoxMissingMessage(mp4boxFilePath));
 		}
 		
 		//Auto clears the table is that option is selected
@@ -143,6 +76,307 @@ public class MP4BoxController {
 		log.log(Level.INFO, "##### Join done #####");
 	}
 	
+	/**
+	 * When the number of videos are too great, divide and conquer the workload.
+	 * There is an issue where the join String/command is too long, 
+	 * this method will try and split up the list of videos to join to avoid this problem!
+	 * - First attempt:  Split the list in two
+	 * - Second attempt: Split the list in four
+	 * - Third attempt:  Add one onto the previously joined expanding the joined video one video at time.
+	 * @param mp4boxFilePath
+	 * @param outputFile
+	 */
+	private void divideAndConquere(String mp4boxFilePath, String addChapterCommand, String outputFile){
+		log.log(Level.INFO, "===== DIVIDE & CONQUER =====");
+		
+		String outputPath = outputFile.substring(0, outputFile.lastIndexOf(File.separator) + 1); //The folder to save the output file in
+		int attemptOne = 2; //Divide dataset in two
+		int attemptTwo = 4; //Divide dataset in four
+		int attempt = 0; //Attempt three things, divide by 2, 4 or finally join 2 and 2 videos at a time!
+		
+		/**
+		 * Let's try three different "ways" of joining the videos
+		 */
+		while(attempt<3){
+			log.log(Level.INFO, "===== Attempt " + (attempt + 1 ) + " =====");
+			if(attempt<2){
+				int divider = 0;
+				
+				/**
+				 * Checks what attempt one is on, and sets the divider accordingly
+				 */
+				if(attempt==0){
+					divider = attemptOne;
+				}else{
+					divider = attemptTwo;
+				}
+				
+				ArrayList<String> listTempOutputFiles = new ArrayList<>(); //Temp files that should be deleted
+				int dataLength = data.length;
+				int listChunkSmall = dataLength/divider; //The small list size chunk. The last list chunk will have a different size often due to math! ;-)
+				
+				/**
+				 * Let's join chunks of the list together into temporary output video files.
+				 * This will process the data contents into video files in stages
+				 */
+				log.log(Level.INFO, "===== Joining video list in portions =====");
+				for(int i=0;i<divider;i++){
+					String tempOutputFile = findValidOutputFile(outputPath, "temp_join_" + i, settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE)); //Temp output filename
+					int listStart = i*listChunkSmall; //Where to start in the data list
+					int listStop = listChunkSmall*(i+1); //Where to stop in the data list
+					
+					/**
+					 * For the last iteration, the stop should be the end of the data list size so that the remaining videos are added.
+					 */
+					if(i==(divider-1)){
+						listStop = dataLength;
+					}
+					
+					listTempOutputFiles.add(tempOutputFile); //Add the temporary output file to a list of files to remove
+					String addInputCommand = createInputCommand(listStart, listStop); //Creates input commands from a subset of the main list of videos to add
+					try {
+						executeMP4BoxCommand(mp4boxFilePath, addInputCommand, "", tempOutputFile); //Creates a temp video file of the list subset
+					} catch (IOException e){
+						log.log(Level.SEVERE, "Tried joining smaller lists of input files, but had an IOexception in attempt " + attempt, e);
+					}
+				}
+				
+				/**
+				 * Create input commands of the temp video files created
+				 */
+				String addInputCommand = "";
+				for (int i = 0; i < listTempOutputFiles.size(); i++) {
+					String tempInput = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+					tempInput = tempInput.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, listTempOutputFiles.get(i));
+					
+					addInputCommand += tempInput;
+				}
+				
+				/**
+				 * Join together the temp video files into the final output video
+				 */
+				log.log(Level.INFO, "===== Joining temporary videos to final video with chapters =====");
+				try {
+					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
+					
+					attempt = 9; //Sets the attempt number high to stop the while loop
+				} catch (IOException e) {
+					log.log(Level.SEVERE, "Tried attempt " + attempt + " for joining videos after an IOexception was thrown in the original join!", e);
+				}
+				
+				/**
+				 * Deletes the temporary files created
+				 */
+				for(int i=0;i<listTempOutputFiles.size();i++){
+					File fileToDelete = new File(listTempOutputFiles.get(i));
+					if(fileToDelete.delete()){
+						log.log(Level.INFO, "The temp file " + fileToDelete.getName() + " is deleted!");
+					}else{
+						log.log(Level.WARNING, "Unable to delete the temp file " + fileToDelete.getName() + "!");
+					}
+				}
+			}else{
+				/**
+				 * Ok, so the other attempts failed, so lets try adding one and one video onto a temp video file.
+				 * It's slow, but unless the video folder and filename is ridiculously long, it should work!
+				 */
+				log.log(Level.INFO, "===== Joining videos by adding one onto a temp file at a time =====");
+				
+				String currentTempOutputFile = ""; //The temp video file used between loops
+				for(int i=0;i<data.length;i++){
+					String tempOutputFile = findValidOutputFile(outputPath, "temp_join_" + i, settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE)); //The next temp video file for this iteration!
+					
+					//The first video is all the previous videos we have joined so far
+					String inputOne = "";
+					
+					/**
+					 * Here the add input command for the inputOne variable is created.
+					 * [IF]   Checks if it is the first iteration, since "currentTempOutputFile" will be empty, we will add the first video in the data list
+					 * [ELSE] Use the currentTempOutputFile. This will be done everytime except the first iteration.
+					 */
+					if(i==0){
+						inputOne = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+						inputOne = inputOne.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
+						
+						//Let's iterate the i value so that the second video input is set to the next video below
+						i++;
+					}else{
+						inputOne = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+						inputOne = inputOne.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, currentTempOutputFile);
+					}
+					
+					//The next video to add to the first one.
+					String inputTwo = settings.get(ConfSettingsKeys.MP4BOX_INPUT()); 
+					inputTwo = inputTwo.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
+					
+					/**
+					 * [IF]   As long as we have not reached the last video in the data list, we will join video onto an temp output file.
+					 * [ELSE] When we reach the last item in the video list, we will join the videos into the final output videos.
+					 */
+					if(i<(data.length-1)){
+						try {
+							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, "", tempOutputFile);
+						} catch (IOException e){
+							log.log(Level.SEVERE, "Tried joining two input files, but had an IOexception in attempt " + attempt, e);
+						}
+					}else{
+						try {
+							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, addChapterCommand, outputFile);
+						} catch (IOException e){
+							log.log(Level.SEVERE, "Tried joining two input files and output final output file, but had an IOexception in attempt " + attempt, e);
+						}
+					}
+					
+					/**
+					 * Lets delete the temp video file for the previous iteration, so that we don't end up using twice the storage space!
+					 */
+					File fileToDelete = new File(currentTempOutputFile);
+					if(fileToDelete.delete()){
+						log.log(Level.INFO, "The temp file " + fileToDelete.getName() + " is deleted!");
+					}else{
+						log.log(Level.WARNING, "Unable to delete the temp file " + fileToDelete.getName() + "!");
+					}
+					
+					/**
+					 * Now lets assign the new temp video file destination to the "currentTempOutputFile" variable so that the next iteration can use it!
+					 */
+					currentTempOutputFile = tempOutputFile;
+				}
+			}
+			
+			attempt++;
+		}
+		
+		log.log(Level.INFO, "===== CONQUERING FINISHED =====");
+	}
+	
+	/**
+	 * Creates a chapter file based on model data and returns the new chapter command for MP4Box
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	private String createChapterFile(){
+		String addChapterCommand = "";
+		String tempChapterFile = "";
+		String duration = "";
+		
+		String tempDurationFile = "";
+		
+		try{
+			// Skips chapter if there is one file and singleFileSkipChapter is true 
+			boolean singleFileSkipChapter = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER));
+			if(data.length>1 || !singleFileSkipChapter){
+				tempChapterFile = getOutputChapterFile();
+				BufferedWriter out = new BufferedWriter(new FileWriter(tempChapterFile));
+				
+				//Create chapters
+				duration = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_INITIALTIME);
+				for (int i = 0; i < data.length; i++) {
+					tempDurationFile = "";
+					
+					if((Boolean) data[i][1]){
+						String timeData = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_TIME);
+						timeData = timeData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_NUMBER, String.valueOf(i));
+						timeData = timeData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_DURATION, duration);
+						
+						out.write(timeData);
+					    out.newLine();
+					    
+					    String nameData = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_NAME);
+					    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NUMBER, String.valueOf(i));
+					    nameData = nameData.replace(ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NAME, (String) data[i][2]);
+					    
+					    out.write(nameData);
+					    out.newLine();
+					}
+					
+					tempDurationFile = String.valueOf(data[i][0]);
+					duration = addTime(duration, getVideoDuration(tempDurationFile));
+				}
+				out.flush();
+				out.close();
+				
+				addChapterCommand = settings.get(ConfSettingsKeys.MP4BOX_CHAPTER());
+				addChapterCommand = addChapterCommand.replace(ConfSettingsRegex.MP4BOX_CHAPTER_FILE, tempChapterFile);
+			}else{
+				log.log(Level.INFO, "Skipping adding chapter to file. " + ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
+			}
+		}catch(IOException e){
+			String message = "An exception (IO) happened while creating the chapter file " + tempChapterFile;
+			JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
+			log.log(Level.SEVERE, message, e);
+			
+			addChapterCommand = null;
+		}catch(ParseException e){
+			String message = "An exception (Parse) happened while adding time together from the file " + tempDurationFile;
+			JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
+			log.log(Level.SEVERE, message, e);
+			
+			addChapterCommand = null;
+		}
+		
+		return addChapterCommand;
+	}
+	
+	/**
+	 * Uses data table to create input commands
+	 * @return
+	 */
+	private String createInputCommand(int startRow, int stopRow){
+		String addInputCommand = "";
+		for(int i=startRow; i<stopRow; i++){
+			String tempInput = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+			tempInput = tempInput.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
+			
+			addInputCommand += tempInput;
+		}
+		return addInputCommand;
+	}
+	
+	/**
+	 * Assembles and executes the command to run the mp4box joining
+	 * @param mp4boxFilePath
+	 * @param addInputCommand
+	 * @param addChapterCommand
+	 * @param outputFile
+	 * @throws IOException
+	 */
+	private void executeMP4BoxCommand(String mp4boxFilePath, String addInputCommand, String addChapterCommand, String outputFile) throws IOException{
+		String execCommand = settings.get(ConfSettingsKeys.MP4BOX_COMMAND());
+		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE, mp4boxFilePath);
+		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_INPUT, addInputCommand);
+		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER, addChapterCommand);
+		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE, outputFile);
+		
+		log.log(Level.INFO, "Here is the command and output of the command");
+		log.log(Level.INFO, execCommand);
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(execCommand);
+		
+		//Output to terminal
+		String s;
+		
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+		// read the output from the command
+		while ((s = stdInput.readLine()) != null) {
+			log.log(Level.INFO, s);
+		}
+		
+		while ((s = stdError.readLine()) != null) {
+			log.log(Level.WARNING, s);
+		}
+	}
+	
+	/**
+	 * Returns the duration for the video based on it's meta data.
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	public String getVideoDuration(String path) throws IOException{
 		ProcessBuilder builder = new ProcessBuilder(getMP4BoxFilePath(), "-info", path);
 		builder.redirectErrorStream(true);
@@ -165,6 +399,14 @@ public class MP4BoxController {
 		return duration;
 	}
 	
+	/**
+	 * Add to time strings together.
+	 * Will carry the seconds and minutes forward.
+	 * @param time1
+	 * @param time2
+	 * @return
+	 * @throws ParseException
+	 */
 	public String addTime(String time1, String time2) throws ParseException{
 		String splitt1 = ":";
 		String splitt2  = ".";

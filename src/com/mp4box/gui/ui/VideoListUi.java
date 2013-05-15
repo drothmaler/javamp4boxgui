@@ -490,7 +490,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	public String getFilenameOutput(String file){
-		return file.substring(file.lastIndexOf(File.separator), file.length());
+		return file.substring(file.lastIndexOf(File.separator) + 1, file.length());
 	}
 	
 	@Override
