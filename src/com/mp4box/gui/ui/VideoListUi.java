@@ -122,6 +122,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		addActionListeners();
 		init();
 		saveLogFile();
+		
+		log.log(Level.INFO, "The operating system detected is: " + ConfSettingsKeys.getOS());
 	}
 	
 	private void initComponents(){
