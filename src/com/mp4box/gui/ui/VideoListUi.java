@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -44,6 +45,9 @@ import com.mp4box.gui.controller.MP4BoxController;
 import com.mp4box.gui.controller.VideoListUiController;
 import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.model.ConfSettingsKeys;
+import com.mp4box.gui.model.comparators.HumaneStringComparator;
+import com.mp4box.gui.model.comparators.NaturalOrderComparator;
+import com.mp4box.gui.model.comparators.WindowsExplorerStringComparator;
 
 /**
  * 
@@ -413,7 +417,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 				/**
 				 * First join all videos in the current folder
 				 */
-				for(File childFile : file.listFiles(filterFile)){
+				File[] files = file.listFiles(filterFile);
+				Arrays.sort(files, new NaturalOrderComparator());
+				for(File childFile : files){
 					try {
 						chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
 					} catch (IOException e) {
@@ -434,7 +440,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 				/**
 				 * Now iterate thru the folders
 				 */
-				for(File childFile : file.listFiles(filterDirectory)){
+				File[] folders = file.listFiles(filterDirectory);
+				Arrays.sort(folders, new NaturalOrderComparator());
+				for(File childFile : folders){
 					try {
 						chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
 					} catch (IOException e) {
@@ -446,7 +454,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 				 * This is run if the "join per folder" option is unchecked.
 				 * All files in the folder(s) will be combined to a single file!
 				 */
-				for(File childFile : file.listFiles()){
+				File[] files = file.listFiles();
+				Arrays.sort(files, new NaturalOrderComparator());
+				for(File childFile : files){
 					try {
 						chapterNumber = addFilePathToModel(childFile.getCanonicalPath().toString(), chapterNumber);
 					} catch (IOException e) {
