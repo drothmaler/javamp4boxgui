@@ -1,5 +1,7 @@
 package com.mp4box.gui.model;
 
+import java.io.File;
+
 import com.mp4box.gui.controller.FileSettings;
 
 public class ConfSettingsValues {
@@ -20,7 +22,7 @@ public class ConfSettingsValues {
 	public static String VIDEO_FILE_TYPE = ".mp4";
 	
 	public static String MP4BOX_WIN_PATH = "";
-	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box/MP4Box.exe";
+	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box.exe";
 	public static String MP4BOX_WIN_CHAPTER = "-chap \"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
 	public static String MP4BOX_WIN_INPUT = " -cat \"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
 	public static String MP4BOX_WIN_COMMAND = "cmd /c start \"\" \"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + " " + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + " -new \"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
