@@ -42,17 +42,16 @@ public class MP4BoxController {
 		
 		String mp4boxFilePath = getMP4BoxFilePath();
 		if((new File(mp4boxFilePath).exists())){
-			String addInputCommand = createInputCommand(0, data.length);
+			String addInputCommand = "";
 			String outputFile = getOutputFile();
 			String addChapterCommand =  createChapterFile();
 				
 			if(addChapterCommand!=null){
 				try {
+					addInputCommand = createInputCommand(0, data.length);
 					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
-					
 				} catch (IOException e) {
-					String message = "An exception (IO) happened, is the total length of the folder and filename very long? \nYou might wanna try a shorter folder path and/or filename!";
-					JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
+					String message = "An exception (IO) happened, is the total length of the folder and filename very long? \nWill try and join the video list in portions! (Divide & Conquere)";
 					log.log(Level.SEVERE, message, e);
 					
 					/**
@@ -97,8 +96,10 @@ public class MP4BoxController {
 		/**
 		 * Let's try three different "ways" of joining the videos
 		 */
+		toAttemptLoop:
 		while(attempt<3){
 			log.log(Level.INFO, "===== Attempt " + (attempt + 1 ) + " =====");
+			
 			if(attempt<2){
 				int divider = 0;
 				
@@ -133,11 +134,15 @@ public class MP4BoxController {
 					}
 					
 					listTempOutputFiles.add(tempOutputFile); //Add the temporary output file to a list of files to remove
-					String addInputCommand = createInputCommand(listStart, listStop); //Creates input commands from a subset of the main list of videos to add
 					try {
+						String addInputCommand = createInputCommand(listStart, listStop); //Creates input commands from a subset of the main list of videos to add
+						
 						executeMP4BoxCommand(mp4boxFilePath, addInputCommand, "", tempOutputFile); //Creates a temp video file of the list subset
-					} catch (IOException e){
+					} catch (Exception e){
 						log.log(Level.SEVERE, "Tried joining smaller lists of input files, but had an IOexception in attempt " + attempt, e);
+						
+						attempt++;
+						break toAttemptLoop;
 					}
 				}
 				
@@ -156,12 +161,15 @@ public class MP4BoxController {
 				 * Join together the temp video files into the final output video
 				 */
 				log.log(Level.INFO, "===== Joining temporary videos to final video with chapters =====");
+				boolean isFinished = true;
 				try {
 					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
-					
 					attempt = 9; //Sets the attempt number high to stop the while loop
 				} catch (IOException e) {
 					log.log(Level.SEVERE, "Tried attempt " + attempt + " for joining videos after an IOexception was thrown in the original join!", e);
+					
+					attempt++;
+					break toAttemptLoop;
 				}
 				
 				/**
@@ -218,12 +226,18 @@ public class MP4BoxController {
 							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, "", tempOutputFile);
 						} catch (IOException e){
 							log.log(Level.SEVERE, "Tried joining two input files, but had an IOexception in attempt " + attempt, e);
+							
+							attempt++;
+							break toAttemptLoop;
 						}
 					}else{
 						try {
 							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, addChapterCommand, outputFile);
 						} catch (IOException e){
 							log.log(Level.SEVERE, "Tried joining two input files and output final output file, but had an IOexception in attempt " + attempt, e);
+							
+							attempt++;
+							break toAttemptLoop;
 						}
 					}
 					
@@ -323,7 +337,7 @@ public class MP4BoxController {
 	 * Uses data table to create input commands
 	 * @return
 	 */
-	private String createInputCommand(int startRow, int stopRow){
+	private String createInputCommand(int startRow, int stopRow) throws Exception{
 		String addInputCommand = "";
 		for(int i=startRow; i<stopRow; i++){
 			String tempInput = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
@@ -368,6 +382,8 @@ public class MP4BoxController {
 		
 		while ((s = stdError.readLine()) != null) {
 			log.log(Level.WARNING, s);
+			
+			throw new IOException(s);
 		}
 	}
 	
