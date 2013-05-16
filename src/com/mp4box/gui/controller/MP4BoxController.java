@@ -186,7 +186,7 @@ public class MP4BoxController {
 			}else{
 				/**
 				 * Ok, so the other attempts failed, so lets try adding one and one video onto a temp video file.
-				 * It's slow, but unless the video folder and filename is ridiculously long, it should work!
+				 * It's slow (REALLY SLOW), but unless the video folder and filename is ridiculously long, it should work!
 				 */
 				log.log(Level.INFO, "===== Joining videos by adding one onto a temp file at a time =====");
 				
