@@ -38,6 +38,8 @@ public class ConfSettingsKeys {
 	public static String LOG_NUMBER_OF_FILES = "LogNumberOfFiles";
 	public static String LOG_WRITE_TO_FILE = "LogWriteToFile";
 	
+	public static String DIVIDE_AND_CONQUERE_SUB_LIST_SIZES = "DivideAndConquereSubListSizes";
+	
 	/**
 	 * This code is for retrieving the correct settings based on operating system used!
 	 */

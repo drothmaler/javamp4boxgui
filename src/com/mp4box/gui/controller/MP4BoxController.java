@@ -89,28 +89,28 @@ public class MP4BoxController {
 		log.log(Level.INFO, "===== DIVIDE & CONQUER =====");
 		
 		String outputPath = outputFile.substring(0, outputFile.lastIndexOf(File.separator) + 1); //The folder to save the output file in
-		int attemptOne = 2; //Divide dataset in two
-		int attemptTwo = 4; //Divide dataset in four
 		int attempt = 0; //Attempt three things, divide by 2, 4 or finally join 2 and 2 videos at a time!
+		
+		String[] tempAttemptSubListSizes = settings.get(ConfSettingsKeys.DIVIDE_AND_CONQUERE_SUB_LIST_SIZES).split(",");
+		int[] attemptSubListSizes = new int[tempAttemptSubListSizes.length]; //The size values for splitting the data list
+		
+		/**
+		 * Converts the attempt values from the temp string array to the int array
+		 */
+		for(int i=0;i<attemptSubListSizes.length; i++){
+			attemptSubListSizes[i] = Integer.valueOf(tempAttemptSubListSizes[i]);
+		}
 		
 		/**
 		 * Let's try three different "ways" of joining the videos
+		 * The "+ 1" represents the final solution which is adding one and one.
 		 */
-		toAttemptLoop:
-		while(attempt<3){
+		while(attempt<(attemptSubListSizes.length + 1)){
 			log.log(Level.INFO, "===== Attempt " + (attempt + 1 ) + " =====");
 			
-			if(attempt<2){
-				int divider = 0;
-				
-				/**
-				 * Checks what attempt one is on, and sets the divider accordingly
-				 */
-				if(attempt==0){
-					divider = attemptOne;
-				}else{
-					divider = attemptTwo;
-				}
+			toAttemptIf:
+			if(attempt<attemptSubListSizes.length){
+				int divider = attemptSubListSizes[attempt];
 				
 				ArrayList<String> listTempOutputFiles = new ArrayList<>(); //Temp files that should be deleted
 				int dataLength = data.length;
@@ -139,10 +139,9 @@ public class MP4BoxController {
 						
 						executeMP4BoxCommand(mp4boxFilePath, addInputCommand, "", tempOutputFile); //Creates a temp video file of the list subset
 					} catch (Exception e){
-						log.log(Level.SEVERE, "Tried joining smaller lists of input files, but had an IOexception in attempt " + attempt, e);
+						log.log(Level.SEVERE, "Tried joining smaller lists of input files, but had an IOexception in attempt " + (attempt + 1), e);
 						
-						attempt++;
-						break toAttemptLoop;
+						break toAttemptIf;
 					}
 				}
 				
@@ -161,15 +160,13 @@ public class MP4BoxController {
 				 * Join together the temp video files into the final output video
 				 */
 				log.log(Level.INFO, "===== Joining temporary videos to final video with chapters =====");
-				boolean isFinished = true;
 				try {
 					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
-					attempt = 9; //Sets the attempt number high to stop the while loop
+					attempt = attemptSubListSizes.length + 2; //Sets the attempt number high to stop the while loop
 				} catch (IOException e) {
 					log.log(Level.SEVERE, "Tried attempt " + attempt + " for joining videos after an IOexception was thrown in the original join!", e);
 					
-					attempt++;
-					break toAttemptLoop;
+					break toAttemptIf;
 				}
 				
 				/**
@@ -225,19 +222,17 @@ public class MP4BoxController {
 						try {
 							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, "", tempOutputFile);
 						} catch (IOException e){
-							log.log(Level.SEVERE, "Tried joining two input files, but had an IOexception in attempt " + attempt, e);
+							log.log(Level.SEVERE, "Tried joining two input files, but had an IOexception in attempt " + (attempt + 1), e);
 							
-							attempt++;
-							break toAttemptLoop;
+							break toAttemptIf;
 						}
 					}else{
 						try {
 							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, addChapterCommand, outputFile);
 						} catch (IOException e){
-							log.log(Level.SEVERE, "Tried joining two input files and output final output file, but had an IOexception in attempt " + attempt, e);
+							log.log(Level.SEVERE, "Tried joining two input files and output final output file, but had an IOexception in attempt " + (attempt + 1), e);
 							
-							attempt++;
-							break toAttemptLoop;
+							break toAttemptIf;
 						}
 					}
 					
