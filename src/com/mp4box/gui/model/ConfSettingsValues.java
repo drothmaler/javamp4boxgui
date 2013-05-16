@@ -38,6 +38,6 @@ public class ConfSettingsValues {
 	public static String LOG_NUMBER_OF_FILES = "10";
 	public static String LOG_WRITE_TO_FILE = "true";
 	
-	public static String DIVIDE_AND_CONQUERE_SUB_LIST_SIZES = "2,4";
+	public static String DIVIDE_AND_CONQUERE_SUB_LIST_SIZES = "2,4,6";
 	
 }
