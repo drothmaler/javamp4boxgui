@@ -45,9 +45,7 @@ import com.mp4box.gui.controller.MP4BoxController;
 import com.mp4box.gui.controller.VideoListUiController;
 import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.model.ConfSettingsKeys;
-import com.mp4box.gui.model.comparators.HumaneStringComparator;
 import com.mp4box.gui.model.comparators.NaturalOrderComparator;
-import com.mp4box.gui.model.comparators.WindowsExplorerStringComparator;
 
 /**
  * 
