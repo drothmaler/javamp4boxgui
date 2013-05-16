@@ -195,6 +195,7 @@ public class FileSettings {
 				confString += "## Note that some of the values are empty." + newline;
 				confString += "## That is because they use the path of the application, but this can be overriden by specifying a different path!" + newline;
 				confString += "## It applies to the following: MP4BoxPath, OutputPath" + newline;
+				confString += "## Add '/min' to " + ConfSettingsKeys.MP4BOX_WIN_COMMAND + " if you want the cmd's minimized (cmd /c start /min ...)" + newline;
 			}
 			confString += "## To add new line in text, write \"" + NEW_LINE_HTML_CONF + "\" for \"" + NEW_LINE_HTML_CODE + "\", and \"" + NEW_LINE_TEXT_CONF + "\" for \""+ NEW_LINE_TEXT_EXPL + "\". " +  newline;
 			
