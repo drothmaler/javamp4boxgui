@@ -19,6 +19,8 @@ public class ConfSettingsKeys {
 	public static String VIDEO_FILE_NAME = "VideoFileName";
 	public static String VIDEO_FILE_TYPE = "VideoFileType";
 	
+	public static String MP4BOX_CMD_SPLITTER_STRING = "MP4BoxCmdSplitterString";
+	
 	public static String MP4BOX_WIN_PATH 		= "MP4BoxWinPath";
 	public static String MP4BOX_WIN_EXECUTABLE 	= "MP4BoxWinExec";
 	public static String MP4BOX_WIN_CHAPTER 	= "MP4BoxWinChapter";

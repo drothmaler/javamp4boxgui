@@ -362,7 +362,7 @@ public class MP4BoxController {
 		log.log(Level.INFO, execCommand);
 		
 		Runtime rt = Runtime.getRuntime();
-		Process proc = rt.exec(execCommand);
+		Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.MP4BOX_CMD_SPLITTER_STRING)));
 		
 		//Output to terminal
 		String s;
