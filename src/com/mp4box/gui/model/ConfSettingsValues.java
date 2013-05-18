@@ -32,21 +32,21 @@ public class ConfSettingsValues {
 	
 	public static String MP4BOX_LINUX_PATH = "";
 	public static String MP4BOX_LINUX_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box";
-	public static String MP4BOX_LINUX_CHAPTER = ";-chap;\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
-	public static String MP4BOX_LINUX_INPUT = ";-cat;\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
-	public static String MP4BOX_LINUX_COMMAND = "/bin/bash;-c;\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
+	public static String MP4BOX_LINUX_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
+	public static String MP4BOX_LINUX_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
+	public static String MP4BOX_LINUX_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_MAC_PATH = "";
 	public static String MP4BOX_MAC_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box";
-	public static String MP4BOX_MAC_CHAPTER = ";-chap;\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
-	public static String MP4BOX_MAC_INPUT = ";-cat;\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
-	public static String MP4BOX_MAC_COMMAND = "/bin/bash;-c;\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
+	public static String MP4BOX_MAC_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
+	public static String MP4BOX_MAC_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
+	public static String MP4BOX_MAC_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_OTHER_PATH = "";
 	public static String MP4BOX_OTHER_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box";
-	public static String MP4BOX_OTHER_CHAPTER = ";-chap;\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
-	public static String MP4BOX_OTHER_INPUT = ";-cat;\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
-	public static String MP4BOX_OTHER_COMMAND = "/bin/bash;-c;\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
+	public static String MP4BOX_OTHER_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
+	public static String MP4BOX_OTHER_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
+	public static String MP4BOX_OTHER_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String LIST_BACKGROUND_COLOUR = "white";
 	
