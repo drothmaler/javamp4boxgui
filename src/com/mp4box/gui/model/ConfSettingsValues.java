@@ -17,6 +17,7 @@ public class ConfSettingsValues {
 	public static String CHAPTER_FILE_DATA_TIME = "CHAPTER" + ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_NUMBER + "=" + ConfSettingsRegex.CHAPTER_FILE_DATA_TIME_DURATION + " " + FileSettings.NEW_LINE_TEXT_CONF;
 	public static String CHAPTER_FILE_DATA_NAME = "CHAPTER" + ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NUMBER + "NAME=" + ConfSettingsRegex.CHAPTER_FILE_DATA_NAME_NAME + " " + FileSettings.NEW_LINE_TEXT_CONF;
 	public static String CHAPTER_FILE_DATA_INITIALTIME = "00:00:00.000";
+	public static String CHAPTER_KEEP_FILE = "false";
 	
 	public static String VIDEO_FILE_NAME = "output";
 	public static String VIDEO_FILE_TYPE = ".mp4";

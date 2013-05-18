@@ -45,8 +45,10 @@ public class MP4BoxController {
 		if((new File(mp4boxFilePath).exists())){
 			String addInputCommand = "";
 			String outputFile = getOutputFile();
-			String addChapterCommand =  createChapterFile();
-				
+			String chapterFileString = getOutputChapterFile();
+			String addChapterCommand = createChapterFile(chapterFileString);
+			
+			//Null is returned by the createChapterFile() if an exception happens!
 			if(addChapterCommand!=null){
 				try {
 					addInputCommand = createInputCommand(0, data.length);
@@ -62,6 +64,15 @@ public class MP4BoxController {
 					divideAndConquere(mp4boxFilePath, addChapterCommand, outputFile);
 				}catch(Exception e){
 					log.log(Level.SEVERE, "If the error is a NullPointer, then it might be related to a filetype thats not supported!", e);
+				}
+			}
+			
+			//Let's delete the chapter file if the settings says so
+			boolean keepChapterFile = Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_KEEP_FILE));
+			if(!keepChapterFile){
+				File chapterFile = new File(chapterFileString);
+				if(!chapterFile.delete()){
+					log.log(Level.WARNING, "Unable to delete chapter file " + chapterFileString);
 				}
 			}
 		}else{
@@ -274,9 +285,8 @@ public class MP4BoxController {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	private String createChapterFile(){
+	private String createChapterFile(String chapterFile){
 		String addChapterCommand = "";
-		String tempChapterFile = "";
 		String duration = "";
 		
 		String tempDurationFile = "";
@@ -285,8 +295,7 @@ public class MP4BoxController {
 			// Skips chapter if there is one file and singleFileSkipChapter is true 
 			boolean singleFileSkipChapter = Boolean.valueOf(settings.get(ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER));
 			if(data.length>1 || !singleFileSkipChapter){
-				tempChapterFile = getOutputChapterFile();
-				BufferedWriter out = new BufferedWriter(new FileWriter(tempChapterFile));
+				BufferedWriter out = new BufferedWriter(new FileWriter(chapterFile));
 				
 				//Create chapters
 				duration = settings.get(ConfSettingsKeys.CHAPTER_FILE_DATA_INITIALTIME);
@@ -316,12 +325,12 @@ public class MP4BoxController {
 				out.close();
 				
 				addChapterCommand = settings.get(ConfSettingsKeys.MP4BOX_CHAPTER());
-				addChapterCommand = addChapterCommand.replace(ConfSettingsRegex.MP4BOX_CHAPTER_FILE, tempChapterFile);
+				addChapterCommand = addChapterCommand.replace(ConfSettingsRegex.MP4BOX_CHAPTER_FILE, chapterFile);
 			}else{
 				log.log(Level.INFO, "Skipping adding chapter to file. " + ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
 			}
 		}catch(IOException e){
-			String message = "An exception (IO) happened while creating the chapter file " + tempChapterFile;
+			String message = "An exception (IO) happened while creating the chapter file " + chapterFile;
 			JOptionPane.showMessageDialog(ui, message + "\n" + e.getMessage());
 			log.log(Level.SEVERE, message, e);
 			

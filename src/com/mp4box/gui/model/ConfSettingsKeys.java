@@ -15,6 +15,7 @@ public class ConfSettingsKeys {
 	public static String CHAPTER_FILE_DATA_TIME = "ChapterFileDataTime";
 	public static String CHAPTER_FILE_DATA_NAME = "ChapterFileDataName";
 	public static String CHAPTER_FILE_DATA_INITIALTIME = "ChapterFileDataInitialtime";
+	public static String CHAPTER_KEEP_FILE = "ChapterKeepFile";
 	
 	public static String VIDEO_FILE_NAME = "VideoFileName";
 	public static String VIDEO_FILE_TYPE = "VideoFileType";
