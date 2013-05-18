@@ -19,6 +19,7 @@ public class ConfSettingsKeys {
 	public static String VIDEO_FILE_NAME = "VideoFileName";
 	public static String VIDEO_FILE_TYPE = "VideoFileType";
 	
+	public static String MP4BOX_CMD_TOO_LONG = "MP4BoxCmdTooLong";
 	public static String MP4BOX_CMD_SPLITTER_STRING = "MP4BoxCmdSplitterString";
 	
 	public static String MP4BOX_WIN_PATH 		= "MP4BoxWinPath";

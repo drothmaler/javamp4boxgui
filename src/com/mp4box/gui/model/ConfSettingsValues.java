@@ -21,6 +21,7 @@ public class ConfSettingsValues {
 	public static String VIDEO_FILE_NAME = "output";
 	public static String VIDEO_FILE_TYPE = ".mp4";
 	
+	public static String MP4BOX_CMD_TOO_LONG = "The command line is too long.";
 	public static String MP4BOX_CMD_SPLITTER_STRING = ";";
 	
 	public static String MP4BOX_WIN_PATH = "";

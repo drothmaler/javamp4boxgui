@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import com.mp4box.gui.model.CmdException;
 import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.model.ConfSettingsKeys;
 import com.mp4box.gui.model.ConfSettingsRegex;
@@ -50,8 +51,8 @@ public class MP4BoxController {
 				try {
 					addInputCommand = createInputCommand(0, data.length);
 					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
-				} catch (IOException e) {
-					String message = "An exception (IO) happened, is the total length of the folder and filename very long? \nWill try and join the video list in portions! (Divide & Conquere)";
+				} catch (CmdException e) {
+					String message = "An exception happened, is the total length of the folder and filename very long? \nWill try and join the video list in portions! (Divide & Conquere)";
 					log.log(Level.SEVERE, message, e);
 					
 					/**
@@ -138,10 +139,12 @@ public class MP4BoxController {
 						String addInputCommand = createInputCommand(listStart, listStop); //Creates input commands from a subset of the main list of videos to add
 						
 						executeMP4BoxCommand(mp4boxFilePath, addInputCommand, "", tempOutputFile); //Creates a temp video file of the list subset
-					} catch (Exception e){
-						log.log(Level.SEVERE, "Tried joining smaller lists of input files, but had an IOexception in attempt " + (attempt + 1), e);
+					} catch (CmdException e) {
+						log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos. Cmd is too long!", e);
 						
 						break toAttemptIf;
+					} catch (Exception e) {
+						log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos!", e);
 					}
 				}
 				
@@ -163,10 +166,12 @@ public class MP4BoxController {
 				try {
 					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
 					attempt = attemptSubListSizes.length + 2; //Sets the attempt number high to stop the while loop
-				} catch (IOException e) {
-					log.log(Level.SEVERE, "Tried attempt " + attempt + " for joining videos after an IOexception was thrown in the original join!", e);
+				} catch (CmdException e) {
+					log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos. Cmd is too long!", e);
 					
 					break toAttemptIf;
+				} catch (Exception e) {
+					log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos!", e);
 				}
 				
 				/**
@@ -221,18 +226,22 @@ public class MP4BoxController {
 					if(i<(data.length-1)){
 						try {
 							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, "", tempOutputFile);
-						} catch (IOException e){
-							log.log(Level.SEVERE, "Tried joining two input files, but had an IOexception in attempt " + (attempt + 1), e);
+						} catch (CmdException e) {
+							log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos. Cmd is too long!", e);
 							
 							break toAttemptIf;
+						} catch (Exception e) {
+							log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos!", e);
 						}
 					}else{
 						try {
 							executeMP4BoxCommand(mp4boxFilePath, inputOne + inputTwo, addChapterCommand, outputFile);
-						} catch (IOException e){
-							log.log(Level.SEVERE, "Tried joining two input files and output final output file, but had an IOexception in attempt " + (attempt + 1), e);
+						} catch (CmdException e) {
+							log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos. Cmd is too long!", e);
 							
 							break toAttemptIf;
+						} catch (Exception e) {
+							log.log(Level.SEVERE, "Tried attempt " + (attempt + 1) + " for joining videos!", e);
 						}
 					}
 					
@@ -351,7 +360,7 @@ public class MP4BoxController {
 	 * @param outputFile
 	 * @throws IOException
 	 */
-	private void executeMP4BoxCommand(String mp4boxFilePath, String addInputCommand, String addChapterCommand, String outputFile) throws IOException{
+	private void executeMP4BoxCommand(String mp4boxFilePath, String addInputCommand, String addChapterCommand, String outputFile) throws IOException, CmdException{
 		String execCommand = settings.get(ConfSettingsKeys.MP4BOX_COMMAND());
 		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE, mp4boxFilePath);
 		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_INPUT, addInputCommand);
@@ -359,7 +368,7 @@ public class MP4BoxController {
 		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE, outputFile);
 		
 		log.log(Level.INFO, "Here is the command and output of the command");
-		log.log(Level.INFO, execCommand);
+		log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.MP4BOX_CMD_SPLITTER_STRING), " "));
 		
 		Runtime rt = Runtime.getRuntime();
 		Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.MP4BOX_CMD_SPLITTER_STRING)));
@@ -376,9 +385,11 @@ public class MP4BoxController {
 		}
 		
 		while ((s = stdError.readLine()) != null) {
-			log.log(Level.WARNING, s);
-			
-			throw new IOException(s);
+			if(s.contains(settings.get(ConfSettingsKeys.MP4BOX_CMD_TOO_LONG))){
+				throw new CmdException(s);
+			}else{
+				log.log(Level.WARNING, s);
+			}
 		}
 	}
 	
