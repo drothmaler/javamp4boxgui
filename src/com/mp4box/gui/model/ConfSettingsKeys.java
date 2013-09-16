@@ -1,5 +1,9 @@
 package com.mp4box.gui.model;
 
+import java.util.ArrayList;
+
+import com.mp4box.gui.controller.OSMethods;
+
 
 
 public class ConfSettingsKeys {
@@ -65,34 +69,13 @@ public class ConfSettingsKeys {
 	/**
 	 * This code is for retrieving the correct settings based on operating system used!
 	 */
-	private static String OS = System.getProperty("os.name");
-	
-	public static boolean isWindows(){
-		return (getOSLowerCase().indexOf("win")>=0);
-	}
-	
-	public static boolean isLinux(){
-		return (getOSLowerCase().indexOf("linux")>=0);
-	}
-	
-	public static boolean isMac(){
-		return (getOSLowerCase().indexOf("mac")>=0);
-	}
-	
-	public static String getOSLowerCase() {
-		return OS.toLowerCase();
-	}
-	
-	public static String getOS() {
-		return OS;
-	}
 	
 	public static String MP4BOX_PATH(){
-		if(isWindows()){
+		if(OSMethods.isWindows()){
 			return MP4BOX_WIN_PATH;
-		}else if(isLinux()){
+		}else if(OSMethods.isLinux()){
 			return MP4BOX_LINUX_PATH;
-		}else if(isMac()){
+		}else if(OSMethods.isMac()){
 			return MP4BOX_MAC_PATH;
 		}else{
 			return MP4BOX_OTHER_PATH;
@@ -100,11 +83,11 @@ public class ConfSettingsKeys {
 	}
 	
 	public static String MP4BOX_EXECUTABLE(){
-		if(isWindows()){
+		if(OSMethods.isWindows()){
 			return MP4BOX_WIN_EXECUTABLE;
-		}else if(isLinux()){
+		}else if(OSMethods.isLinux()){
 			return MP4BOX_LINUX_EXECUTABLE;
-		}else if(isMac()){
+		}else if(OSMethods.isMac()){
 			return MP4BOX_MAC_EXECUTABLE;
 		}else{
 			return MP4BOX_OTHER_EXECUTABLE;
@@ -112,11 +95,11 @@ public class ConfSettingsKeys {
 	}
 	
 	public static String MP4BOX_CHAPTER(){
-		if(isWindows()){
+		if(OSMethods.isWindows()){
 			return MP4BOX_WIN_CHAPTER;
-		}else if(isLinux()){
+		}else if(OSMethods.isLinux()){
 			return MP4BOX_LINUX_CHAPTER;
-		}else if(isMac()){
+		}else if(OSMethods.isMac()){
 			return MP4BOX_MAC_CHAPTER;
 		}else{
 			return MP4BOX_OTHER_CHAPTER;
@@ -124,11 +107,11 @@ public class ConfSettingsKeys {
 	}
 	
 	public static String MP4BOX_INPUT(){
-		if(isWindows()){
+		if(OSMethods.isWindows()){
 			return MP4BOX_WIN_INPUT;
-		}else if(isLinux()){
+		}else if(OSMethods.isLinux()){
 			return MP4BOX_LINUX_INPUT;
-		}else if(isMac()){
+		}else if(OSMethods.isMac()){
 			return MP4BOX_MAC_INPUT;
 		}else{
 			return MP4BOX_OTHER_INPUT;
@@ -136,11 +119,11 @@ public class ConfSettingsKeys {
 	}
 	
 	public static String MP4BOX_COMMAND(){
-		if(isWindows()){
+		if(OSMethods.isWindows()){
 			return MP4BOX_WIN_COMMAND;
-		}else if(isLinux()){
+		}else if(OSMethods.isLinux()){
 			return MP4BOX_LINUX_COMMAND;
-		}else if(isMac()){
+		}else if(OSMethods.isMac()){
 			return MP4BOX_MAC_COMMAND;
 		}else{
 			return MP4BOX_OTHER_COMMAND;

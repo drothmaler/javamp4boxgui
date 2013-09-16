@@ -585,6 +585,33 @@ public class MP4BoxController {
 		String returnString = settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE());
 		returnString = returnString.replace(ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH, mp4boxPath);
 		
+		/**
+		 * The following section handles environment variables for the different OS's
+		 * Windows is the only one supported atm.
+		 */
+		if(OSMethods.isWindows()){
+			ArrayList<String> listEnvVariablesToReplace = new ArrayList<String>();
+			
+			//First we find the environment variable strings
+			int firstFoundProsentageChar=-1;
+			for(int i=0;i<returnString.length();i++){ //Lets check all the characters in the String
+				if((String.valueOf(returnString.charAt(i))).equals("%")){ //Is it equal to % which is used in Windows env variables?
+					if(firstFoundProsentageChar!=-1){ //Second prosentage found
+						listEnvVariablesToReplace.add(returnString.substring(firstFoundProsentageChar, i+1)); //Lets add the complete string found
+						firstFoundProsentageChar=-1; //And lets reset the first found variable
+					}else{ //First prosentage
+						firstFoundProsentageChar = i; //Then lets remember that position
+					}
+				}
+			}
+			
+			//and now we replace the environment variable strings with actual folder paths
+			for (String envVariable : listEnvVariablesToReplace) {
+				String envPath = System.getenv(envVariable.replaceAll("%", ""));//We also remove the % signs as getenv doesnt use them.
+				returnString = returnString.replace(envVariable, envPath);
+			}
+		}
+		
 		return returnString;
 	}
 	

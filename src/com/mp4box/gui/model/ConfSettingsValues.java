@@ -25,26 +25,26 @@ public class ConfSettingsValues {
 	public static String MP4BOX_CMD_TOO_LONG = "The command line is too long.";
 	public static String MP4BOX_CMD_SPLITTER_STRING = ";";
 	
-	public static String MP4BOX_WIN_PATH = "";
-	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box.exe";
+	public static String MP4BOX_WIN_PATH = "%ProgramFiles%\\GPAC";
+	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box.exe";
 	public static String MP4BOX_WIN_CHAPTER = ";-chap;\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
 	public static String MP4BOX_WIN_INPUT = ";-cat;\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
 	public static String MP4BOX_WIN_COMMAND = "cmd;/c;start;\"\";\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
 	
 	public static String MP4BOX_LINUX_PATH = "";
-	public static String MP4BOX_LINUX_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box";
+	public static String MP4BOX_LINUX_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
 	public static String MP4BOX_LINUX_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
 	public static String MP4BOX_LINUX_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
 	public static String MP4BOX_LINUX_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_MAC_PATH = "";
-	public static String MP4BOX_MAC_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box";
+	public static String MP4BOX_MAC_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
 	public static String MP4BOX_MAC_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
 	public static String MP4BOX_MAC_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
 	public static String MP4BOX_MAC_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_OTHER_PATH = "";
-	public static String MP4BOX_OTHER_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + "MP4Box" + File.separator + "MP4Box";
+	public static String MP4BOX_OTHER_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
 	public static String MP4BOX_OTHER_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
 	public static String MP4BOX_OTHER_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
 	public static String MP4BOX_OTHER_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;

@@ -42,6 +42,7 @@ import javax.swing.ListSelectionModel;
 
 import com.mp4box.gui.controller.FileSettings;
 import com.mp4box.gui.controller.MP4BoxController;
+import com.mp4box.gui.controller.OSMethods;
 import com.mp4box.gui.controller.VideoListUiController;
 import com.mp4box.gui.model.ConfLanguageKeys;
 import com.mp4box.gui.model.ConfSettingsKeys;
@@ -123,7 +124,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		init();
 		saveLogFile();
 		
-		log.log(Level.INFO, "The operating system detected is: " + ConfSettingsKeys.getOS());
+		log.log(Level.INFO, "The operating system detected is: " + OSMethods.getOS());
 	}
 	
 	private void initComponents(){
