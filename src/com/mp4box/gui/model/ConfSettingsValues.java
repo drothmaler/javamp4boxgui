@@ -22,46 +22,47 @@ public class ConfSettingsValues {
 	public static String VIDEO_FILE_NAME = "output";
 	public static String VIDEO_FILE_TYPE = ".mp4";
 	
+	public static String CMD_SPLITTER_STRING = ";";
+	
 	public static String MP4BOX_CMD_TOO_LONG = "The command line is too long.";
-	public static String MP4BOX_CMD_SPLITTER_STRING = ";";
-	public static String MP4BOX_CMD_CHAPTER = ";-chap;\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
-	public static String MP4BOX_CMD_INPUT = ";-cat;\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
+	public static String MP4BOX_CMD_CHAPTER = CMD_SPLITTER_STRING + "-chap" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
+	public static String MP4BOX_CMD_INPUT = CMD_SPLITTER_STRING + "-cat" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
 	
 	public static String MP4BOX_WIN_PATH = "%ProgramFiles%" + File.separator  + "GPAC";
 	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box.exe";
-	public static String MP4BOX_WIN_COMMAND = "cmd;/c;start;\"\";\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
+	public static String MP4BOX_WIN_COMMAND = "cmd" + CMD_SPLITTER_STRING + "/c" + CMD_SPLITTER_STRING + "start" + CMD_SPLITTER_STRING + "\"\"" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
 	
 	public static String MP4BOX_LINUX_PATH = "";
 	public static String MP4BOX_LINUX_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
-	public static String MP4BOX_LINUX_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
+	public static String MP4BOX_LINUX_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_MAC_PATH = "";
 	public static String MP4BOX_MAC_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
-	public static String MP4BOX_MAC_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
+	public static String MP4BOX_MAC_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_OTHER_PATH = "";
 	public static String MP4BOX_OTHER_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
-	public static String MP4BOX_OTHER_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
+	public static String MP4BOX_OTHER_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
-	public static String HANDBRAKE_SETTINGS = "-i;" + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + ";-o;" + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT;
+	public static String HANDBRAKE_SETTINGS = "-i" + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + CMD_SPLITTER_STRING + "-o" + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT;
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT_SELECTION 	= "1";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DESTINATION_FOLDER 	= "";
 	
 	public static String HANDBRAKE_WIN_PATH 		= "%ProgramFiles%" + File.separator  + "Handbrake";
 	public static String HANDBRAKE_WIN_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI.exe";
-	public static String HANDBRAKE_WIN_COMMAND		= "cmd;/c;start;\"\";" + ConfSettingsRegex.HANDBRAKE_EXECUTABLE + ";" + ConfSettingsRegex.HANDBRAKE_SETTINGS;
+	public static String HANDBRAKE_WIN_COMMAND		= "cmd" + CMD_SPLITTER_STRING + "/c" + CMD_SPLITTER_STRING + "start" + CMD_SPLITTER_STRING + "\"\"" + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
 	public static String HANDBRAKE_LINUX_PATH 		= "";
 	public static String HANDBRAKE_LINUX_EXECUTABLE = ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
-	public static String HANDBRAKE_LINUX_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + ";" + ConfSettingsRegex.HANDBRAKE_SETTINGS;
+	public static String HANDBRAKE_LINUX_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
 	public static String HANDBRAKE_MAC_PATH 		= "";
 	public static String HANDBRAKE_MAC_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
-	public static String HANDBRAKE_MAC_COMMAND		= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + ";" + ConfSettingsRegex.HANDBRAKE_SETTINGS;
+	public static String HANDBRAKE_MAC_COMMAND		= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
 	public static String HANDBRAKE_OTHER_PATH 		= "";
 	public static String HANDBRAKE_OTHER_EXECUTABLE = ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
-	public static String HANDBRAKE_OTHER_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + ";" + ConfSettingsRegex.HANDBRAKE_SETTINGS;
+	public static String HANDBRAKE_OTHER_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
 	public static String LIST_BACKGROUND_COLOUR = "white";
 	

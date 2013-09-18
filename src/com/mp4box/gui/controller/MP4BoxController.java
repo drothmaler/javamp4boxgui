@@ -380,10 +380,10 @@ public class MP4BoxController {
 		execCommand = execCommand.replace(ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE, outputFile);
 		
 		log.log(Level.INFO, "Here is the command and output of the command");
-		log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.MP4BOX_CMD_SPLITTER_STRING), " "));
+		log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
 		
 		Runtime rt = Runtime.getRuntime();
-		Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.MP4BOX_CMD_SPLITTER_STRING)));
+		Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
 		
 		//Output to terminal
 		String s;
@@ -680,11 +680,12 @@ public class MP4BoxController {
 				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_EXECUTABLE, "\"" + handbrakeExec + "\"");
 				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_SETTINGS, tempHandbrakeSettings);
 				
-				log.log(Level.INFO, execCommand);
+				//Replaces the separator with spaces to enable the command to be copy pasted and run for the log reader
+				log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
 				
 				try{
 					Runtime rt = Runtime.getRuntime();
-					Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.MP4BOX_CMD_SPLITTER_STRING)));
+					Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
 					
 					//Output to terminal
 					String s;
