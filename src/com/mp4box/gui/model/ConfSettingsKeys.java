@@ -45,8 +45,8 @@ public class ConfSettingsKeys {
 	
 	public static String HANDBRAKE_ENABLED			= "HandbrakeEnabled";
 	public static String HANDBRAKE_SETTINGS			= "HandbrakeSettings";
-	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT_SELECTION = "VideoConversionDefaultSelection";
-	public static String RADIO_BUTTON_VIDEO_CONVERSION_DESTINATION_FOLDER = "VideoConversionDestinationFolder";
+	public static String RADIO_BUTTON_VIDEO_TRANSCODING_DEFAULT_SELECTION = "VideoTranscodingDefaultSelection";
+	public static String RADIO_BUTTON_VIDEO_TRANSCODING_DESTINATION_FOLDER = "VideoTranscodingDestinationFolder";
 	
 	public static String HANDBRAKE_WIN_PATH 		= "HandbrakeWinPath";
 	public static String HANDBRAKE_WIN_EXECUTABLE 	= "HandbrakeWinExec";

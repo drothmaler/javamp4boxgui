@@ -178,9 +178,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		radioButtonChapterNameDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_CHAPTER_NAME_DEFAULT));
 		radioButtonChapterNameVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_CHAPTER_NAME_VIDEOSOURCE));
 		
-		labelVideoConversion.setText(settings.get(ConfLanguageKeys.LABEL_VIDEO_CONVERSION));
-		radioButtonVideoConversionOutputFolderDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT));
-		radioButtonVideoConversionOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER));
+		labelVideoConversion.setText(settings.get(ConfLanguageKeys.LABEL_VIDEO_TRANSCODING));
+		radioButtonVideoConversionOutputFolderDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_TRANSCODING_DEFAULT));
+		radioButtonVideoConversionOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_TRANSCODING_VIDEOSOURCEFOLDER));
 		setTextFieldVideoConversionOutputDefaultValue();
 		labelVideoConversionHandbrakeSettings.setText(settings.get(ConfLanguageKeys.LABEL_HANDBRAKE_SETTINGS));
 		textFieldVideoConversionHandbrakeSettings.setText(settings.get(ConfSettingsKeys.HANDBRAKE_SETTINGS));
@@ -296,7 +296,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), 			panelOutput);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), 		panelAutomation);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_FOLDER_RECURSION), panelFolderRecursion);
-		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_VIDEO_CONVERSION), panelVideoConversion);
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_VIDEO_TRANSCODING), panelVideoConversion);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION),		panelInformation);
 		
 		panelButton.add(buttonJoin, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 0, 1));
@@ -387,7 +387,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	}
 	
 	private void setRadioButtonDefaultVideoConversion(){
-		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT_SELECTION));
+		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.RADIO_BUTTON_VIDEO_TRANSCODING_DEFAULT_SELECTION));
 		
 		if(defaultSelection==1){
 			radioButtonVideoConversionOutputFolderDefault.setSelected(true);

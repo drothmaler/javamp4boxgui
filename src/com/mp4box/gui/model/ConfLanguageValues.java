@@ -7,7 +7,7 @@ public class ConfLanguageValues {
 	public static String TAB_NAME_OUTPUT = "Output";
 	public static String TAB_NAME_AUTOMATION = "Automation";
 	public static String TAB_NAME_FOLDER_RECURSION = "Folder Recursion";
-	public static String TAB_NAME_VIDEO_CONVERSION = "Video Conversion";
+	public static String TAB_NAME_VIDEO_TRANSCODING = "Video Transcoding";
 	public static String TAB_NAME_INFORMATION = "Information";
 	
 	public static String CHECKBOX_AUTOCLEAR_TEXT = "Auto clear table after join?";
@@ -32,9 +32,9 @@ public class ConfLanguageValues {
 	public static String RADIO_BUTTON_CHAPTER_NAME_DEFAULT = "Default";
 	public static String RADIO_BUTTON_CHAPTER_NAME_VIDEOSOURCE = "Video source";
 	
-	public static String LABEL_VIDEO_CONVERSION = "Output location:";
-	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT = "Default";
-	public static String RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER = "Video source folder";
+	public static String LABEL_VIDEO_TRANSCODING = "Output location:";
+	public static String RADIO_BUTTON_VIDEO_TRANSCODING_DEFAULT = "Default";
+	public static String RADIO_BUTTON_VIDEO_TRANSCODING_VIDEOSOURCEFOLDER = "Video source folder";
 	public static String LABEL_HANDBRAKE_SETTINGS = "Handbrake settings:";
 	public static String LABEL_HANDBRAKE_ENABLED = "Handbrake enabled:";
 	

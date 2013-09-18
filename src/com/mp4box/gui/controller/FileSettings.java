@@ -247,7 +247,7 @@ public class FileSettings {
 		String currentPath = getApplicationPath();
 		
 		//Checks that another path isn't defined in the conf file
-		String settingsPath = settingsHashMap.get(ConfSettingsKeys.RADIO_BUTTON_VIDEO_CONVERSION_DESTINATION_FOLDER);
+		String settingsPath = settingsHashMap.get(ConfSettingsKeys.RADIO_BUTTON_VIDEO_TRANSCODING_DESTINATION_FOLDER);
 		if(!settingsPath.isEmpty()){
 			currentPath = settingsPath + File.separator;
 		}
