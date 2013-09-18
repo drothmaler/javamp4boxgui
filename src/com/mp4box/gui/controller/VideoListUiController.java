@@ -59,7 +59,7 @@ public class VideoListUiController implements ActionListener {
 				ui.updateChapterNameNameingscheme();
 			}
 		}else if(e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonAbout())){
-			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland, and tested on the following version of MP4Box: 'GPAC.Framework.Setup-0.5.1-DEV-rev4452'!");
+			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland!");
 		}else if(e.getSource() instanceof JCheckBox){
 			JCheckBox checkbox = (JCheckBox) e.getSource();
 			if(checkbox.equals(ui.getCheckBoxSeparateVideos())){
