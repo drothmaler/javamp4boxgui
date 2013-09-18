@@ -10,12 +10,12 @@ public class ConfSettingsKeys {
 	
 	public static String OUTPUT_FOLDER = "OutputFolder";
 	
-	public static String CHAPTER_ENABLED = "ChapterEnabled";
-	public static String CHAPTER_FILETYPE = "ChapterFiletype";
-	public static String CHAPTER_FILE_DATA_TIME = "ChapterFileDataTime";
-	public static String CHAPTER_FILE_DATA_NAME = "ChapterFileDataName";
-	public static String CHAPTER_FILE_DATA_INITIALTIME = "ChapterFileDataInitialtime";
-	public static String CHAPTER_KEEP_FILE = "ChapterKeepFile";
+	public static String CHAPTER_ENABLED 				= "ChapterEnabled";
+	public static String CHAPTER_FILETYPE 				= "ChapterFiletype";
+	public static String CHAPTER_FILE_DATA_TIME 		= "ChapterFileDataTime";
+	public static String CHAPTER_FILE_DATA_NAME 		= "ChapterFileDataName";
+	public static String CHAPTER_FILE_DATA_INITIALTIME 	= "ChapterFileDataInitialtime";
+	public static String CHAPTER_KEEP_FILE 				= "ChapterKeepFile";
 	
 	public static String VIDEO_FILE_NAME = "VideoFileName";
 	public static String VIDEO_FILE_TYPE = "VideoFileType";
@@ -42,7 +42,8 @@ public class ConfSettingsKeys {
 	public static String MP4BOX_OTHER_EXECUTABLE= "MP4BoxOtherExec";
 	public static String MP4BOX_OTHER_COMMAND 	= "MP4BoxOtherCommand";
 	
-	public static String HANDBRAKE_SETTINGS 	= "HandbrakeSettings";
+	public static String HANDBRAKE_ENABLED			= "HandbrakeEnabled";
+	public static String HANDBRAKE_SETTINGS			= "HandbrakeSettings";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT_SELECTION = "VideoConversionDefaultSelection";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DESTINATION_FOLDER = "VideoConversionDestinationFolder";
 	
