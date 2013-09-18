@@ -26,6 +26,10 @@ public class ConfLanguageKeys {
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE = "RadioButtonOutputFileTextVideSource";
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER = "RadioButtonOutputFileTextVideSourceFolder";
 	
+	public static String LABEL_CHAPTER_NAME = "LabelChapterName";
+	public static String RADIO_BUTTON_CHAPTER_NAME_DEFAULT = "RadioButtonChapterNameDefault";
+	public static String RADIO_BUTTON_CHAPTER_NAME_VIDEOSOURCE = "RadioButtonChapterNameVideSource";
+	
 	public static String LABEL_VIDEO_CONVERSION = "LabelVideoConversion";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT = "RadioButtonVideoConversionDefault";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER = "RadioButtonVideoConversionVideSourceFolder";

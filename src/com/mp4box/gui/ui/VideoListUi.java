@@ -89,6 +89,12 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JRadioButton radioButtonOutputFileVideoSource = new JRadioButton();
 	JRadioButton radioButtonOutputFileVideoSourceFolder = new JRadioButton();
 	
+	JPanel panelChapterName = new JPanel(new GridBagLayout());
+	JLabel labelChapterName = new JLabel();
+	ButtonGroup groupChapterName = new ButtonGroup();
+	JRadioButton radioButtonChapterNameDefault = new JRadioButton();
+	JRadioButton radioButtonChapterNameVideoSource = new JRadioButton();
+	
 	JCheckBox checkBoxAutoclear = new JCheckBox();
 	JCheckBox checkBoxAutoJoin = new JCheckBox();
 	
@@ -168,6 +174,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		radioButtonOutputFileDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_DEFAULT));
 		radioButtonOutputFileVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE));
 		radioButtonOutputFileVideoSourceFolder.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER));
+		labelChapterName.setText(settings.get(ConfLanguageKeys.LABEL_CHAPTER_NAME));
+		radioButtonChapterNameDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_CHAPTER_NAME_DEFAULT));
+		radioButtonChapterNameVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_CHAPTER_NAME_VIDEOSOURCE));
 		
 		labelVideoConversion.setText(settings.get(ConfLanguageKeys.LABEL_VIDEO_CONVERSION));
 		radioButtonVideoConversionOutputFolderDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT));
@@ -226,13 +235,19 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		groupOutputFile.add(radioButtonOutputFileVideoSourceFolder);
 		setRadioButtonDefaultOutputFile();
 		
+		groupChapterName.add(radioButtonChapterNameDefault);
+		groupChapterName.add(radioButtonChapterNameVideoSource);
+		setRadioButtonDefaultChapterName();
+		
 		//Output panel
 		panelOutput.add(textFieldOutput,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 2));
 		panelOutput.add(labeloutputFolder,	getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 1, 1));
 		panelOutput.add(panelOutputFolder,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 1, 1));
 		panelOutput.add(labelOutputFile,	getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
 		panelOutput.add(panelOutputFile,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 2, 1));
-		panelOutput.add(new JPanel(),		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 2)); //Filler panel to push components to the top
+		panelOutput.add(labelChapterName,	getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 3, 1));
+		panelOutput.add(panelChapterName, 	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 3, 1));
+		panelOutput.add(new JPanel(),		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 4, 2)); //Filler panel to push components to the top
 		
 		panelOutputFolder.add(radioButtonOutputFolderDefault,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 0, 1));
 		panelOutputFolder.add(radioButtonOutputFolderVideoSource,	getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 1, 0, 1));
@@ -240,6 +255,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		panelOutputFile.add(radioButtonOutputFileDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 0, 1));
 		panelOutputFile.add(radioButtonOutputFileVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 0, 1));
 		panelOutputFile.add(radioButtonOutputFileVideoSourceFolder,	getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 2, 0, 1));
+		
+		panelChapterName.add(radioButtonChapterNameDefault,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 0, 1));
+		panelChapterName.add(radioButtonChapterNameVideoSource,		getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 1, 0, 1));
 		
 		//Automation settings
 		panelAutomation.add(checkBoxAutoclear, 	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
@@ -295,6 +313,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		radioButtonOutputFileDefault.addActionListener(actionListener);
 		radioButtonOutputFileVideoSource.addActionListener(actionListener);
 		radioButtonOutputFileVideoSourceFolder.addActionListener(actionListener);
+		radioButtonChapterNameDefault.addActionListener(actionListener);
+		radioButtonChapterNameVideoSource.addActionListener(actionListener);
 		
 		radioButtonVideoConversionOutputFolderDefault.addActionListener(actionListener);
 		radioButtonVideoConversionOutputFolderVideoSource.addActionListener(actionListener);
@@ -353,6 +373,16 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			radioButtonOutputFileVideoSource.setSelected(true);
 		}else if(defaultSelection==3){
 			radioButtonOutputFileVideoSourceFolder.setSelected(true);
+		}
+	}
+	
+	private void setRadioButtonDefaultChapterName(){
+		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.RADIO_BUTTON_CHAPTER_NAME_DEFAULT_SELECTION));
+		
+		if(defaultSelection==1){
+			radioButtonChapterNameDefault.setSelected(true);
+		}else if(defaultSelection==2){
+			radioButtonChapterNameVideoSource.setSelected(true);
 		}
 	}
 	
@@ -476,7 +506,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		
 		if(file.isDirectory()){
 			if(checkBoxSeparateVideos.isSelected()){
-				//Resets the the chap number for each folder, so each video will start with 1.
+				//Resets the the chap number for each folder, so each video will start with 1. This is due to the recursive use of this method!
 				chapterNumber = 0;
 				
 				/**
@@ -563,6 +593,24 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			getRadioButtonVideoConversionOutputFolderVideoSource().setEnabled(false);
 			getTextFieldVideoConversionOutput().setEnabled(false);
 			getTextFieldVideoConversionHandbrakeSettings().setEnabled(false);
+		}
+	}
+	
+	public void updateChapterNameNameingscheme(JRadioButton radioButton){
+		if(radioButton == radioButtonChapterNameDefault){
+			Object[][] data = videoTableModel.getData();
+			for(int i=0;i<data.length;i++){
+				String chapterNumber = String.valueOf(i+1);
+				videoTableModel.setValueAt(settings.get(ConfLanguageKeys.CHAPTER_NAME_DEFAULT) + chapterNumber, i, 2);
+			}
+		}else{
+			Object[][] data = videoTableModel.getData();
+			for(int i=0;i<data.length;i++){
+				String filename = FileSettings.splitOutputFilePath((String)data[i][0])[1]; //Selects the entire file path and filename, then splits that into two parts.
+				filename = filename.substring(0, filename.lastIndexOf(".")); //and then removes the filetype by selecting the substring up until the last "."
+				
+				videoTableModel.setValueAt(filename, i, 2);
+			}
 		}
 	}
 	
@@ -660,6 +708,14 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	public JRadioButton getRadioButtonVideoConversionOutputFolderVideoSource() {
 		return radioButtonVideoConversionOutputFolderVideoSource;
+	}
+	
+	public JRadioButton getRadioButtonChapterNameDefault() {
+		return radioButtonChapterNameDefault;
+	}
+	
+	public JRadioButton getRadioButtonChapterNameVideoSource() {
+		return radioButtonChapterNameVideoSource;
 	}
 	
 	public JButton getButtonJoin(){

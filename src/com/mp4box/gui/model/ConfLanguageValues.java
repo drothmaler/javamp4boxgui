@@ -28,6 +28,10 @@ public class ConfLanguageValues {
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE = "Video source";
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER = "Video Source Folder";
 	
+	public static String LABEL_CHAPTER_NAME = "Chapter name:";
+	public static String RADIO_BUTTON_CHAPTER_NAME_DEFAULT = "Default";
+	public static String RADIO_BUTTON_CHAPTER_NAME_VIDEOSOURCE = "Video source";
+	
 	public static String LABEL_VIDEO_CONVERSION = "Output location:";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT = "Default";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER = "Video source folder";
