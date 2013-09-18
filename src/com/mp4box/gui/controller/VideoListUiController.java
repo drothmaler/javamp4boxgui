@@ -20,7 +20,6 @@ public class VideoListUiController implements ActionListener {
 		this.ui = ui;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if((e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonJoin()))){
@@ -59,27 +58,32 @@ public class VideoListUiController implements ActionListener {
 			}
 		}else if(e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonAbout())){
 			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland, and tested on the following version of MP4Box: 'GPAC.Framework.Setup-0.5.1-DEV-rev4452'!");
-		}else if((e.getSource() instanceof JCheckBox && ((JCheckBox) e.getSource()).equals(ui.getCheckBoxSeparateVideos()))){
-			if(ui.getCheckBoxSeparateVideos().isSelected()){
-				/**
-				 * When the separate videos based on folders option is enabled, other options are set as a result.
-				 */
-				
-				//Enable these two options that are required
-				ui.getCheckBoxAutoJoin().setSelected(true);
-				ui.getCheckBoxAutoClear().setSelected(true);
-				
-				//Disable them to make sure they are kept as required
-				ui.getCheckBoxAutoJoin().setEnabled(false);
-				ui.getCheckBoxAutoClear().setEnabled(false);
-			}else if(!ui.getCheckBoxSeparateVideos().isSelected()){
-				//Reset options to default
-				ui.getCheckBoxAutoJoin().setSelected(Boolean.valueOf(ui.getSettings().get(ConfSettingsKeys.CHECKBOX_AUTOJOIN_SELECTED)));
-				ui.getCheckBoxAutoClear().setSelected(Boolean.valueOf(ui.getSettings().get(ConfSettingsKeys.CHECKBOX_AUTOCLEAR_SELECTED)));
-				
-				//Enable them so the user can do whatever
-				ui.getCheckBoxAutoJoin().setEnabled(true);
-				ui.getCheckBoxAutoClear().setEnabled(true);
+		}else if(e.getSource() instanceof JCheckBox){
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			if(checkbox.equals(ui.getCheckBoxSeparateVideos())){
+				if(checkbox.isSelected()){
+					/**
+					 * When the separate videos based on folders option is enabled, other options are set as a result.
+					 */
+					
+					//Enable these two options that are required
+					ui.getCheckBoxAutoJoin().setSelected(true);
+					ui.getCheckBoxAutoClear().setSelected(true);
+					
+					//Disable them to make sure they are kept as required
+					ui.getCheckBoxAutoJoin().setEnabled(false);
+					ui.getCheckBoxAutoClear().setEnabled(false);
+				}else if(!checkbox.isSelected()){
+					//Reset options to default
+					ui.getCheckBoxAutoJoin().setSelected(Boolean.valueOf(ui.getSettings().get(ConfSettingsKeys.CHECKBOX_AUTOJOIN_SELECTED)));
+					ui.getCheckBoxAutoClear().setSelected(Boolean.valueOf(ui.getSettings().get(ConfSettingsKeys.CHECKBOX_AUTOCLEAR_SELECTED)));
+					
+					//Enable them so the user can do whatever
+					ui.getCheckBoxAutoJoin().setEnabled(true);
+					ui.getCheckBoxAutoClear().setEnabled(true);
+				}
+			}else if(checkbox.equals(ui.getCheckBoxVideoConversionEnabled())){
+				ui.setVideoConversionState(checkbox.isSelected());
 			}
 		}
 	}

@@ -17,14 +17,15 @@ public class ConfSettingsKeys {
 	public static String CHAPTER_FILE_DATA_INITIALTIME 	= "ChapterFileDataInitialtime";
 	public static String CHAPTER_KEEP_FILE 				= "ChapterKeepFile";
 	
-	public static String VIDEO_FILE_NAME = "VideoFileName";
-	public static String VIDEO_FILE_TYPE = "VideoFileType";
+	public static String VIDEO_FILE_NAME 			= "VideoFileName";
+	public static String VIDEO_FILE_TYPE 			= "VideoFileType";
+	public static String VIDEO_FILE_TYPE_WARNING 	= "VideoFileTypeWarning";
 	
 	public static String CMD_SPLITTER_STRING = "CmdSplitterString";
 	
-	public static String MP4BOX_CMD_TOO_LONG 		= "MP4BoxCmdTooLong";
-	public static String MP4BOX_CMD_CHAPTER 		= "MP4BoxCmdChapter";
-	public static String MP4BOX_CMD_INPUT 			= "MP4BoxCmdInput";
+	public static String MP4BOX_CMD_TOO_LONG 	= "MP4BoxCmdTooLong";
+	public static String MP4BOX_CMD_CHAPTER 	= "MP4BoxCmdChapter";
+	public static String MP4BOX_CMD_INPUT 		= "MP4BoxCmdInput";
 	
 	public static String MP4BOX_WIN_PATH 		= "MP4BoxWinPath";
 	public static String MP4BOX_WIN_EXECUTABLE 	= "MP4BoxWinExec";

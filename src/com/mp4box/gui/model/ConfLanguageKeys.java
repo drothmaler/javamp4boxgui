@@ -30,6 +30,7 @@ public class ConfLanguageKeys {
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT = "RadioButtonVideoConversionDefault";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER = "RadioButtonVideoConversionVideSourceFolder";
 	public static String LABEL_HANDBRAKE_SETTINGS = "LabelHandbrakeSettings";
+	public static String LABEL_HANDBRAKE_ENABLED = "HandbrakeEnabled";
 	
 	public static String EDITOR_PANE_INFORMATION = "EditorPaneInformation";
 	

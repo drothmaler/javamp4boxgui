@@ -19,8 +19,9 @@ public class ConfSettingsValues {
 	public static String CHAPTER_FILE_DATA_INITIALTIME 	= "00:00:00.000";
 	public static String CHAPTER_KEEP_FILE 				= "false";
 	
-	public static String VIDEO_FILE_NAME = "output";
-	public static String VIDEO_FILE_TYPE = ".mp4";
+	public static String VIDEO_FILE_NAME 			= "output";
+	public static String VIDEO_FILE_TYPE 			= ".mp4";
+	public static String VIDEO_FILE_TYPE_WARNING 	= "true";
 	
 	public static String CMD_SPLITTER_STRING = ";";
 	

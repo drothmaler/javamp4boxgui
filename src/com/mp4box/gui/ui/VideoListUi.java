@@ -103,6 +103,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JTextField textFieldVideoConversionOutput = new JTextField();
 	JLabel labelVideoConversionHandbrakeSettings = new JLabel();
 	JTextField textFieldVideoConversionHandbrakeSettings = new JTextField();
+	JLabel labelVideoConversionEnabled = new JLabel();
+	JCheckBox checkBoxVideoConversionEnabled = new JCheckBox();
 	
 	JEditorPane editorPaneInformation = new JEditorPane();
 	
@@ -173,6 +175,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		setTextFieldVideoConversionOutputDefaultValue();
 		labelVideoConversionHandbrakeSettings.setText(settings.get(ConfLanguageKeys.LABEL_HANDBRAKE_SETTINGS));
 		textFieldVideoConversionHandbrakeSettings.setText(settings.get(ConfSettingsKeys.HANDBRAKE_SETTINGS));
+		labelVideoConversionEnabled.setText(settings.get(ConfLanguageKeys.LABEL_HANDBRAKE_ENABLED));
+		checkBoxVideoConversionEnabled.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.HANDBRAKE_ENABLED)));
+		setVideoConversionState(checkBoxVideoConversionEnabled.isSelected());
 		
 		checkBoxAutoclear.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR_TEXT));
 		checkBoxAutoJoin.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN_TEXT));
@@ -260,7 +265,9 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		panelVideoConversion.add(textFieldVideoConversionOutput,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
 		panelVideoConversion.add(labelVideoConversionHandbrakeSettings,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
 		panelVideoConversion.add(textFieldVideoConversionHandbrakeSettings,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 2, 1));
-		panelVideoConversion.add(new JPanel(),								getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 2)); //Filler panel to push components to the top
+		panelVideoConversion.add(labelVideoConversionEnabled,				getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 3, 1));
+		panelVideoConversion.add(checkBoxVideoConversionEnabled,			getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 3, 1));
+		panelVideoConversion.add(new JPanel(),								getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 4, 2)); //Filler panel to push components to the top
 				
 		//Information panel
 		panelInformation.add(editorPaneInformation,  getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
@@ -291,6 +298,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		
 		radioButtonVideoConversionOutputFolderDefault.addActionListener(actionListener);
 		radioButtonVideoConversionOutputFolderVideoSource.addActionListener(actionListener);
+		checkBoxVideoConversionEnabled.addActionListener(actionListener);
 		
 		checkBoxSeparateVideos.addActionListener(actionListener);
 	}
@@ -544,6 +552,20 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		getTextFieldVideoConversionOutput().setText(folderDefault);
 	}
 	
+	public void setVideoConversionState(Boolean enabled){
+		if(enabled){
+			getRadioButtonVideoConversionOutputFolderDefault().setEnabled(true);
+			getRadioButtonVideoConversionOutputFolderVideoSource().setEnabled(true);
+			getTextFieldVideoConversionOutput().setEnabled(true);
+			getTextFieldVideoConversionHandbrakeSettings().setEnabled(true);
+		}else{
+			getRadioButtonVideoConversionOutputFolderDefault().setEnabled(false);
+			getRadioButtonVideoConversionOutputFolderVideoSource().setEnabled(false);
+			getTextFieldVideoConversionOutput().setEnabled(false);
+			getTextFieldVideoConversionHandbrakeSettings().setEnabled(false);
+		}
+	}
+	
 	private void messageProcessFileException(String filePath, IOException e){
 		JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "\nStack trace: " + e.getMessage());
 		log.log(Level.SEVERE, "Unable to properly process a file in " + filePath, e);
@@ -646,6 +668,10 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	public JButton getButtonAbout(){
 		return buttonAbout;
+	}
+	
+	public JCheckBox getCheckBoxVideoConversionEnabled() {
+		return checkBoxVideoConversionEnabled;
 	}
 	
 	public JCheckBox getCheckBoxSeparateVideos(){

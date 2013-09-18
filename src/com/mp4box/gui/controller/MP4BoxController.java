@@ -43,39 +43,59 @@ public class MP4BoxController {
 		
 		String mp4boxFilePath = getMP4BoxFilePath();
 		if((new File(mp4boxFilePath).exists())){
-			data = convertVideos(data);
 			
-			
-			String addInputCommand = "";
-			String outputFile = getOutputFile();
-			String chapterFileString = getOutputChapterFile();
-			String addChapterCommand = createChapterFile(chapterFileString);
-			
-			//Null is returned by the createChapterFile() if an exception happens!
-			if(addChapterCommand!=null){
-				try {
-					addInputCommand = createInputCommand(0, data.length);
-					executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
-				} catch (CmdException e) {
-					String message = "An exception happened, is the total length of the folder and filename very long? \nWill try and join the video list in portions! (Divide & Conquere)";
-					log.log(Level.SEVERE, message, e);
-					
-					/**
-					 * Since the join failed, and it's likely that it has to do with the command being to big, 
-					 * lets try and split the data list up and join them in portions.
-					 */
-					divideAndConquere(mp4boxFilePath, addChapterCommand, outputFile);
-				}catch(Exception e){
-					log.log(Level.SEVERE, "If the error is a NullPointer, then it might be related to a filetype thats not supported!", e);
+			int answer = -1;
+			if(Boolean.valueOf(settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE_WARNING)) && !ui.getCheckBoxVideoConversionEnabled().isSelected()){ //The warning can be disabled in the settings file
+				//Checks if there is one file that is not an MP4 file and gives a warning!
+				for (Object[] videoRow : data) {
+					if(!((String)videoRow[0]).endsWith(settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE))){
+						String msg = "Input video list contains none " + settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE) + " file(s) without video conversion enabled! \nShould the video conversion (Handbrake) be enabled?";
+						log.log(Level.WARNING, msg);
+						answer = JOptionPane.showConfirmDialog(ui, msg);
+						
+						break;
+					}
 				}
 			}
 			
-			//Let's delete the chapter file if the settings says so
-			boolean keepChapterFile = Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_KEEP_FILE));
-			if(!keepChapterFile){
-				File chapterFile = new File(chapterFileString);
-				if(!chapterFile.delete()){
-					log.log(Level.WARNING, "Unable to delete chapter file " + chapterFileString);
+			if(answer == JOptionPane.CANCEL_OPTION){
+				log.log(Level.WARNING, "## Canceled! ##");
+			}else {
+				if(ui.getCheckBoxVideoConversionEnabled().isSelected() || answer == JOptionPane.YES_OPTION){
+					data = convertVideos(data);
+				}
+				
+				String addInputCommand = "";
+				String outputFile = getOutputFile();
+				String chapterFileString = getOutputChapterFile();
+				String addChapterCommand = createChapterFile(chapterFileString);
+				
+				//Null is returned by the createChapterFile() if an exception happens!
+				if(addChapterCommand!=null){
+					try {
+						addInputCommand = createInputCommand(0, data.length);
+						executeMP4BoxCommand(mp4boxFilePath, addInputCommand, addChapterCommand, outputFile);
+					} catch (CmdException e) {
+						String message = "An exception happened, is the total length of the folder and filename very long? \nWill try and join the video list in portions! (Divide & Conquere)";
+						log.log(Level.SEVERE, message, e);
+						
+						/**
+						 * Since the join failed, and it's likely that it has to do with the command being to big, 
+						 * lets try and split the data list up and join them in portions.
+						 */
+						divideAndConquere(mp4boxFilePath, addChapterCommand, outputFile);
+					}catch(Exception e){
+						log.log(Level.SEVERE, "If the error is a NullPointer, then it might be related to a filetype thats not supported!", e);
+					}
+				}
+				
+				//Let's delete the chapter file if the settings says so
+				boolean keepChapterFile = Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_KEEP_FILE));
+				if(!keepChapterFile){
+					File chapterFile = new File(chapterFileString);
+					if(!chapterFile.delete()){
+						log.log(Level.WARNING, "Unable to delete chapter file " + chapterFileString);
+					}
 				}
 			}
 		}else{
@@ -344,6 +364,12 @@ public class MP4BoxController {
 			log.log(Level.SEVERE, message, e);
 			
 			addChapterCommand = null;
+		}catch(Exception e){
+			String message = e.getMessage();
+			JOptionPane.showMessageDialog(ui, message);
+			log.log(Level.SEVERE, message, e);
+			
+			addChapterCommand = null;
 		}
 		
 		return addChapterCommand;
@@ -441,7 +467,11 @@ public class MP4BoxController {
 	 * @return
 	 * @throws ParseException
 	 */
-	public String addTime(String time1, String time2) throws ParseException{
+	public String addTime(String time1, String time2) throws ParseException, Exception{
+		if(time1 == null || time2 == null){
+			throw new Exception("When adding two times, one of them was NULL! Usually because of unsupported filetype!");
+		}
+		
 		String splitt1 = ":";
 		String splitt2  = ".";
 		

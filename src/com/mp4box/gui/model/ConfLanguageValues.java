@@ -32,6 +32,7 @@ public class ConfLanguageValues {
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT = "Default";
 	public static String RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER = "Video source folder";
 	public static String LABEL_HANDBRAKE_SETTINGS = "Handbrake settings:";
+	public static String LABEL_HANDBRAKE_ENABLED = "Handbrake enabled:";
 	
 	public static String EDITOR_PANE_INFORMATION = FileSettings.HTML_TAG 
 											 	 + "<b>Installation (Wiki):</b> <a href='http://sourceforge.net/p/javamp4boxgui/wiki/Installation/'>http://sourceforge.net/p/javamp4boxgui/wiki/Installation/</a>" + FileSettings.NEW_LINE_HTML_CONF
