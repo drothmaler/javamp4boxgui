@@ -39,6 +39,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 
 import com.mp4box.gui.controller.FileSettings;
 import com.mp4box.gui.controller.MP4BoxController;
@@ -72,6 +73,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	JPanel panelOutput = new JPanel(new GridBagLayout());
 	JPanel panelAutomation = new JPanel(new GridBagLayout());
 	JPanel panelFolderRecursion = new JPanel(new GridBagLayout());
+	JPanel panelVideoConversion = new JPanel(new GridBagLayout());
 	JPanel panelInformation = new JPanel(new GridBagLayout());
 	
 	JTextField textFieldOutput = new JTextField();
@@ -92,6 +94,15 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	JLabel labelSeparateVideos = new JLabel();
 	JCheckBox checkBoxSeparateVideos = new JCheckBox();
+	
+	JPanel panelVideoConversionOutput = new JPanel(new GridBagLayout());
+	JLabel labelVideoConversion = new JLabel();
+	ButtonGroup groupVideoConversion = new ButtonGroup();
+	JRadioButton radioButtonVideoConversionOutputFolderDefault = new JRadioButton();
+	JRadioButton radioButtonVideoConversionOutputFolderVideoSource = new JRadioButton();
+	JTextField textFieldVideoConversionOutput = new JTextField();
+	JLabel labelVideoConversionHandbrakeSettings = new JLabel();
+	JTextField textFieldVideoConversionHandbrakeSettings = new JTextField();
 	
 	JEditorPane editorPaneInformation = new JEditorPane();
 	
@@ -155,6 +166,13 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		radioButtonOutputFileDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_DEFAULT));
 		radioButtonOutputFileVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE));
 		radioButtonOutputFileVideoSourceFolder.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER));
+		
+		labelVideoConversion.setText(settings.get(ConfLanguageKeys.LABEL_VIDEO_CONVERSION));
+		radioButtonVideoConversionOutputFolderDefault.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT));
+		radioButtonVideoConversionOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER));
+		setTextFieldVideoConversionOutputDefaultValue();
+		labelVideoConversionHandbrakeSettings.setText(settings.get(ConfLanguageKeys.LABEL_HANDBRAKE_SETTINGS));
+		textFieldVideoConversionHandbrakeSettings.setText(settings.get(ConfSettingsKeys.HANDBRAKE_SETTINGS));
 		
 		checkBoxAutoclear.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOCLEAR_TEXT));
 		checkBoxAutoJoin.setText(settings.get(ConfLanguageKeys.CHECKBOX_AUTOJOIN_TEXT));
@@ -228,6 +246,23 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		panelFolderRecursion.add(checkBoxSeparateVideos, 	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 1, 1));
 		panelFolderRecursion.add(new JPanel(), 				getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 2, 1));
 		
+		//Video conversion
+		groupVideoConversion = new ButtonGroup();
+		groupVideoConversion.add(radioButtonVideoConversionOutputFolderDefault);
+		groupVideoConversion.add(radioButtonVideoConversionOutputFolderVideoSource);
+		setRadioButtonDefaultVideoConversion();
+		
+		panelVideoConversionOutput.add(radioButtonVideoConversionOutputFolderDefault,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 0, 1));
+		panelVideoConversionOutput.add(radioButtonVideoConversionOutputFolderVideoSource,	getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 1, 0, 1));
+		
+		panelVideoConversion.add(labelVideoConversion, 		 				getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 0, 1));
+		panelVideoConversion.add(panelVideoConversionOutput, 				getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 0, 1));
+		panelVideoConversion.add(textFieldVideoConversionOutput,			getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 1, 1, 1));
+		panelVideoConversion.add(labelVideoConversionHandbrakeSettings,		getComponentConstraints(GridBagConstraints.BOTH, 0, 0, 0, 2, 1));
+		panelVideoConversion.add(textFieldVideoConversionHandbrakeSettings,	getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 1, 2, 1));
+		panelVideoConversion.add(new JPanel(),								getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 3, 2)); //Filler panel to push components to the top
+				
+		//Information panel
 		panelInformation.add(editorPaneInformation,  getComponentConstraints(GridBagConstraints.BOTH, 1, 0, 0, 0, 1));
 		panelInformation.add(new JPanel(),			 getComponentConstraints(GridBagConstraints.BOTH, 1, 1, 0, 1, 1));
 		
@@ -236,6 +271,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_OUTPUT), 			panelOutput);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_AUTOMATION), 		panelAutomation);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_FOLDER_RECURSION), panelFolderRecursion);
+		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_VIDEO_CONVERSION), panelVideoConversion);
 		tabbedPaneOptions.add(settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION),		panelInformation);
 		
 		panelButton.add(buttonJoin, getComponentConstraints(GridBagConstraints.CENTER, 1, 0.5, 0, 0, 1));
@@ -253,10 +289,20 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		radioButtonOutputFileVideoSource.addActionListener(actionListener);
 		radioButtonOutputFileVideoSourceFolder.addActionListener(actionListener);
 		
+		radioButtonVideoConversionOutputFolderDefault.addActionListener(actionListener);
+		radioButtonVideoConversionOutputFolderVideoSource.addActionListener(actionListener);
+		
 		checkBoxSeparateVideos.addActionListener(actionListener);
 	}
 	
 	private void init(){
+		//Lets use the system look and feel
+		try{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		this.setTitle("Java MP4Box Gui v1.8-SNAPSHOT");
 		this.setSize(640,480);
 		this.setLocationRelativeTo(null); //Centers the window on the screen
@@ -299,6 +345,16 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			radioButtonOutputFileVideoSource.setSelected(true);
 		}else if(defaultSelection==3){
 			radioButtonOutputFileVideoSourceFolder.setSelected(true);
+		}
+	}
+	
+	private void setRadioButtonDefaultVideoConversion(){
+		int defaultSelection = Integer.valueOf(settings.get(ConfSettingsKeys.RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT_SELECTION));
+		
+		if(defaultSelection==1){
+			radioButtonVideoConversionOutputFolderDefault.setSelected(true);
+		}else if(defaultSelection==2){
+			radioButtonVideoConversionOutputFolderVideoSource.setSelected(true);
 		}
 	}
 	
@@ -478,6 +534,16 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		return chapterNumber;
 	}
 	
+	/**
+	 * Sets the value of textFieldVideoConversionOutput to the default value.
+	 * If there is a value defined in settings.conf, then that is used,
+	 * otherwise the application folder is used.
+	 */
+	public void setTextFieldVideoConversionOutputDefaultValue(){
+		String folderDefault = getFileSettings().getCurrentVideoConversionOutputPath();
+		getTextFieldVideoConversionOutput().setText(folderDefault);
+	}
+	
 	private void messageProcessFileException(String filePath, IOException e){
 		JOptionPane.showMessageDialog(this, "Unable to properly process a file in " + filePath + "\nStack trace: " + e.getMessage());
 		log.log(Level.SEVERE, "Unable to properly process a file in " + filePath, e);
@@ -538,6 +604,14 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		return textFieldOutput;
 	}
 	
+	public JTextField getTextFieldVideoConversionOutput() {
+		return textFieldVideoConversionOutput;
+	}
+	
+	public JTextField getTextFieldVideoConversionHandbrakeSettings() {
+		return textFieldVideoConversionHandbrakeSettings;
+	}
+	
 	public JRadioButton getRadioButtonOutputFolderDefault() {
 		return radioButtonOutputFolderDefault;
 	}
@@ -556,6 +630,14 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	public JRadioButton getRadioButtonOutputFileVideoSourceFolder() {
 		return radioButtonOutputFileVideoSourceFolder;
+	}
+	
+	public JRadioButton getRadioButtonVideoConversionOutputFolderDefault() {
+		return radioButtonVideoConversionOutputFolderDefault;
+	}
+	
+	public JRadioButton getRadioButtonVideoConversionOutputFolderVideoSource() {
+		return radioButtonVideoConversionOutputFolderVideoSource;
 	}
 	
 	public JButton getButtonJoin(){

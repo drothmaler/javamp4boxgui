@@ -43,6 +43,9 @@ public class MP4BoxController {
 		
 		String mp4boxFilePath = getMP4BoxFilePath();
 		if((new File(mp4boxFilePath).exists())){
+			data = convertVideos(data);
+			
+			
 			String addInputCommand = "";
 			String outputFile = getOutputFile();
 			String chapterFileString = getOutputChapterFile();
@@ -585,19 +588,27 @@ public class MP4BoxController {
 		String returnString = settings.get(ConfSettingsKeys.MP4BOX_EXECUTABLE());
 		returnString = returnString.replace(ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH, mp4boxPath);
 		
-		/**
-		 * The following section handles environment variables for the different OS's
-		 * Windows is the only one supported atm.
-		 */
+		returnString = replaceEnvironmentVariables(returnString);
+		
+		return returnString;
+	}
+	
+	/**
+	 * The following section handles environment variables for the different OS's
+	 * Windows is the only one supported atm.
+	 * @param fileString
+	 * @return
+	 */
+	public String replaceEnvironmentVariables(String fileString){
 		if(OSMethods.isWindows()){
 			ArrayList<String> listEnvVariablesToReplace = new ArrayList<String>();
 			
 			//First we find the environment variable strings
 			int firstFoundProsentageChar=-1;
-			for(int i=0;i<returnString.length();i++){ //Lets check all the characters in the String
-				if((String.valueOf(returnString.charAt(i))).equals("%")){ //Is it equal to % which is used in Windows env variables?
+			for(int i=0;i<fileString.length();i++){ //Lets check all the characters in the String
+				if((String.valueOf(fileString.charAt(i))).equals("%")){ //Is it equal to % which is used in Windows env variables?
 					if(firstFoundProsentageChar!=-1){ //Second prosentage found
-						listEnvVariablesToReplace.add(returnString.substring(firstFoundProsentageChar, i+1)); //Lets add the complete string found
+						listEnvVariablesToReplace.add(fileString.substring(firstFoundProsentageChar, i+1)); //Lets add the complete string found
 						firstFoundProsentageChar=-1; //And lets reset the first found variable
 					}else{ //First prosentage
 						firstFoundProsentageChar = i; //Then lets remember that position
@@ -608,17 +619,119 @@ public class MP4BoxController {
 			//and now we replace the environment variable strings with actual folder paths
 			for (String envVariable : listEnvVariablesToReplace) {
 				String envPath = System.getenv(envVariable.replaceAll("%", ""));//We also remove the % signs as getenv doesnt use them.
-				returnString = returnString.replace(envVariable, envPath);
+				fileString = fileString.replace(envVariable, envPath);
 			}
 		}
 		
-		return returnString;
+		return fileString;
 	}
 	
 	public String getMP4BoxMissingMessage(String mp4boxPath){
 		return "Can't find the MP4Box binary! \nExpected to find it here: " + mp4boxPath +"\n"
             + "If you need further information, look in the '" + settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION) + "' tab!\n"
             + "This app is tested with build: 'Nightly DEV build of v0.5.1' \n";
+	}
+	
+	/**
+	 * Converts all files in the data variable to MP4 (ConfSettingsValues.VIDEO_FILE_TYPE) files.
+	 * The data variable is returned with the filename & paths updated.
+	 * @param data
+	 * @return data
+	 */
+	public Object[][] convertVideos(Object[][] data){
+		String handbrakeExec = getHandbrakeFilePath(); //Where handbrake at? http://www.youtube.com/watch?v=Dd7FixvoKBw
+		handbrakeExec = handbrakeExec.replaceAll("\\\\", "\\\\\\\\"); //Because replaceAll fu¤ks up \\ by making pairs of them in to single \. Therefore I use 4 (\\\\) of them. It's a java thing. Read up sheeple!
+		
+		String handbrakeSettings = ui.getTextFieldVideoConversionHandbrakeSettings().getText(); //Settings are important
+		String handbrakeOutputPath = "";
+		
+		//Update handbrakeOutputPath variable if the default radio button is selected
+		if(ui.getRadioButtonVideoConversionOutputFolderDefault().isSelected()){
+			handbrakeOutputPath = ui.getTextFieldVideoConversionOutput().getText();
+		}
+		
+		Object[][] dataUpdated = new Object[data.length][];
+		for (int i=0; i<data.length; i++) {
+			Object[] videoRow = data[i];
+			String videoSourceFilePath = (String) videoRow[0];
+			if(!videoSourceFilePath.endsWith(settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE))){
+				log.log(Level.INFO, "## Converting " + videoSourceFilePath + " to an MP4 file ##");
+				
+				//Use video source folder path if the handbrakeOutputPath variable is blank
+				String newVideoOutputPath = handbrakeOutputPath;
+				if(newVideoOutputPath.isEmpty()){
+					newVideoOutputPath = FileSettings.splitOutputFilePath(videoSourceFilePath)[0]; //Removes the filename as we only need the folder path
+				}
+				newVideoOutputPath = newVideoOutputPath + FileSettings.splitOutputFilePath(videoSourceFilePath)[1] + settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE); //Adds the filename to the output variable
+				
+				videoSourceFilePath = videoSourceFilePath.replaceAll("\\\\", "\\\\\\\\"); //These are used because replaceAll removes slashes such as this one: \
+				newVideoOutputPath = newVideoOutputPath.replaceAll("\\\\", "\\\\\\\\");   //So I add more to compensate!
+				
+				String tempHandbrakeSettings = handbrakeSettings;
+				log.log(Level.INFO, "Pre settings: " + tempHandbrakeSettings);
+				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT, "\"" + videoSourceFilePath + "\"");
+				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT, "\"" + newVideoOutputPath + "\"");
+				log.log(Level.INFO, "Post settings: " + tempHandbrakeSettings);
+				
+				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll("\\\\", "\\\\\\\\"); //The replaceAll thing I talked about!
+				
+				//The command to be run, assemble autobots!
+				String execCommand = settings.get(ConfSettingsKeys.HANDBRAKE_COMMAND());
+				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_EXECUTABLE, "\"" + handbrakeExec + "\"");
+				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_SETTINGS, tempHandbrakeSettings);
+				
+				log.log(Level.INFO, execCommand);
+				
+				try{
+					Runtime rt = Runtime.getRuntime();
+					Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.MP4BOX_CMD_SPLITTER_STRING)));
+					
+					//Output to terminal
+					String s;
+					
+					BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+					BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+					// read the output from the command
+					while ((s = stdInput.readLine()) != null) {
+						log.log(Level.INFO, s);
+					}
+					
+					// read the output from the command
+					while ((s = stdError.readLine()) != null) {
+						log.log(Level.WARNING, s);
+					}
+				}catch(Exception e){
+					log.log(Level.SEVERE , "Video convertion exception", e);
+					break;
+				}
+				
+				videoRow[0] = newVideoOutputPath;
+				dataUpdated[i] = videoRow;
+				
+				log.log(Level.INFO, "Converted filename: " + newVideoOutputPath);
+			}else{
+				dataUpdated[i] = data[i];
+			}
+		}
+		
+		return dataUpdated;
+	}
+	
+	public String getHandbrakeFilePath(){
+		String handbrakePath = FileSettings.getApplicationPath(); //Will assume the handbrake executable is in the local folder if settings is empty
+		if(!settings.get(ConfSettingsKeys.HANDBRAKE_PATH()).isEmpty()){
+			handbrakePath = settings.get(ConfSettingsKeys.HANDBRAKE_PATH());  //Uses the settings path if found
+		}
+		
+		//Replaces a variable in the executable string with the actual path
+		String returnString = settings.get(ConfSettingsKeys.HANDBRAKE_EXECUTABLE());
+		returnString = returnString.replace(ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH, handbrakePath);
+		
+		//Replaces env variables with actual folder paths "java style"
+		returnString = replaceEnvironmentVariables(returnString);
+		
+		return returnString;
 	}
 	
 }

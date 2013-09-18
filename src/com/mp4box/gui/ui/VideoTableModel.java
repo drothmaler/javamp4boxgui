@@ -74,6 +74,12 @@ public class VideoTableModel extends AbstractTableModel {
     	fireTableDataChanged();
     }
     
+    /**
+     * Column 0 = File
+	 * Column 1 = Chapter
+	 * Column 2 = Chapter Name
+     * @return
+     */
     public Object[][] getData(){
     	return data;
     }

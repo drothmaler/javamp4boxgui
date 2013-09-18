@@ -243,6 +243,18 @@ public class FileSettings {
 		return currentPath;
 	}
 	
+	public String getCurrentVideoConversionOutputPath(){
+		String currentPath = getApplicationPath();
+		
+		//Checks that another path isn't defined in the conf file
+		String settingsPath = settingsHashMap.get(ConfSettingsKeys.RADIO_BUTTON_VIDEO_CONVERSION_DESTINATION_FOLDER);
+		if(!settingsPath.isEmpty()){
+			currentPath = settingsPath + File.separator;
+		}
+		
+		return currentPath;
+	}
+	
 	public static String getApplicationPath(){
 		return (new File("")).getAbsolutePath().replace("%20", " ") + File.separator;
 	}
@@ -250,4 +262,22 @@ public class FileSettings {
 	public HashMap<String, String> getSettings() {
 		return settings;
 	}
+	
+	/**
+	 * Splits a filename from the folder path.
+	 * Returns [folder, filename]
+	 * @param path
+	 * @return
+	 * Folder
+	 * Filename
+	 */
+	public static String[] splitOutputFilePath(String path){
+		int folderFileSplitIndex = path.lastIndexOf(File.separator) + 1;
+		String folder = path.substring(0, folderFileSplitIndex);
+		String file = path.substring(folderFileSplitIndex, path.length());
+		
+		String[] returnString = {folder, file};
+		return returnString;
+	}
+	
 }

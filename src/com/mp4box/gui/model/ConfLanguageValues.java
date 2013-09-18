@@ -7,6 +7,7 @@ public class ConfLanguageValues {
 	public static String TAB_NAME_OUTPUT = "Output";
 	public static String TAB_NAME_AUTOMATION = "Automation";
 	public static String TAB_NAME_FOLDER_RECURSION = "Folder Recursion";
+	public static String TAB_NAME_VIDEO_CONVERSION = "Video Conversion";
 	public static String TAB_NAME_INFORMATION = "Information";
 	
 	public static String CHECKBOX_AUTOCLEAR_TEXT = "Auto clear table after join?";
@@ -26,6 +27,11 @@ public class ConfLanguageValues {
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_DEFAULT = "Default";
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCE = "Video source";
 	public static String RADIO_BUTTON_OUTPUT_FILE_TEXT_VIDEOSOURCEFOLDER = "Video Source Folder";
+	
+	public static String LABEL_VIDEO_CONVERSION = "Output location:";
+	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT = "Default";
+	public static String RADIO_BUTTON_VIDEO_CONVERSION_VIDEOSOURCEFOLDER = "Video source folder";
+	public static String LABEL_HANDBRAKE_SETTINGS = "Handbrake settings:";
 	
 	public static String EDITOR_PANE_INFORMATION = FileSettings.HTML_TAG 
 											 	 + "<b>Installation (Wiki):</b> <a href='http://sourceforge.net/p/javamp4boxgui/wiki/Installation/'>http://sourceforge.net/p/javamp4boxgui/wiki/Installation/</a>" + FileSettings.NEW_LINE_HTML_CONF

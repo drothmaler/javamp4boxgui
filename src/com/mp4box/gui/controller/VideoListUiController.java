@@ -33,7 +33,7 @@ public class VideoListUiController implements ActionListener {
 				String folderDefault = ui.getFileSettings().getCurrentOutputPath();
 				
 				//We select the filename already defined in the output textbox
-				String filename = splitOutputFilePath(ui.getTextFieldOutput().getText())[1];
+				String filename = FileSettings.splitOutputFilePath(ui.getTextFieldOutput().getText())[1];
 				
 				//Now we combine the new folder with the existing filename
 				ui.getTextFieldOutput().setText(folderDefault + filename);
@@ -44,7 +44,7 @@ public class VideoListUiController implements ActionListener {
 				String fileDefault = ui.getSettings().get(ConfSettingsKeys.VIDEO_FILE_NAME) + ui.getSettings().get(ConfSettingsKeys.VIDEO_FILE_TYPE);
 				
 				//We select the filename already defined in the output textbox
-				String foldername = splitOutputFilePath(ui.getTextFieldOutput().getText())[0];
+				String foldername = FileSettings.splitOutputFilePath(ui.getTextFieldOutput().getText())[0];
 				
 				//Now we combine the new folder with the existing filename
 				ui.getTextFieldOutput().setText(foldername + fileDefault);
@@ -52,6 +52,10 @@ public class VideoListUiController implements ActionListener {
 				actionRadioButtonOutputFileVideoSource();
 			}else if(radioButton.equals(ui.getRadioButtonOutputFileVideoSourceFolder())){
 				actionRadioButtonOutputFileVideoSourceFolder();
+			}else if(radioButton.equals(ui.getRadioButtonVideoConversionOutputFolderDefault())){
+				ui.setTextFieldVideoConversionOutputDefaultValue();
+			}else if(radioButton.equals(ui.getRadioButtonVideoConversionOutputFolderVideoSource())){
+				ui.getTextFieldVideoConversionOutput().setText("[VIDEO SOURCE FOLDER]");
 			}
 		}else if(e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonAbout())){
 			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland, and tested on the following version of MP4Box: 'GPAC.Framework.Setup-0.5.1-DEV-rev4452'!");
@@ -79,7 +83,7 @@ public class VideoListUiController implements ActionListener {
 			}
 		}
 	}
-
+	
 	public void actionRadioButtonOutputFolderVideoSource(){
 		Object[][] data = ui.getVideoTableModel().getData();
 		String firstVideo = "";
@@ -92,10 +96,10 @@ public class VideoListUiController implements ActionListener {
 		}
 		
 		//We select the folder where the source video resides
-		String folderSourceVideo = splitOutputFilePath(firstVideo)[0];
+		String folderSourceVideo = FileSettings.splitOutputFilePath(firstVideo)[0];
 		
 		//We select the filename already defined in the output textbox
-		String filename = splitOutputFilePath(ui.getTextFieldOutput().getText())[1];
+		String filename = FileSettings.splitOutputFilePath(ui.getTextFieldOutput().getText())[1];
 		
 		//Now we combine the new folder with the existing filename
 		ui.getTextFieldOutput().setText(folderSourceVideo + filename);
@@ -113,10 +117,10 @@ public class VideoListUiController implements ActionListener {
 		}
 		
 		//We select the folder where the source video resides
-		String fileSourceVideo = splitOutputFilePath(firstVideo)[1];
+		String fileSourceVideo = FileSettings.splitOutputFilePath(firstVideo)[1];
 		
 		//We select the foldername already defined in the output textbox
-		String foldername = splitOutputFilePath(ui.getTextFieldOutput().getText())[0];
+		String foldername = FileSettings.splitOutputFilePath(ui.getTextFieldOutput().getText())[0];
 		
 		//Now we combine the new folder with the existing filename
 		ui.getTextFieldOutput().setText(foldername + fileSourceVideo);
@@ -138,19 +142,10 @@ public class VideoListUiController implements ActionListener {
 		String fileSourceVideoParentFolder = firstVideoFile.getParentFile().getName().toString() + ui.getSettings().get(ConfSettingsKeys.VIDEO_FILE_TYPE);
 		
 		//We select the foldername already defined in the output textbox
-		String foldername = splitOutputFilePath(ui.getTextFieldOutput().getText())[0];
+		String foldername = FileSettings.splitOutputFilePath(ui.getTextFieldOutput().getText())[0];
 		
 		//Now we combine the new folder with the existing filename
 		ui.getTextFieldOutput().setText(foldername + fileSourceVideoParentFolder);
-	}
-	
-	private String[] splitOutputFilePath(String path){
-		int folderFileSplitIndex = path.lastIndexOf(File.separator) + 1;
-		String folder = path.substring(0, folderFileSplitIndex);
-		String file = path.substring(folderFileSplitIndex, path.length());
-		
-		String[] returnString = {folder, file};
-		return returnString;
 	}
 	
 }
