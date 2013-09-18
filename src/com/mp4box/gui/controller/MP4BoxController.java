@@ -686,21 +686,23 @@ public class MP4BoxController {
 			String videoSourceFilePath = (String) videoRow[0];
 			if(!videoSourceFilePath.endsWith(settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE))){
 				log.log(Level.INFO, "## Converting " + videoSourceFilePath + " to an MP4 file ##");
+				String[] folderAndFileNames = FileSettings.splitOutputFilePath(videoSourceFilePath);
 				
 				//Use video source folder path if the handbrakeOutputPath variable is blank
 				String newVideoOutputPath = handbrakeOutputPath;
 				if(newVideoOutputPath.isEmpty()){
-					newVideoOutputPath = FileSettings.splitOutputFilePath(videoSourceFilePath)[0]; //Removes the filename as we only need the folder path
+					newVideoOutputPath = folderAndFileNames[0]; //Removes the filename as we only need the folder path
 				}
-				newVideoOutputPath = newVideoOutputPath + FileSettings.splitOutputFilePath(videoSourceFilePath)[1] + settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE); //Adds the filename to the output variable
+				String filenameWithoutFiletype = folderAndFileNames[1].substring(0, folderAndFileNames[1].lastIndexOf(".")); //Lets remove the old filetype, so it's not part of the new filename
+				newVideoOutputPath = newVideoOutputPath + filenameWithoutFiletype + settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE); //Adds the filename to the output variable
 				
 				videoSourceFilePath = videoSourceFilePath.replaceAll("\\\\", "\\\\\\\\"); //These are used because replaceAll removes slashes such as this one: \
 				newVideoOutputPath = newVideoOutputPath.replaceAll("\\\\", "\\\\\\\\");   //So I add more to compensate!
 				
-				String tempHandbrakeSettings = handbrakeSettings;
+				String tempHandbrakeSettings = handbrakeSettings; //Make a copy of the settings variable so we can modify it for this single iteration
 				log.log(Level.INFO, "Pre settings: " + tempHandbrakeSettings);
-				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT, "\"" + videoSourceFilePath + "\"");
-				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT, "\"" + newVideoOutputPath + "\"");
+				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT, "\"" + videoSourceFilePath + "\""); //Insert input file 
+				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT, "\"" + newVideoOutputPath + "\""); //Insert output file
 				log.log(Level.INFO, "Post settings: " + tempHandbrakeSettings);
 				
 				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll("\\\\", "\\\\\\\\"); //The replaceAll thing I talked about!
@@ -714,10 +716,11 @@ public class MP4BoxController {
 				log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
 				
 				try{
+					//Time to execute the command
 					Runtime rt = Runtime.getRuntime();
 					Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
 					
-					//Output to terminal
+					//Output to terminal/log file
 					String s;
 					
 					BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
