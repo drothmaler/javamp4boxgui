@@ -56,7 +56,7 @@ public class VideoListUiController implements ActionListener {
 			}else if(radioButton.equals(ui.getRadioButtonVideoConversionOutputFolderVideoSource())){
 				ui.getTextFieldVideoConversionOutput().setText("[VIDEO SOURCE FOLDER]");
 			}else if(radioButton.equals(ui.getRadioButtonChapterNameDefault()) || radioButton.equals(ui.getRadioButtonChapterNameVideoSource())){
-				ui.updateChapterNameNameingscheme(radioButton);
+				ui.updateChapterNameNameingscheme();
 			}
 		}else if(e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonAbout())){
 			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland, and tested on the following version of MP4Box: 'GPAC.Framework.Setup-0.5.1-DEV-rev4452'!");

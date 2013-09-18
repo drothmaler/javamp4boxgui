@@ -563,10 +563,21 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 			/**
 			 * Adds the file to the model since it isn't a folder
 			 */
-			chapterNumber = chapterNumber + 1;
+			String chaptername = "";
+			
+			//Names chapters based on what is selected
+			if(radioButtonChapterNameDefault.isSelected()){
+				chapterNumber = chapterNumber + 1;
+				chaptername = settings.get(ConfLanguageKeys.CHAPTER_NAME_DEFAULT) + chapterNumber;
+			}else{
+				chaptername = FileSettings.splitOutputFilePath(filePath)[1]; //Get filename
+				chaptername = chaptername.substring(0, chaptername.lastIndexOf(".")); //Remove filetype
+			}
+			
+			//Add data to the model
 			videoTableModel.addRow(filePath, 
 				Boolean.valueOf(settings.get(ConfSettingsKeys.CHAPTER_ENABLED)), 
-				settings.get(ConfLanguageKeys.CHAPTER_NAME_DEFAULT) + chapterNumber);
+				chaptername);
 		}
 		
 		return chapterNumber;
@@ -596,8 +607,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		}
 	}
 	
-	public void updateChapterNameNameingscheme(JRadioButton radioButton){
-		if(radioButton == radioButtonChapterNameDefault){
+	public void updateChapterNameNameingscheme(){
+		if(radioButtonChapterNameDefault.isSelected()){
 			Object[][] data = videoTableModel.getData();
 			for(int i=0;i<data.length;i++){
 				String chapterNumber = String.valueOf(i+1);
