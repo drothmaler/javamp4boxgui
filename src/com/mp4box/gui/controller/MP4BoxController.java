@@ -167,7 +167,7 @@ public class MP4BoxController {
 				 */
 				String addInputCommand = "";
 				for (int i = 0; i < listTempOutputFiles.size(); i++) {
-					String tempInput = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+					String tempInput = settings.get(ConfSettingsKeys.MP4BOX_CMD_INPUT);
 					tempInput = tempInput.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, listTempOutputFiles.get(i));
 					
 					addInputCommand += tempInput;
@@ -219,18 +219,18 @@ public class MP4BoxController {
 					 * [ELSE] Use the currentTempOutputFile. This will be done everytime except the first iteration.
 					 */
 					if(i==0){
-						inputOne = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+						inputOne = settings.get(ConfSettingsKeys.MP4BOX_CMD_INPUT);
 						inputOne = inputOne.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
 						
 						//Let's iterate the i value so that the second video input is set to the next video below
 						i++;
 					}else{
-						inputOne = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+						inputOne = settings.get(ConfSettingsKeys.MP4BOX_CMD_INPUT);
 						inputOne = inputOne.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, currentTempOutputFile);
 					}
 					
 					//The next video to add to the first one.
-					String inputTwo = settings.get(ConfSettingsKeys.MP4BOX_INPUT()); 
+					String inputTwo = settings.get(ConfSettingsKeys.MP4BOX_CMD_INPUT); 
 					inputTwo = inputTwo.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
 					
 					/**
@@ -327,7 +327,7 @@ public class MP4BoxController {
 				out.flush();
 				out.close();
 				
-				addChapterCommand = settings.get(ConfSettingsKeys.MP4BOX_CHAPTER());
+				addChapterCommand = settings.get(ConfSettingsKeys.MP4BOX_CMD_CHAPTER);
 				addChapterCommand = addChapterCommand.replace(ConfSettingsRegex.MP4BOX_CHAPTER_FILE, chapterFile);
 			}else{
 				log.log(Level.INFO, "Skipping adding chapter to file. " + ConfSettingsKeys.SINGLE_FILE_SKIP_CHAPTER + " is enabled in " + FileSettings.FILE_NAME_SETTINGS);
@@ -356,7 +356,7 @@ public class MP4BoxController {
 	private String createInputCommand(int startRow, int stopRow) throws Exception{
 		String addInputCommand = "";
 		for(int i=startRow; i<stopRow; i++){
-			String tempInput = settings.get(ConfSettingsKeys.MP4BOX_INPUT());
+			String tempInput = settings.get(ConfSettingsKeys.MP4BOX_CMD_INPUT);
 			tempInput = tempInput.replace(ConfSettingsRegex.MP4BOX_INPUT_FILE, (String) data[i][0]);
 			
 			addInputCommand += tempInput;

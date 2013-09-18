@@ -24,34 +24,28 @@ public class ConfSettingsValues {
 	
 	public static String MP4BOX_CMD_TOO_LONG = "The command line is too long.";
 	public static String MP4BOX_CMD_SPLITTER_STRING = ";";
+	public static String MP4BOX_CMD_CHAPTER = ";-chap;\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
+	public static String MP4BOX_CMD_INPUT = ";-cat;\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
 	
 	public static String MP4BOX_WIN_PATH = "%ProgramFiles%" + File.separator  + "GPAC";
 	public static String MP4BOX_WIN_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box.exe";
-	public static String MP4BOX_WIN_CHAPTER = ";-chap;\"" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE + "\"";
-	public static String MP4BOX_WIN_INPUT = ";-cat;\"" + ConfSettingsRegex.MP4BOX_INPUT_FILE + "\"";
 	public static String MP4BOX_WIN_COMMAND = "cmd;/c;start;\"\";\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
 	
 	public static String MP4BOX_LINUX_PATH = "";
 	public static String MP4BOX_LINUX_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
-	public static String MP4BOX_LINUX_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
-	public static String MP4BOX_LINUX_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
 	public static String MP4BOX_LINUX_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_MAC_PATH = "";
 	public static String MP4BOX_MAC_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
-	public static String MP4BOX_MAC_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
-	public static String MP4BOX_MAC_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
 	public static String MP4BOX_MAC_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
 	public static String MP4BOX_OTHER_PATH = "";
 	public static String MP4BOX_OTHER_EXECUTABLE = ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box";
-	public static String MP4BOX_OTHER_CHAPTER = ";-chap;" + ConfSettingsRegex.MP4BOX_CHAPTER_FILE;
-	public static String MP4BOX_OTHER_INPUT = ";-cat;" + ConfSettingsRegex.MP4BOX_INPUT_FILE;
 	public static String MP4BOX_OTHER_COMMAND = ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + ";-new;" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
-	public static String HANDBRAKE_SETTINGS 		= "-i;" + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + ";-o;" + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT;
-	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT_SELECTION = "1";
-	public static String RADIO_BUTTON_VIDEO_CONVERSION_DESTINATION_FOLDER = "";
+	public static String HANDBRAKE_SETTINGS = "-i;" + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + ";-o;" + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT;
+	public static String RADIO_BUTTON_VIDEO_CONVERSION_DEFAULT_SELECTION 	= "1";
+	public static String RADIO_BUTTON_VIDEO_CONVERSION_DESTINATION_FOLDER 	= "";
 	
 	public static String HANDBRAKE_WIN_PATH 		= "%ProgramFiles%" + File.separator  + "Handbrake";
 	public static String HANDBRAKE_WIN_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI.exe";
