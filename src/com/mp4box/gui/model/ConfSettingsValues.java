@@ -33,7 +33,7 @@ public class ConfSettingsValues {
 	public static String MP4BOX_WIN_EXECUTABLE 	= ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "mp4box.exe";
 	public static String MP4BOX_WIN_COMMAND 	= "cmd" + CMD_SPLITTER_STRING + "/c" + CMD_SPLITTER_STRING + "start" + CMD_SPLITTER_STRING + "\"\"" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE + "\"";
 	
-	public static String MP4BOX_LINUX_PATH 		= File.separator + "usr " + File.separator + "bin";
+	public static String MP4BOX_LINUX_PATH 		= File.separator + "usr" + File.separator + "bin";
 	public static String MP4BOX_LINUX_EXECUTABLE= ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "MP4Box";
 	public static String MP4BOX_LINUX_COMMAND 	= ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
@@ -41,7 +41,7 @@ public class ConfSettingsValues {
 	public static String MP4BOX_MAC_EXECUTABLE 	= ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "MP4Box";
 	public static String MP4BOX_MAC_COMMAND 	= ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
-	public static String MP4BOX_OTHER_PATH 		= File.separator + "usr " + File.separator + "bin";
+	public static String MP4BOX_OTHER_PATH 		= File.separator + "usr" + File.separator + "bin";
 	public static String MP4BOX_OTHER_EXECUTABLE= ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "MP4Box";
 	public static String MP4BOX_OTHER_COMMAND 	= ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
@@ -54,7 +54,7 @@ public class ConfSettingsValues {
 	public static String HANDBRAKE_WIN_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI.exe";
 	public static String HANDBRAKE_WIN_COMMAND		= "cmd" + CMD_SPLITTER_STRING + "/c" + CMD_SPLITTER_STRING + "start" + CMD_SPLITTER_STRING + "\"\"" + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
-	public static String HANDBRAKE_LINUX_PATH 		= File.separator + "usr " + File.separator + "bin";
+	public static String HANDBRAKE_LINUX_PATH 		= File.separator + "usr" + File.separator + "bin";
 	public static String HANDBRAKE_LINUX_EXECUTABLE = ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
 	public static String HANDBRAKE_LINUX_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
@@ -62,7 +62,7 @@ public class ConfSettingsValues {
 	public static String HANDBRAKE_MAC_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
 	public static String HANDBRAKE_MAC_COMMAND		= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
-	public static String HANDBRAKE_OTHER_PATH 		= File.separator + "usr " + File.separator + "bin";
+	public static String HANDBRAKE_OTHER_PATH 		= File.separator + "usr" + File.separator + "bin";
 	public static String HANDBRAKE_OTHER_EXECUTABLE = ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
 	public static String HANDBRAKE_OTHER_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
