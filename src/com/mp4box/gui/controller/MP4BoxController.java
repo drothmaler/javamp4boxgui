@@ -695,20 +695,24 @@ public class MP4BoxController {
 				String filenameWithoutFiletype = folderAndFileNames[1].substring(0, folderAndFileNames[1].lastIndexOf(".")); //Lets remove the old filetype, so it's not part of the new filename
 				newVideoOutputPath = newVideoOutputPath + filenameWithoutFiletype + settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE); //Adds the filename to the output variable
 				
-				videoSourceFilePath = videoSourceFilePath.replaceAll("\\\\", "\\\\\\\\"); //These are used because replaceAll removes slashes such as this one: \
-				newVideoOutputPath = newVideoOutputPath.replaceAll("\\\\", "\\\\\\\\");   //So I add more to compensate!
+				videoSourceFilePath = increaseTwoBackSlashesToFour(videoSourceFilePath); //These are used because replaceAll removes slashes such as this one: \
+				newVideoOutputPath 	= increaseTwoBackSlashesToFour(newVideoOutputPath);   //So I add more to compensate!
 				
 				String tempHandbrakeSettings = handbrakeSettings; //Make a copy of the settings variable so we can modify it for this single iteration
 				log.log(Level.INFO, "Pre settings: " + tempHandbrakeSettings);
-				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT, "\"" + videoSourceFilePath + "\""); //Insert input file 
-				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT, "\"" + newVideoOutputPath + "\""); //Insert output file
+				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT, videoSourceFilePath); //Insert input file 
+				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT, newVideoOutputPath); //Insert output file
 				log.log(Level.INFO, "Post settings: " + tempHandbrakeSettings);
 				
-				tempHandbrakeSettings = tempHandbrakeSettings.replaceAll("\\\\", "\\\\\\\\"); //The replaceAll thing I talked about!
+				tempHandbrakeSettings = increaseTwoBackSlashesToFour(tempHandbrakeSettings); //The replaceAll thing I talked about!
+				
+				if(OSMethods.isLinux()){
+					tempHandbrakeSettings = tempHandbrakeSettings.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "); //Because of the way bash wants the args
+				}
 				
 				//The command to be run, assemble autobots!
 				String execCommand = settings.get(ConfSettingsKeys.HANDBRAKE_COMMAND());
-				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_EXECUTABLE, "\"" + handbrakeExec + "\"");
+				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_EXECUTABLE, handbrakeExec);
 				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_SETTINGS, tempHandbrakeSettings);
 				
 				//Replaces the separator with spaces to enable the command to be copy pasted and run for the log reader
@@ -749,6 +753,10 @@ public class MP4BoxController {
 		}
 		
 		return dataUpdated;
+	}
+	
+	public String increaseTwoBackSlashesToFour(String path){
+		return path.replaceAll("\\\\", "\\\\\\\\");
 	}
 	
 	public String getHandbrakeFilePath(){
