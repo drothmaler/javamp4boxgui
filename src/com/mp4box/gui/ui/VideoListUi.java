@@ -183,7 +183,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		radioButtonVideoConversionOutputFolderVideoSource.setText(settings.get(ConfLanguageKeys.RADIO_BUTTON_VIDEO_TRANSCODING_VIDEOSOURCEFOLDER));
 		setTextFieldVideoConversionOutputDefaultValue();
 		labelVideoConversionHandbrakeSettings.setText(settings.get(ConfLanguageKeys.LABEL_HANDBRAKE_SETTINGS));
-		textFieldVideoConversionHandbrakeSettings.setText(settings.get(ConfSettingsKeys.HANDBRAKE_SETTINGS));
+		textFieldVideoConversionHandbrakeSettings.setText(settings.get(ConfSettingsKeys.HANDBRAKE_SETTINGS()));
 		labelVideoConversionEnabled.setText(settings.get(ConfLanguageKeys.LABEL_HANDBRAKE_ENABLED));
 		checkBoxVideoConversionEnabled.setSelected(Boolean.valueOf(settings.get(ConfSettingsKeys.HANDBRAKE_ENABLED)));
 		setVideoConversionState(checkBoxVideoConversionEnabled.isSelected());

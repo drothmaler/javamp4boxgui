@@ -44,24 +44,27 @@ public class ConfSettingsKeys {
 	public static String MP4BOX_OTHER_COMMAND 	= "MP4BoxOtherCommand";
 	
 	public static String HANDBRAKE_ENABLED			= "HandbrakeEnabled";
-	public static String HANDBRAKE_SETTINGS			= "HandbrakeSettings";
 	public static String RADIO_BUTTON_VIDEO_TRANSCODING_DEFAULT_SELECTION = "VideoTranscodingDefaultSelection";
 	public static String RADIO_BUTTON_VIDEO_TRANSCODING_DESTINATION_FOLDER = "VideoTranscodingDestinationFolder";
 	
 	public static String HANDBRAKE_WIN_PATH 		= "HandbrakeWinPath";
 	public static String HANDBRAKE_WIN_EXECUTABLE 	= "HandbrakeWinExec";
+	public static String HANDBRAKE_WIN_SETTINGS		= "HandbrakeWinSettings";
 	public static String HANDBRAKE_WIN_COMMAND		= "HandbrakeWinCmd";
 	
 	public static String HANDBRAKE_LINUX_PATH 		= "HandbrakeLinuxPath";
 	public static String HANDBRAKE_LINUX_EXECUTABLE = "HandbrakeLinuxExec";
+	public static String HANDBRAKE_LINUX_SETTINGS	= "HandbrakeLinuxSettings";
 	public static String HANDBRAKE_LINUX_COMMAND	= "HandbrakeLinuxCmd";
 	
 	public static String HANDBRAKE_MAC_PATH 		= "HandbrakeMacPath";
 	public static String HANDBRAKE_MAC_EXECUTABLE 	= "HandbrakeMacExec";
+	public static String HANDBRAKE_MAC_SETTINGS		= "HandbrakeMacSettings";
 	public static String HANDBRAKE_MAC_COMMAND		= "HandbrakeMacCmd";
 	
 	public static String HANDBRAKE_OTHER_PATH 		= "HandbrakeOtherPath";
 	public static String HANDBRAKE_OTHER_EXECUTABLE = "HandbrakeOtherExec";
+	public static String HANDBRAKE_OTHER_SETTINGS	= "HandbrakeOtherSettings";
 	public static String HANDBRAKE_OTHER_COMMAND	= "HandbrakeOtherCmd";
 	
 	public static String LIST_BACKGROUND_COLOUR = "ListBackground";
@@ -141,6 +144,18 @@ public class ConfSettingsKeys {
 			return HANDBRAKE_MAC_EXECUTABLE;
 		}else{
 			return HANDBRAKE_OTHER_EXECUTABLE;
+		}
+	}
+	
+	public static String HANDBRAKE_SETTINGS(){
+		if(OSMethods.isWindows()){
+			return HANDBRAKE_WIN_SETTINGS;
+		}else if(OSMethods.isLinux()){
+			return HANDBRAKE_LINUX_SETTINGS;
+		}else if(OSMethods.isMac()){
+			return HANDBRAKE_MAC_SETTINGS;
+		}else{
+			return HANDBRAKE_OTHER_SETTINGS;
 		}
 	}
 	
