@@ -669,7 +669,7 @@ public class MP4BoxController {
 	 */
 	public Object[][] convertVideos(Object[][] data){
 		String handbrakeExec = getHandbrakeFilePath(); //Where handbrake at? http://www.youtube.com/watch?v=Dd7FixvoKBw
-		handbrakeExec = handbrakeExec.replaceAll("\\\\", "\\\\\\\\"); //Because replaceAll fu¤ks up \\ by making pairs of them in to single \. Therefore I use 4 (\\\\) of them. It's a java thing. Read up sheeple!
+		handbrakeExec = handbrakeExec.replaceAll("\\\\", "\\\\\\\\"); //Because replaceAll fuï¿½ks up \\ by making pairs of them in to single \. Therefore I use 4 (\\\\) of them. It's a java thing. Read up sheeple!
 		
 		String handbrakeSettings = ui.getTextFieldVideoConversionHandbrakeSettings().getText(); //Settings are important
 		String handbrakeOutputPath = "";
@@ -715,13 +715,37 @@ public class MP4BoxController {
 				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_EXECUTABLE, handbrakeExec);
 				execCommand = execCommand.replaceAll(ConfSettingsRegex.HANDBRAKE_SETTINGS, tempHandbrakeSettings);
 				
-				//Replaces the separator with spaces to enable the command to be copy pasted and run for the log reader
-				log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
+				log.log(Level.INFO, execCommand);
 				
 				try{
 					//Time to execute the command
 					Runtime rt = Runtime.getRuntime();
-					Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
+					Process proc = null;
+					
+					if(OSMethods.isWindows()){
+						proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
+						//Replaces the separator with spaces to enable the command to be copy pasted and run for the log reader
+						log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
+					}else{
+						execCommand = execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " ");
+						
+						String tempCmdFile = findValidOutputFile(ui.getFolderPathOutput(), "tempCmd", "");
+						BufferedWriter out = new BufferedWriter(new FileWriter(tempCmdFile));
+						out.write(execCommand);
+						out.flush();
+						out.close();
+						
+						(new File(tempCmdFile)).setExecutable(true);
+						
+						String whatExec = "/bin/bash -c " + tempCmdFile;
+						
+						proc = rt.exec(whatExec);
+						
+						log.log(Level.INFO, whatExec);
+						
+						//Delete the temp command file ## FUNGERER IKKE ??? ##
+//						(new File(tempCmdFile)).delete();
+					}
 					
 					//Output to terminal/log file
 					String s;
