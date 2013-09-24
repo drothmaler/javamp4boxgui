@@ -743,7 +743,7 @@ public class MP4BoxController {
 	}
 	
 	public String getTemporaryCommandFile(){
-		return findValidOutputFile((new File("")).getAbsolutePath(), "tempCmd", "");
+		return findValidOutputFile((new File("")).getAbsolutePath() + File.separator, "tempCmd", "");
 	}
 	
 	/**
