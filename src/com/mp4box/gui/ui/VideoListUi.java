@@ -136,6 +136,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	
 	public VideoListUi(){
 		settings = fileSettings.getSettings();
+		log.setLevel(Level.parse(settings.get(ConfSettingsKeys.LOG_LEVEL)));
 		
 		initComponents();
 		addComponents();
@@ -158,7 +159,7 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 		}catch(Exception e){
 			log.log(Level.INFO, e.getMessage(), e.getStackTrace());
 		}
-			
+		
 		scrollPaneVideo.add(tableVideo);
 		scrollPaneVideo.setViewportView(tableVideo);
 		

@@ -43,7 +43,10 @@ public class MP4BoxController {
 		
 		String mp4boxFilePath = getMP4BoxFilePath();
 		if((new File(mp4boxFilePath).exists())){
-			
+			/**
+			 * Should we warn about wrong filetype?
+			 * And are there any video files with the wrong filetype?
+			 */
 			int answer = -1;
 			if(Boolean.valueOf(settings.get(ConfSettingsKeys.VIDEO_FILE_TYPE_WARNING)) && !ui.getCheckBoxVideoConversionEnabled().isSelected()){ //The warning can be disabled in the settings file
 				//Checks if there is one file that is not an MP4 file and gives a warning!
@@ -58,9 +61,15 @@ public class MP4BoxController {
 				}
 			}
 			
+			/**
+			 * Cancle or continue?
+			 */
 			if(answer == JOptionPane.CANCEL_OPTION){
 				log.log(Level.WARNING, "## Canceled! ##");
 			}else {
+				/**
+				 * Should we convert the input videos?
+				 */
 				if(ui.getCheckBoxVideoConversionEnabled().isSelected() || answer == JOptionPane.YES_OPTION){
 					data = convertVideos(data);
 				}
@@ -408,27 +417,13 @@ public class MP4BoxController {
 		log.log(Level.INFO, "Here is the command and output of the command");
 		log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
 		
-		Runtime rt = Runtime.getRuntime();
-		Process proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
+		String temporaryExecutableFile = getTemporaryCommandFile();
+		Process proc = executeCommand(execCommand, temporaryExecutableFile);
+		//Delete the temp command file
+		(new File(temporaryExecutableFile)).delete();
 		
-		//Output to terminal
-		String s;
-		
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-		// read the output from the command
-		while ((s = stdInput.readLine()) != null) {
-			log.log(Level.INFO, s);
-		}
-		
-		while ((s = stdError.readLine()) != null) {
-			if(s.contains(settings.get(ConfSettingsKeys.MP4BOX_CMD_TOO_LONG))){
-				throw new CmdException(s);
-			}else{
-				log.log(Level.WARNING, s);
-			}
-		}
+		//Logs the errors
+		logProcessOutput(proc);
 	}
 	
 	/**
@@ -669,7 +664,8 @@ public class MP4BoxController {
 	 */
 	public Object[][] convertVideos(Object[][] data){
 		String handbrakeExec = getHandbrakeFilePath(); //Where handbrake at? http://www.youtube.com/watch?v=Dd7FixvoKBw
-		handbrakeExec = handbrakeExec.replaceAll("\\\\", "\\\\\\\\"); //Because replaceAll fu�ks up \\ by making pairs of them in to single \. Therefore I use 4 (\\\\) of them. It's a java thing. Read up sheeple!
+		handbrakeExec = increaseTwoBackSlashesToFour(handbrakeExec); //Because replaceAll fu�ks up \\ by making pairs of them in to single \. Therefore I use 4 (\\\\) of them. It's a java thing. Read up sheeple!
+		String temporaryExecutableFile = getTemporaryCommandFile();
 		
 		String handbrakeSettings = ui.getTextFieldVideoConversionHandbrakeSettings().getText(); //Settings are important
 		String handbrakeOutputPath = "";
@@ -719,49 +715,9 @@ public class MP4BoxController {
 				
 				try{
 					//Time to execute the command
-					Runtime rt = Runtime.getRuntime();
-					Process proc = null;
+					Process proc = executeCommand(execCommand, temporaryExecutableFile);
 					
-					if(OSMethods.isWindows()){
-						proc = rt.exec(execCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
-						//Replaces the separator with spaces to enable the command to be copy pasted and run for the log reader
-						log.log(Level.INFO, execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
-					}else{
-						execCommand = execCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " ");
-						
-						String tempCmdFile = findValidOutputFile(ui.getFolderPathOutput(), "tempCmd", "");
-						BufferedWriter out = new BufferedWriter(new FileWriter(tempCmdFile));
-						out.write(execCommand);
-						out.flush();
-						out.close();
-						
-						(new File(tempCmdFile)).setExecutable(true);
-						
-						String whatExec = "/bin/bash -c " + tempCmdFile;
-						
-						proc = rt.exec(whatExec);
-						
-						log.log(Level.INFO, whatExec);
-						
-						//Delete the temp command file ## FUNGERER IKKE ??? ##
-//						(new File(tempCmdFile)).delete();
-					}
-					
-					//Output to terminal/log file
-					String s;
-					
-					BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-					BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-					// read the output from the command
-					while ((s = stdInput.readLine()) != null) {
-						log.log(Level.INFO, s);
-					}
-					
-					// read the output from the command
-					while ((s = stdError.readLine()) != null) {
-						log.log(Level.WARNING, s);
-					}
+					logProcessOutput(proc);
 				}catch(Exception e){
 					log.log(Level.SEVERE , "Video convertion exception", e);
 					break;
@@ -776,11 +732,77 @@ public class MP4BoxController {
 			}
 		}
 		
+		//Delete the temp command file
+		(new File(temporaryExecutableFile)).delete();
+		
 		return dataUpdated;
 	}
 	
 	public String increaseTwoBackSlashesToFour(String path){
 		return path.replaceAll("\\\\", "\\\\\\\\");
+	}
+	
+	public String getTemporaryCommandFile(){
+		return findValidOutputFile((new File("")).getAbsolutePath(), "tempCmd", "");
+	}
+	
+	/**
+	 * Executes commands!
+	 * The temporaryExecutableFile is used in Linux and other none Windows OS's as a workaround for getting the commands executed properly.
+	 * @param executableCommand
+	 * @param temporaryExecutableFile [In Windows, this doesn't apply]
+	 * @return
+	 * @throws IOException
+	 */
+	public Process executeCommand(String executableCommand, String temporaryExecutableFile) throws IOException{
+		Runtime rt = Runtime.getRuntime();
+		Process proc = null;
+		
+		executableCommand = increaseTwoBackSlashesToFour(executableCommand);
+		
+		if(OSMethods.isWindows()){
+			proc = rt.exec(executableCommand.split(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING)));
+			//Replaces the separator with spaces to enable the command to be copy pasted and run for the log reader
+			log.log(Level.INFO, executableCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " "));
+		}else{
+			executableCommand = executableCommand.replaceAll(settings.get(ConfSettingsKeys.CMD_SPLITTER_STRING), " ");
+			
+			BufferedWriter out = new BufferedWriter(new FileWriter(temporaryExecutableFile));
+			out.write(executableCommand);
+			out.flush();
+			out.close();
+			
+			(new File(temporaryExecutableFile)).setExecutable(true);
+			
+			proc = rt.exec(temporaryExecutableFile);
+			
+			log.log(Level.INFO, "Temporary Executable File content: \n" + temporaryExecutableFile);
+		}
+		
+		return proc;
+	}
+	
+	public void logProcessOutput(Process proc) throws IOException, CmdException{
+		//Output to terminal/log file
+		String s;
+		
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+		// read the output from the command
+		while ((s = stdInput.readLine()) != null) {
+			log.log(Level.FINEST, s);
+		}
+		
+		// read the output from the command
+		while ((s = stdError.readLine()) != null) {
+			if(s.contains(settings.get(ConfSettingsKeys.MP4BOX_CMD_TOO_LONG))){
+				throw new CmdException(s);
+			}else{
+				log.log(Level.WARNING, "The following Warning output isn't necessarily a warning, but is simply output!");
+				log.log(Level.WARNING, s);
+			}
+		}
 	}
 	
 	public String getHandbrakeFilePath(){

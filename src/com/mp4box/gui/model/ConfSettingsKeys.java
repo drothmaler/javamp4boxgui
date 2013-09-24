@@ -78,6 +78,7 @@ public class ConfSettingsKeys {
 	
 	public static String LOG_NAME = "LogName";
 	public static String LOG_SIZE = "LogSize";
+	public static String LOG_LEVEL = "LogLevel";
 	public static String LOG_NUMBER_OF_FILES = "LogNumberOfFiles";
 	public static String LOG_WRITE_TO_FILE = "LogWriteToFile";
 	
