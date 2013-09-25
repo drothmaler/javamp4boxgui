@@ -799,7 +799,6 @@ public class MP4BoxController {
 			if(s.contains(settings.get(ConfSettingsKeys.MP4BOX_CMD_TOO_LONG))){
 				throw new CmdException(s);
 			}else{
-				log.log(Level.WARNING, "The following Warning output isn't necessarily a warning, but is simply output!");
 				log.log(Level.WARNING, s);
 			}
 		}
