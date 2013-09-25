@@ -57,7 +57,7 @@ public class ConfSettingsValues {
 	public static String HANDBRAKE_LINUX_PATH 		= File.separator + "usr" + File.separator + "bin";
 	public static String HANDBRAKE_LINUX_EXECUTABLE = ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
 	public static String HANDBRAKE_LINUX_SETTINGS 	= "-i '" + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + "' -o '" + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT + "'";
-	public static String HANDBRAKE_LINUX_COMMAND	= "/bin/bash;-c;\"" + ConfSettingsRegex.HANDBRAKE_EXECUTABLE + " " + ConfSettingsRegex.HANDBRAKE_SETTINGS + "\"";
+	public static String HANDBRAKE_LINUX_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + " " + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
 	public static String HANDBRAKE_MAC_PATH 		= File.separator + "Applications" + File.separator + "HandBrake.app";
 	public static String HANDBRAKE_MAC_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
