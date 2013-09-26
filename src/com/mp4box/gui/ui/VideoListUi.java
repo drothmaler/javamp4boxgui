@@ -402,6 +402,8 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 	 * Source: Drag&Drop: http://www.java-tips.org/java-se-tips/javax.swing/how-to-implement-drag-drop-functionality-in-your-applic.html
 	 */
 	public void drop(DropTargetDropEvent dtde) {
+		String exceptionMsg = "\nAre you remote controlling via VNC? This is known for causing random problems in Linux! /nTry and restart the application and try again a couple of times, it might then suddenly work!";
+		
 		//Quick check to see if it exists, otherwise it will do it for all folders, and that is annoying.
 		MP4BoxController controller = new MP4BoxController(this);
 		String mp4boxPath = controller.getMP4BoxFilePath();
@@ -452,14 +454,14 @@ public class VideoListUi extends JFrame implements DropTargetListener {
 				// Ok, is it another Java object?
 				else if (flavors[i].isFlavorSerializedObjectType()) {
 					dtde.dropComplete(true);
-					JOptionPane.showMessageDialog(this, "Due to the nature of this application, a Java Object seems to be a somewhat useless input...Sorry!");
+					JOptionPane.showMessageDialog(this, "Invalid input: Recieved a Java Object" + exceptionMsg);
 					
 					return;
 				}
 				// How about an input stream?
 				else if (flavors[i].isRepresentationClassInputStream()) {
 					dtde.dropComplete(true);
-					JOptionPane.showMessageDialog(this, "If an input stream would work, I'm not aware of it yet....Sorry!");
+					JOptionPane.showMessageDialog(this, "Invalid input: Recieved an InputStream" + exceptionMsg);
 					
 					return;
 				}
