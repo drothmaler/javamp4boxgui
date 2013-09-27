@@ -37,7 +37,7 @@ public class ConfSettingsValues {
 	public static String MP4BOX_LINUX_EXECUTABLE= ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "MP4Box";
 	public static String MP4BOX_LINUX_COMMAND 	= ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
-	public static String MP4BOX_MAC_PATH 		= File.separator + "Applications" + File.separator + "GPAC";
+	public static String MP4BOX_MAC_PATH 		= File.separator + "Applications" + File.separator + "Osmo4.app" + File.separator + "Contents" + File.separator + "MacOS";
 	public static String MP4BOX_MAC_EXECUTABLE 	= ConfSettingsRegex.MP4BOX_EXECUTABLE_PATH + File.separator + "MP4Box";
 	public static String MP4BOX_MAC_COMMAND 	= ConfSettingsRegex.MP4BOX_COMMAND_EXECUTABLE + ConfSettingsRegex.MP4BOX_COMMAND_INPUT + ConfSettingsRegex.MP4BOX_COMMAND_CHAPTER + CMD_SPLITTER_STRING + "-new" + CMD_SPLITTER_STRING + ConfSettingsRegex.MP4BOX_COMMAND_OUTPUT_FILE;
 	
@@ -59,7 +59,7 @@ public class ConfSettingsValues {
 	public static String HANDBRAKE_LINUX_SETTINGS 	= "-i '" + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + "' -o '" + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT + "'";
 	public static String HANDBRAKE_LINUX_COMMAND	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + " " + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
-	public static String HANDBRAKE_MAC_PATH 		= File.separator + "Applications" + File.separator + "HandBrake.app";
+	public static String HANDBRAKE_MAC_PATH 		= File.separator + "Applications";
 	public static String HANDBRAKE_MAC_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";
 	public static String HANDBRAKE_MAC_SETTINGS 	= "-i '" + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + "' -o '" + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT + "'";
 	public static String HANDBRAKE_MAC_COMMAND		= ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
