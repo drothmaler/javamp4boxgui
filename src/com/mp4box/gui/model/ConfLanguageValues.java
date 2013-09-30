@@ -41,7 +41,7 @@ public class ConfLanguageValues {
 	public static String EDITOR_PANE_INFORMATION = FileSettings.HTML_TAG 
 											 	 + "<b>Installation (Wiki):</b> <a href='http://sourceforge.net/p/javamp4boxgui/wiki/Installation/'>http://sourceforge.net/p/javamp4boxgui/wiki/Installation/</a>" + FileSettings.NEW_LINE_HTML_CONF
 											 	 + "<b>MP4Box Nightly Builds:</b> <a href='http://gpac.wp.mines-telecom.fr/downloads/gpac-nightly-builds/'>http://gpac.wp.mines-telecom.fr/downloads/gpac-nightly-builds/</a>" + FileSettings.NEW_LINE_HTML_CONF
-											 	 + "<b>Handbrake:</b> <a href='http://handbrake.fr/downloads.php'>http://handbrake.fr/downloads.php</a>" + FileSettings.NEW_LINE_HTML_CONF
+											 	 + "<b>Handbrake CLI:</b> <a href='http://handbrake.fr/downloads.php'>http://handbrake.fr/downloads.php</a>" + FileSettings.NEW_LINE_HTML_CONF
 											 	 + "Download the proper version for your OS, and follow the Wiki instructions!" + FileSettings.NEW_LINE_HTML_CONF
 											 	 + "<i>Please note that using other OS's than Windows requires changes to settings.conf (see Wiki).</i>" + FileSettings.NEW_LINE_HTML_CONF;
 	

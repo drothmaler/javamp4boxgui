@@ -75,7 +75,7 @@ public class MP4BoxController {
 					if((new File(handbrakeFilePath)).exists()){
 						data = convertVideos(data);
 					}else{
-						String msg = "Can't find the HandBrake executable! \nExpected to find it here: " + handbrakeFilePath +"\n"
+						String msg = "Can't find the HandBrakeCLI executable! \nExpected to find it here: " + handbrakeFilePath +"\n"
 			            + "If you need further information, look in the '" + settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION) + "' tab!\n"
 			            + "This app is tested with HandBrake build: 'HandBrake-0.9.9-1_i686'";
 						
