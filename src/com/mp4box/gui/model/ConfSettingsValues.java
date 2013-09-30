@@ -50,9 +50,9 @@ public class ConfSettingsValues {
 	public static String RADIO_BUTTON_VIDEO_TRANSCODING_DESTINATION_FOLDER 	= "";
 	
 	public static String HANDBRAKE_WIN_PATH 		= "%ProgramFiles%" + File.separator  + "Handbrake";
-	public static String HANDBRAKE_WIN_EXECUTABLE 	= "\"" + ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI.exe\"";
+	public static String HANDBRAKE_WIN_EXECUTABLE 	= ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI.exe";
 	public static String HANDBRAKE_WIN_SETTINGS 	= "-i" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.HANDBRAKE_COMMAND_INPUT + "\"" + CMD_SPLITTER_STRING + "-o" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.HANDBRAKE_COMMAND_OUTPUT +"\"";
-	public static String HANDBRAKE_WIN_COMMAND		= "cmd" + CMD_SPLITTER_STRING + "/c" + CMD_SPLITTER_STRING + "start" + CMD_SPLITTER_STRING + "\"\"" + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_EXECUTABLE + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
+	public static String HANDBRAKE_WIN_COMMAND		= "cmd" + CMD_SPLITTER_STRING + "/c" + CMD_SPLITTER_STRING + "start" + CMD_SPLITTER_STRING + "\"\"" + CMD_SPLITTER_STRING + "\"" + ConfSettingsRegex.HANDBRAKE_EXECUTABLE + "\"" + CMD_SPLITTER_STRING + ConfSettingsRegex.HANDBRAKE_SETTINGS;
 	
 	public static String HANDBRAKE_LINUX_PATH 		= File.separator + "usr" + File.separator + "bin";
 	public static String HANDBRAKE_LINUX_EXECUTABLE = ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH + File.separator + "HandBrakeCLI";

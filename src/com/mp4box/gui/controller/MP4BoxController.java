@@ -42,7 +42,7 @@ public class MP4BoxController {
 		log.log(Level.INFO, "##### Join start #####");
 		
 		String mp4boxFilePath = getMP4BoxFilePath();
-		if((new File(mp4boxFilePath).exists())){
+		if((new File(mp4boxFilePath)).exists()){
 			/**
 			 * Should we warn about wrong filetype?
 			 * And are there any video files with the wrong filetype?
@@ -71,7 +71,17 @@ public class MP4BoxController {
 				 * Should we convert the input videos?
 				 */
 				if(ui.getCheckBoxVideoConversionEnabled().isSelected() || answer == JOptionPane.YES_OPTION){
-					data = convertVideos(data);
+					String handbrakeFilePath = getHandBrakeFilePath();
+					if((new File(handbrakeFilePath)).exists()){
+						data = convertVideos(data);
+					}else{
+						String msg = "Can't find the HandBrake executable! \nExpected to find it here: " + handbrakeFilePath +"\n"
+			            + "If you need further information, look in the '" + settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION) + "' tab!\n"
+			            + "This app is tested with HandBrake build: 'HandBrake-0.9.9-1_i686'";
+						
+						log.log(Level.SEVERE, msg);
+						JOptionPane.showMessageDialog(ui, msg);
+					}
 				}
 				
 				String addInputCommand = "";
@@ -464,7 +474,7 @@ public class MP4BoxController {
 	 */
 	public String addTime(String time1, String time2) throws ParseException, Exception{
 		if(time1 == null || time2 == null){
-			throw new Exception("When adding two times, one of them was NULL! Usually because of unsupported filetype!");
+			throw new Exception("When calculating video runtime for chapterfile, a video runtime was NULL! \nThis is usually because of unsupported filetypes!");
 		}
 		
 		String splitt1 = ":";
@@ -618,6 +628,22 @@ public class MP4BoxController {
 		return returnString;
 	}
 	
+	public String getHandBrakeFilePath(){
+		String handbrakePath = FileSettings.getApplicationPath(); //Will assume the handbrake executable is in the local folder if settings is empty
+		if(!settings.get(ConfSettingsKeys.HANDBRAKE_PATH()).isEmpty()){
+			handbrakePath = settings.get(ConfSettingsKeys.HANDBRAKE_PATH());  //Uses the settings path if found
+		}
+		
+		//Replaces a variable in the executable string with the actual path
+		String returnString = settings.get(ConfSettingsKeys.HANDBRAKE_EXECUTABLE());
+		returnString = returnString.replace(ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH, handbrakePath);
+		
+		//Replaces env variables with actual folder paths "java style"
+		returnString = replaceEnvironmentVariables(returnString);
+		
+		return returnString;
+	}
+	
 	/**
 	 * The following section handles environment variables for the different OS's
 	 * Should handle any env variable surrounded by %.
@@ -651,9 +677,9 @@ public class MP4BoxController {
 	}
 	
 	public String getMP4BoxMissingMessage(String mp4boxPath){
-		return "Can't find the MP4Box binary! \nExpected to find it here: " + mp4boxPath +"\n"
+		return "Can't find the MP4Box executable! \nExpected to find it here: " + mp4boxPath +"\n"
             + "If you need further information, look in the '" + settings.get(ConfLanguageKeys.TAB_NAME_INFORMATION) + "' tab!\n"
-            + "This app is tested with build: 'Nightly DEV build of v0.5.1' \n";
+            + "This app is tested with MP4Box build: 'Nightly DEV build of v0.5.1'";
 	}
 	
 	/**
@@ -663,7 +689,7 @@ public class MP4BoxController {
 	 * @return data
 	 */
 	public Object[][] convertVideos(Object[][] data){
-		String handbrakeExec = getHandbrakeFilePath(); //Where handbrake at? http://www.youtube.com/watch?v=Dd7FixvoKBw
+		String handbrakeExec = getHandBrakeFilePath(); //Where handbrake at? http://www.youtube.com/watch?v=Dd7FixvoKBw
 		handbrakeExec = increaseTwoBackSlashesToFour(handbrakeExec); //Because replaceAll fu�ks up \\ by making pairs of them in to single \. Therefore I use 4 (\\\\) of them. It's a java thing. Read up sheeple!
 		String temporaryExecutableFile = getTemporaryCommandFile();
 		
@@ -802,22 +828,6 @@ public class MP4BoxController {
 				log.log(Level.WARNING, s);
 			}
 		}
-	}
-	
-	public String getHandbrakeFilePath(){
-		String handbrakePath = FileSettings.getApplicationPath(); //Will assume the handbrake executable is in the local folder if settings is empty
-		if(!settings.get(ConfSettingsKeys.HANDBRAKE_PATH()).isEmpty()){
-			handbrakePath = settings.get(ConfSettingsKeys.HANDBRAKE_PATH());  //Uses the settings path if found
-		}
-		
-		//Replaces a variable in the executable string with the actual path
-		String returnString = settings.get(ConfSettingsKeys.HANDBRAKE_EXECUTABLE());
-		returnString = returnString.replace(ConfSettingsRegex.HANDBRAKE_EXECUTABLE_PATH, handbrakePath);
-		
-		//Replaces env variables with actual folder paths "java style"
-		returnString = replaceEnvironmentVariables(returnString);
-		
-		return returnString;
 	}
 	
 }
