@@ -59,7 +59,7 @@ public class VideoListUiController implements ActionListener {
 				ui.updateChapterNameNameingscheme();
 			}
 		}else if(e.getSource() instanceof JButton && ((JButton) e.getSource()).equals(ui.getButtonAbout())){
-			JOptionPane.showMessageDialog(ui, "Created by Rune André Liland!");
+			JOptionPane.showMessageDialog(ui, "Created by Rune AndrÃ© Liland!");
 		}else if(e.getSource() instanceof JCheckBox){
 			JCheckBox checkbox = (JCheckBox) e.getSource();
 			if(checkbox.equals(ui.getCheckBoxSeparateVideos())){
